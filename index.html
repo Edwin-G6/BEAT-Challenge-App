@@ -198,7 +198,7 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
 <body data-view="bad">
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.1</div></div></div>
+  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.2</div></div></div>
   <div class="nv" role="group" aria-label="Menu">
     <button class="ni" id="m-bad" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD</button>
     <button class="ni" id="m-bed" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>STREAK</button>
@@ -406,6 +406,13 @@ $("add").onclick=openAdd;$("e-today").onclick=()=>setDay(today());$("e-yest").on
 ["out","in","city","el"].forEach(k=>$("e-"+k).oninput=etot);
 $("m-bad").onclick=()=>setView("bad");$("m-bed").onclick=()=>setView("bed");$("q").oninput=render;$("lid").onchange=()=>init(sel);$("act").onchange=render;
 $("load").onclick=()=>$("file").click();
+const fbErr=e=>{const c=(e&&e.code)||"",m=(e&&e.message)||String(e);
+  if(/geannuleerd/i.test(m))return"inloggen geannuleerd";
+  if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c))return"wachtwoord of e-mailadres klopt niet ("+c+")";
+  if(c==="permission-denied")return"geen toestemming; controleer de Firestore-regels en of je bent ingelogd als beheerder ("+c+")";
+  if(c==="auth/operation-not-allowed")return"inloggen met e-mail en wachtwoord staat uit in Firebase ("+c+")";
+  if(/network|unavailable/.test(c))return"geen verbinding met Firebase ("+c+")";
+  return c||m};
 let DB=null,ENT=[];
 function eff(){
   const have=new Set(ALL.map(r=>r[0]+"|"+r[1])),M=new Set(ALL.filter(r=>r[8]).map(r=>r[1]));
@@ -472,7 +479,7 @@ async function saveEntry(){
   $("e-save").disabled=true;
   try{
     if(DB)await DB.doc("entries/"+id).set(doc);
-  }catch(err){m.textContent="Opslaan niet gelukt, probeer het later opnieuw.";$("e-save").disabled=false;return}
+  }catch(err){m.textContent="Opslaan niet gelukt: "+fbErr(err)+".";$("e-save").disabled=false;return}
   $("e-save").disabled=false;
   ENT=ENT.concat([entRow(doc,id)]);
   $("dlg").close();init(sel);
@@ -486,7 +493,7 @@ $("file").onchange=async e=>{const f=e.target.files[0];if(!f)return;
   ALL=mergeDays(ALL,parsed);init(sel);
   if(!DB){$("msg").textContent="Upload geldt alleen in deze sessie (opslag niet beschikbaar)";return}
   try{for(const [d,v] of byDate(parsed))await DB.doc("days/"+d).set({rows:v})}
-  catch(err){$("msg").textContent="Opslaan niet gelukt (inloggen als beheerder is nodig); upload geldt alleen in deze sessie"}
+  catch(err){$("msg").textContent="Opslaan niet gelukt: "+fbErr(err)+". Upload geldt alleen in deze sessie."}
   e.target.value="";
 };
 init();loadDb();
