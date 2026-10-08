@@ -94,6 +94,12 @@ td.rk{width:56px}
 td .d{font-weight:400;font-size:14px}
 td .c{font-weight:700;font-size:14px}
 td.sur{font-size:17px;background:var(--hl)}
+td.mc{line-height:1.15;padding-top:9px;padding-bottom:9px}
+td.mc .cv{display:block;font:700 17px "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
+td.mc .dv{display:block;margin-top:2px;font:700 12px "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;color:var(--dt)}
+td.mc.z .cv{color:var(--line);font-weight:400}
+tr.tot td.mc .dv{color:var(--dt)}
+.ad{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--tq);margin-right:8px;box-shadow:0 0 0 3px var(--mint);vertical-align:1px}
 td.sur .d{font-weight:700}
 th.sur{color:var(--dt)}
 th.sur,td.sur,#btable th:nth-child(3),#btable td:nth-child(3){border-left:2px solid var(--dt);border-right:2px solid var(--dt)}
@@ -179,6 +185,8 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
   tr.tot td:nth-child(2){background:var(--mint) !important}
   tbody tr:hover td:nth-child(2){background:var(--hl)}
   td.sur{font-size:15px}
+  td.mc .cv{font-size:15px}
+  td.mc .dv{font-size:11px}
   .pods{grid-template-columns:1fr;gap:10px;margin-bottom:14px}
   .pc{padding:14px 16px;border-radius:22px}
   .pc h3{font-size:15px;gap:10px;margin-bottom:2px}
@@ -198,7 +206,7 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
 <body data-view="bad">
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.2</div></div></div>
+  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.4</div></div></div>
   <div class="nv" role="group" aria-label="Menu">
     <button class="ni" id="m-bad" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD</button>
     <button class="ni" id="m-bed" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>STREAK</button>
@@ -236,7 +244,7 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
   <section class="card">
     <div class="sub" style="margin-bottom:10px" id="tdesc"></div>
     <div class="tw"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
-    <div class="note">Per cel: stand van de gekozen dag, met het cumulatief tussen haakjes. De stand geldt voor de maand van de gekozen dag en begint op de eerste dag van de volgende maand weer bij nul. Meerdere ritten op één dag zijn opgeteld; totaal km is inclusief elektrisch. Surplus = cumulatief totaal km − (dagnummer in de maand × 25) (bijvoorbeeld 25 km op dag 1 = 0, 60 km op dag 2 = +10).</div>
+    <div class="note">Per cel: het grote getal is het cumulatief sinds het begin van de maand; het groene getal eronder is wat er op de gekozen dag bij kwam. Een stip bij de naam betekent dat die renner op de gekozen dag heeft gereden. De stand geldt voor de maand van de gekozen dag en begint op de eerste dag van de volgende maand weer bij nul. Meerdere ritten op één dag zijn opgeteld; totaal km is inclusief elektrisch. Surplus = cumulatief totaal km − (dagnummer in de maand × 25) (bijvoorbeeld 25 km op dag 1 = 0, 60 km op dag 2 = +10).</div>
   </section>
 </div>
 <div class="bed">
@@ -293,7 +301,7 @@ const fz=v=>Math.round(v)===0?"–":f0(v);
 const nl=n=>{const [i,f]=String(n).split(".");return i.replace(/\B(?=(\d{3})+(?!\d))/g,".")+(f?","+f:"")};
 const f0=v=>nl(Math.round(v));
 const $=id=>document.getElementById(id), esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-let ALL=RAW,bedRows=RAW,rows=RAW,days=[],sel="",sortK="sur",sortD=-1,exportDate="";
+let picked=false,ALL=RAW,bedRows=RAW,rows=RAW,days=[],sel="",sortK="sur",sortD=-1,exportDate="";
 function parseCSV(t){
   const L=t.replace(/^\uFEFF/,"").split(/\r?\n/).filter(Boolean);
   const h=L[0].split(";").map(s=>s.replace(/"/g,"").trim());
@@ -345,7 +353,7 @@ function init(keep){
   const cnt={};rows.forEach(r=>cnt[r[0]]=(cnt[r[0]]||0)+1);
   const mx=Math.max(...Object.values(cnt));
   const yd=yest();
-  sel=days.includes(keep)?keep:([...days].reverse().find(d=>d<=yd)||days[0]);
+  sel=(picked&&days.includes(keep))?keep:([...days].reverse().find(d=>d<=yd)||days[0]);
   $("day").innerHTML=[...days].reverse().map(d=>`<option value="${d}">${dl(d)}</option>`).join("");
   $("meta").textContent=`${dl(days[0])} t/m ${dl(days[days.length-1])} · ${new Set(rows.map(r=>r[1])).size} deelnemers · ${nl(rows.length)} ritten`;
   render();
@@ -359,14 +367,14 @@ function render(){
   $("meta").textContent=`${mnd} · ${dl(ms)} t/m ${dl(sel)} · ${cm.size} deelnemers · ${nl(rows.filter(r=>r[0]>=ms&&r[0]<=sel).length)} ritten`;
   const z={name:"",out:0,in:0,city:0,el:0,tot:0,hm:0};
   const nd=+sel.slice(8);
-  let data=[...cm.values()].map(c=>({name:c.name,d:dm.get(c.name)||z,c,s:c.tot-nd*25}));
+  let data=[...cm.values()].map(c=>({name:c.name,d:dm.get(c.name)||z,c,s:c.tot-nd*25,on:dm.has(c.name)}));
   if($("act").checked)data=data.filter(o=>dm.has(o.name));
   const q=$("q").value.trim().toLowerCase();
   if(q)data=data.filter(o=>o.name.toLowerCase().includes(q));
-  data.sort((a,b)=>sortK==="name"?a.name.localeCompare(b.name):sortK==="sur"?sortD*(a.s-b.s):sortD*((a.d[sortK]-b.d[sortK])||(a.c[sortK]-b.c[sortK])));
+  data.sort((a,b)=>sortK==="name"?a.name.localeCompare(b.name):sortK==="sur"?sortD*(a.s-b.s):sortD*((a.c[sortK]-b.c[sortK])||(a.d[sortK]-b.d[sortK])));
   if(sortK==="name"&&sortD<0)data.reverse();
   const sum=(g,k)=>data.reduce((s,o)=>s+o[g][k],0);
-  const cell=(d,c,k)=>`<td><span class="d">${fz(d[k])}</span> <span class="c">(${fz(c[k])})</span></td>`;
+  const cell=(d,c,k)=>{const cz=Math.round(c[k])===0,dz=Math.round(d[k])===0;return `<td class="mc${cz?" z":""}"><span class="cv">${cz?"·":f0(c[k])}</span>${dz?"":`<span class="dv">+${f0(d[k])}</span>`}</td>`};
   const sumC=k=>[...cm.values()].reduce((s,o)=>s+o[k],0);
   $("tiles").innerHTML=[["users","Deelnemers",nl(cm.size),""],["bike","Road Warrior",f0(sumC("out")),"KM"],["zap","Zwift Warrior",f0(sumC("in")),"KM"],["building","Stadsfietsbeuker",f0(sumC("city")),"KM"],["gauge","Totaal KM",f0(sumC("tot")),"KM"],["mountain","Bergbaas",f0(sumC("hm")),"HM"]]
     .map(([i,l,v,u])=>`<div class="kpi"><div class="ki">${ic(i,24)}</div><div class="kl">${l}</div><div class="kv">${v}${u?`<small>${u}</small>`:""}</div></div>`).join("");
@@ -374,11 +382,11 @@ function render(){
   $("podium").innerHTML=[["out","Road Warrior","KM","bike"],["in","Zwift Warrior","KM","zap"],["hm","Bergbaas (hoogtemeters)","HM","mountain"]].map(([k,l,u,i])=>{
     const top=[...cm.values()].filter(o=>Math.round(o[k])>0).sort((a,b)=>b[k]-a[k]).slice(0,3);
     return `<div class="pc"><h3><span class="pi2">${ic(i,22)}</span>${l}</h3>`+(top.length?`<ol>`+top.map((o,j)=>`<li>${rb(j)}<span class="nm">${esc(o.name)}</span><span class="v">${f0(o[k])}<small>${u}</small></span></li>`).join("")+`</ol>`:`<div class="sub" style="padding:10px 0">Nog geen ritten</div>`)+`</div>`}).join("");
-  $("tdesc").textContent=`${dl(sel)} (cumulatief ${dl(ms)} t/m ${dl(sel)} tussen haakjes)`;
+  $("tdesc").textContent=`Totaal t/m ${dl(sel)} · groen = erbij op ${dl(sel)} · stip = reed op ${dl(sel)}`;
   const ar=k=>k===sortK?(sortD<0?" ↓":" ↑"):"";
   $("thead").innerHTML=`<tr><th>#</th><th data-k="name" class="${sortK==="name"?"on":""}">Naam${ar("name")}</th>`+`<th data-k="sur" class="sur ${sortK==="sur"?"on":""}">Surplus${ar("sur")}</th>`+COLS.map(([k,l])=>`<th data-k="${k}" class="${sortK===k?"on":""}">${l}${ar(k)}</th>`).join("")+`</tr>`;
-  $("tbody").innerHTML=data.length?`<tr class="tot"><td></td><td>${q||$("act").checked?"Selectie":"Totaal"}</td>`+sc(data.reduce((s,o)=>s+o.s,0))+COLS.map(([k])=>`<td><span class="d">${fz(sum("d",k))}</span> <span class="c">(${fz(sum("c",k))})</span></td>`).join("")+`</tr>`+
-    data.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${esc(o.name)}</td>`+sc(o.s)+COLS.map(([k])=>cell(o.d,o.c,k)).join("")+`</tr>`).join("")
+  $("tbody").innerHTML=data.length?`<tr class="tot"><td></td><td>${q||$("act").checked?"Selectie":"Totaal"}</td>`+sc(data.reduce((s,o)=>s+o.s,0))+COLS.map(([k])=>cell({[k]:sum("d",k)},{[k]:sum("c",k)},k)).join("")+`</tr>`+
+    data.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${o.on?`<span class="ad" title="Reed op deze dag"></span>`:""}${esc(o.name)}</td>`+sc(o.s)+COLS.map(([k])=>cell(o.d,o.c,k)).join("")+`</tr>`).join("")
     :`<tr><td colspan="9" class="empty">Geen resultaten.</td></tr>`;
   document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(k===sortK)sortD*=-1;else{sortK=k;sortD=k==="name"?1:-1}render()});
   chart();renderBed();
@@ -397,11 +405,11 @@ function chart(){
   $("chart").innerHTML=s;
   {const cw=$("chart").parentElement,sr=$("chart").querySelector('rect[data-d="'+sel+'"]');
    if(sr&&cw.scrollWidth>cw.clientWidth)cw.scrollLeft=sr.getBoundingClientRect().left-$("chart").getBoundingClientRect().left-cw.clientWidth/2}
-  document.querySelectorAll("#chart rect[data-d]").forEach(r=>r.onclick=()=>{sel=r.dataset.d;render()});
+  document.querySelectorAll("#chart rect[data-d]").forEach(r=>r.onclick=()=>{picked=true;sel=r.dataset.d;render()});
 }
-$("day").onchange=e=>{sel=e.target.value;render()};
-$("prev").onclick=()=>{sel=days[days.indexOf(sel)-1];render()};
-$("next").onclick=()=>{sel=days[days.indexOf(sel)+1];render()};
+$("day").onchange=e=>{picked=true;sel=e.target.value;render()};
+$("prev").onclick=()=>{picked=true;sel=days[days.indexOf(sel)-1];render()};
+$("next").onclick=()=>{picked=true;sel=days[days.indexOf(sel)+1];render()};
 $("add").onclick=openAdd;$("e-today").onclick=()=>setDay(today());$("e-yest").onclick=()=>setDay(yest());$("e-name").onchange=byName;$("e-num").oninput=byNum;$("e-date").onchange=elist;$("e-cancel").onclick=()=>$("dlg").close();$("e-save").onclick=saveEntry;
 ["out","in","city","el"].forEach(k=>$("e-"+k).oninput=etot);
 $("m-bad").onclick=()=>setView("bad");$("m-bed").onclick=()=>setView("bed");$("q").oninput=render;$("lid").onchange=()=>init(sel);$("act").onchange=render;
