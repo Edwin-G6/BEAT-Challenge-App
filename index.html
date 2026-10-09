@@ -214,7 +214,7 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
 <body data-view="bad">
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.6</div></div></div>
+  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.7</div></div></div>
   <div class="nv" role="group" aria-label="Menu">
     <button class="ni" id="m-bad" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD</button>
     <button class="ni" id="m-bed" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>STREAK</button>
@@ -348,9 +348,9 @@ function renderBed(){
   $("bhead").innerHTML=`<tr><th>#</th><th data-b="name" class="${on("name")}">Naam${ar("name")}</th><th data-b="max" class="${on("max")}">Max streak${ar("max")}</th><th data-b="mk" class="${on("mk")}">KM max streak${ar("mk")}</th><th data-b="cur" class="${on("cur")}">Huidige streak${ar("cur")}</th><th data-b="ck" class="${on("ck")}">KM huidige streak${ar("ck")}</th></tr>`;
   const z=v=>v?nl(v):"–",zk=v=>Math.round(v)?nl(Math.round(v)):"–";
   $("bbody").innerHTML=L.length?L.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${esc(o.name)}</td><td><span class="c">${z(o.max)}</span></td><td>${zk(o.mk)}</td><td><span class="c">${z(o.cur)}</span></td><td>${zk(o.ck)}</td></tr>`).join(""):`<tr><td colspan="6" class="empty">Geen resultaten.</td></tr>`;
-  document.querySelectorAll("th[data-b]").forEach(th=>th.onclick=()=>{const k=th.dataset.b;if(k===bsK)bsD*=-1;else{bsK=k;bsD=k==="name"?1:-1}renderBed()});
+  document.querySelectorAll("th[data-b]").forEach(th=>th.onclick=()=>{const k=th.dataset.b;track("Tabel gesorteerd",{tabel:"STREAK",kolom:k});if(k===bsK)bsD*=-1;else{bsK=k;bsD=k==="name"?1:-1}renderBed()});
 }
-function setView(v){document.body.dataset.view=v;$("m-bad").setAttribute("aria-pressed",v==="bad");$("m-bed").setAttribute("aria-pressed",v==="bed")}
+function setView(v){if(document.body.dataset.view!==v)track("Tab bekeken",{tab:v==="bad"?"BAD":"STREAK"});document.body.dataset.view=v;$("m-bad").setAttribute("aria-pressed",v==="bad");$("m-bed").setAttribute("aria-pressed",v==="bed")}
 function agg(list){const m=new Map();for(const r of list){let o=m.get(r[1]);if(!o){o={name:r[1],out:0,in:0,city:0,el:0,tot:0,hm:0};m.set(r[1],o)}
   o.out+=r[2];o.in+=r[3];o.city+=r[4];o.el+=r[5];o.tot+=r[6];o.hm+=r[7]}return m}
 function dl(d){return new Date(d+"T12:00:00").toLocaleDateString("nl-NL",{weekday:"short",day:"numeric",month:"short"})}
@@ -396,7 +396,7 @@ function render(){
   $("tbody").innerHTML=data.length?`<tr class="tot"><td></td><td>${q||$("act").checked?"Selectie":"Totaal"}</td>`+sc(data.reduce((s,o)=>s+o.s,0))+COLS.map(([k])=>cell({[k]:sum("d",k)},{[k]:sum("c",k)},k)).join("")+`</tr>`+
     data.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${o.on?`<span class="ad" title="Reed op deze dag"></span>`:""}${esc(o.name)}</td>`+sc(o.s)+COLS.map(([k])=>cell(o.d,o.c,k)).join("")+`</tr>`).join("")
     :`<tr><td colspan="9" class="empty">Geen resultaten.</td></tr>`;
-  document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(k===sortK)sortD*=-1;else{sortK=k;sortD=k==="name"?1:-1}render()});
+  document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;track("Tabel gesorteerd",{tabel:"BAD",kolom:k});if(k===sortK)sortD*=-1;else{sortK=k;sortD=k==="name"?1:-1}render()});
   chart();renderBed();
   const i=days.indexOf(sel);$("prev").disabled=i<=0;$("next").disabled=i>=days.length-1;
 }
@@ -413,15 +413,18 @@ function chart(){
   $("chart").innerHTML=s;
   {const cw=$("chart").parentElement,sr=$("chart").querySelector('rect[data-d="'+sel+'"]');
    if(sr&&cw.scrollWidth>cw.clientWidth)cw.scrollLeft=sr.getBoundingClientRect().left-$("chart").getBoundingClientRect().left-cw.clientWidth/2}
-  document.querySelectorAll("#chart rect[data-d]").forEach(r=>r.onclick=()=>{picked=true;sel=r.dataset.d;render()});
+  document.querySelectorAll("#chart rect[data-d]").forEach(r=>r.onclick=()=>{track("Dag gewijzigd",{via:"grafiek"});picked=true;sel=r.dataset.d;render()});
 }
-$("day").onchange=e=>{picked=true;sel=e.target.value;render()};
-$("prev").onclick=()=>{picked=true;sel=days[days.indexOf(sel)-1];render()};
-$("next").onclick=()=>{picked=true;sel=days[days.indexOf(sel)+1];render()};
-$("add").onclick=openAdd;$("e-today").onclick=()=>setDay(today());$("e-yest").onclick=()=>setDay(yest());$("e-name").onchange=byName;$("e-num").oninput=byNum;$("e-date").onchange=elist;$("e-cancel").onclick=()=>$("dlg").close();$("e-save").onclick=saveEntry;
+$("day").onchange=e=>{track("Dag gewijzigd",{via:"keuzelijst"});picked=true;sel=e.target.value;render()};
+$("prev").onclick=()=>{track("Dag gewijzigd",{via:"pijltjes"});picked=true;sel=days[days.indexOf(sel)-1];render()};
+$("next").onclick=()=>{track("Dag gewijzigd",{via:"pijltjes"});picked=true;sel=days[days.indexOf(sel)+1];render()};
+$("add").onclick=openAdd;$("e-today").onclick=()=>setDay(today());$("e-yest").onclick=()=>setDay(yest());$("e-name").onchange=byName;$("e-num").oninput=byNum;$("e-date").onchange=elist;$("e-cancel").onclick=()=>{track("Rit invoeren geannuleerd");$("dlg").close()};$("e-save").onclick=saveEntry;
 ["out","in","city","el"].forEach(k=>$("e-"+k).oninput=etot);
-$("m-bad").onclick=()=>setView("bad");$("m-bed").onclick=()=>setView("bed");$("q").oninput=render;$("lid").onchange=()=>init(sel);$("act").onchange=render;
+$("m-bad").onclick=()=>setView("bad");$("m-bed").onclick=()=>setView("bed");$("q").oninput=()=>{if(!_sq&&$("q").value){_sq=true;track("Zoeken gebruikt")}render()};$("lid").onchange=()=>{track("Filter alleen BEAT leden",{stand:$("lid").checked?"aan":"uit"});init(sel)};$("act").onchange=()=>{track("Filter alleen actief",{stand:$("act").checked?"aan":"uit"});render()};
 $("load").onclick=()=>$("file").click();
+/* Plausible-gebeurtenissen. Er gaan nooit namen, rugnummers of zoektermen mee. */
+const track=(n,pr)=>{try{if(window.plausible)window.plausible(n,pr?{props:pr}:undefined)}catch(e){}};
+let _sq=false;
 const fbErr=e=>{const c=(e&&e.code)||"",m=(e&&e.message)||String(e);
   if(/geannuleerd/i.test(m))return"inloggen geannuleerd";
   if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c))return"wachtwoord of e-mailadres klopt niet ("+c+")";
@@ -463,6 +466,7 @@ function byNum(){
 function byName(){const v=$("e-name").value;$("e-num").value=rugnr(v);$("e-nh").textContent="";elist()}
 function setDay(s){$("e-date").value=s<BSTART?BSTART:s;elist()}
 function openAdd(){
+  track("Rit invoeren geopend");
   const names=[...new Set(bedRows.map(r=>r[1]))].sort((a,b)=>a.localeCompare(b));
   $("e-name").innerHTML='<option value="">Kies je naam…</option>'+names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join("");
   const d=$("e-date");d.min=BSTART;d.max=today();d.value=today();
@@ -498,6 +502,7 @@ async function saveEntry(){
   }catch(err){m.textContent="Opslaan niet gelukt: "+fbErr(err)+".";$("e-save").disabled=false;return}
   $("e-save").disabled=false;
   ENT=ENT.concat([entRow(doc,id)]);
+  track("Rit opgeslagen",{dag:date===today()?"vandaag":date===yest()?"gisteren":"eerder"});
   $("dlg").close();init(sel);
   $("msg").textContent=`Rit opgeslagen: ${name}, ${date}`+(DB?"":" (alleen in deze sessie)");
   setTimeout(()=>{$("msg").textContent=""},6000);
