@@ -27,6 +27,8 @@ body[data-view="bed"] .bad,body[data-view="bad"] .bed{display:none !important}
 .bt{font-weight:800;font-style:italic;font-size:19px;line-height:1.02;letter-spacing:-.03em;color:var(--dt);text-transform:uppercase}
 .beta{margin-top:5px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);font-style:normal}
 .nv,.ac{display:flex;flex-direction:column;gap:6px}
+/* Knop "Nieuwe export laden" is verborgen maar werkt nog: verwijder de volgende regel om hem weer te tonen */
+#load{display:none !important}
 .sg{font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--mute);padding:16px 10px 4px;text-transform:uppercase}
 .ni{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:transparent;color:var(--sl);border:1px solid transparent;border-radius:14px;padding:12px 14px;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
 .ni:hover:not(:disabled){background:var(--hl);filter:none}
@@ -206,7 +208,7 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
 <body data-view="bad">
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.4</div></div></div>
+  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.5</div></div></div>
   <div class="nv" role="group" aria-label="Menu">
     <button class="ni" id="m-bad" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD</button>
     <button class="ni" id="m-bed" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>STREAK</button>
