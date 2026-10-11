@@ -210,10 +210,8 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
 .gr{color:var(--dt)}
 .so{opacity:.45;font-size:10px;letter-spacing:0}
 th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
-.tb{background:#0a1214;border-radius:28px;padding:28px 32px;margin-bottom:18px;box-shadow:var(--sh)}
-.tb h1{color:#fff;font-size:34px}
+.tb{padding:24px 28px}
 .tb h1 em{font-style:inherit;color:var(--dt)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tb{background:#050a0b;border:1px solid var(--line)}}
 .soon{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:64px 20px}
 .soon .ki{margin:0}
 .soon h2{font-size:30px}
@@ -232,7 +230,18 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .yb .zc{box-shadow:none;color:var(--ink)}
 .yb .zc h3{color:var(--yh)}
 .zo .yb{margin-bottom:0}
-@media (max-width:700px){.zg{grid-template-columns:1fr}.tb{padding:22px 20px}.tb h1{font-size:26px}.soon{padding:44px 16px}}
+.zg3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.zg3 .zc{padding:16px 18px}
+.zg3 .zc h3{margin-bottom:8px}
+.mailbox{display:flex;flex-wrap:wrap;align-items:center;gap:16px 18px;margin-top:26px;background:var(--hl);border:1px solid var(--line);border-radius:22px;padding:18px 22px}
+.mailbox .ki{margin:0;flex:none;width:48px;height:48px;border-radius:14px}
+.mailbox .mt{flex:1 1 260px;display:flex;flex-direction:column;gap:3px;font-size:14.5px;line-height:1.45}
+.mailbox .mt b{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.mailbox .mp{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:11px 18px;font:700 13px "JetBrains Mono",ui-monospace,monospace;color:var(--dt);text-decoration:none;box-shadow:var(--sh)}
+.mailbox .mp:hover{border-color:var(--tq)}
+@media (max-width:1000px){.zg3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.zg3{grid-template-columns:1fr}}
+@media (max-width:700px){.zg{grid-template-columns:1fr}.tb{padding:20px 18px}.tb h1{font-size:26px}.soon{padding:44px 16px}}
 @media (max-width:640px){.nv .ni{font-size:10px;padding:10px 2px;letter-spacing:.03em;line-height:1.15}}
 </style>
 <!-- Omgeving: staging = adres bevat /staging/ -->
@@ -254,7 +263,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <script>if(window.IS_STAGING){var b=document.createElement("div");b.className="stg";b.textContent="STAGING – testomgeving";document.body.appendChild(b);document.addEventListener("DOMContentLoaded",function(){var bl=document.querySelector(".beta");if(bl)bl.textContent+=" · STAGING"})}</script>
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.9</div></div></div>
+  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.10</div></div></div>
   <div class="nv" role="group" aria-label="Menu">
     <button class="ni" id="m-bad" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD</button>
     <button class="ni" id="m-bed" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>STREAK</button>
@@ -311,14 +320,14 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   </section>
 </div>
 <div class="hof">
-  <section class="tb"><h1><em>Hall</em> of Fame</h1></section>
+  <section class="card tb"><h1>Hall of <em>Fame</em></h1></section>
   <section class="card soon">
     <div class="ki"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>
     <h2>Coming soon</h2>
   </section>
 </div>
 <div class="zo">
-  <section class="tb"><h1>Zo werkt het: de <em>BEAT Challenges</em></h1></section>
+  <section class="card tb"><h1>Zo werkt het: de <em>BEAT Challenges</em></h1></section>
   <div class="yb row"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div><b>Let op: dit is een bètaversie.</b> De BEAT Challenge app is nieuw en nog volop in ontwikkeling. Merk je problemen of werkt iets niet goed? Meld het dan (graag zelf!) in het Clubhuis, zodat we het kunnen oplossen.</div></div>
 
   <div class="zl"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>De twee klassementen</div>
@@ -327,14 +336,23 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
       <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD: BEAT Average Day Ranking</h3>
       <p>Dit is de doorlopende maandchallenge. Hij loopt van de eerste tot en met de laatste dag van iedere maand en begint op de 1e weer opnieuw. Het idee is dat je gedurende de maand meer dan gemiddeld <b>25 kilometer per dag</b> fietst. Rustdagen zijn toegestaan.</p>
       <p>Je <b>surplus</b> geeft aan of je boven of onder die gemiddeld 25 km per dag zit. Het surplus wordt berekend als je totaal aantal kilometers min 25 km per verstreken dag. Wie het meeste surplus heeft, staat bovenaan.</p>
-      <p>Daarnaast zijn er doorlopende uitdagingen zoals de <b>BEAT Road Warrior</b> (meeste buiten kilometers), de <b>BEAT Zwift Warrior</b> (meeste binnen kilometers), <b>BEAT Stadsfietsbeuker</b> (meeste stadsfietskilometers), de <b>eBike</b> (je raadt het al, de meeste eBike kilometers) en de <b>BEAT Bergbaas</b> (meeste hoogtemeters). De winnaars komen in de Hall of Fame.</p>
     </div>
     <div class="zc">
       <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>STREAK: Eeuwige roem</h3>
-      <p>De streak loopt altijd door en stopt niet aan het einde van de maand. Hij telt vanaf <b>1 september 2026</b>. Je ziet je huidige en je langste streak, met de bijbehorende kilometers.</p>
+      <p>De streak loopt altijd door en stopt niet aan het einde van de maand. Je ziet je huidige en je langste streak, met de bijbehorende kilometers.</p>
       <p>Een dag met <b>25 km of meer</b> telt mee voor je streak. Er zijn <b>geen rustdagen</b>: mis je een dag, dan begint je huidige streak weer bij nul.</p>
       <p>Heb je meer dan 100 dagen op rij? Dan zit je in de <b>100 dagen plus club</b>!</p>
     </div>
+  </div>
+
+  <div class="zl"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>Doorlopende uitdagingen</div>
+  <div class="zg3">
+    <div class="zc"><h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/></svg>BEAT Road Warrior</h3><p>Meeste buiten kilometers.</p></div>
+    <div class="zc"><h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>BEAT Zwift Warrior</h3><p>Meeste binnen kilometers.</p></div>
+    <div class="zc"><h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01"/></svg>BEAT Stadsfietsbeuker</h3><p>Meeste stadsfietskilometers.</p></div>
+    <div class="zc"><h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 7h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><path d="M6 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h1"/><path d="m11 7-3 5h4l-3 5"/><path d="M22 11v2"/></svg>eBike</h3><p>Je raadt het al: de meeste eBike kilometers.</p></div>
+    <div class="zc"><h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>BEAT Bergbaas</h3><p>Meeste hoogtemeters.</p></div>
+    <div class="zc"><h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>Hall of Fame</h3><p>De winnaars komen in de Hall of Fame.</p></div>
   </div>
 
   <div class="zl"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>De aanvullende basisspelregels</div>
@@ -357,6 +375,12 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
         <p>De jury van BEAT beslist bindend over alle voorkomende vraagstukken en onduidelijkheden. De jury is te allen tijde gerechtigd om deelnemers bij twijfel of onregelmatigheden uit de strijd te nemen of te diskwalificeren, zonder dat daar een verdere onderbouwing voor nodig is.</p>
       </div>
     </div>
+  </div>
+
+  <div class="mailbox">
+    <div class="ki"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
+    <div class="mt"><b>Vragen of opmerkingen?</b><span>Opmerkingen over de challenge of over de app kunnen worden gesteld via de mail aan:</span></div>
+    <a class="mp" href="mailto:edwin@beatcyclingclub.com"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>edwin@beatcyclingclub.com</a>
   </div>
 </div>
 </main>
