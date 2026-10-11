@@ -203,18 +203,29 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
   .qd button{min-height:40px;flex:1}
   .ba button{flex:1}
 }
+
+.stg{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:9999;background:#f59e0b;color:#1a1a1a;font:800 12px/1 Outfit,system-ui,sans-serif;letter-spacing:.04em;padding:9px 16px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none}
 </style>
-<!-- Privacy-friendly analytics by Plausible -->
-<script async src="https://plausible.io/js/pa-7S4BVQN2dziziJLYpUKIp.js"></script>
+<!-- Omgeving: staging = adres bevat /staging/ -->
 <script>
-  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
-  plausible.init()
+  window.IS_STAGING=/\/staging(\/|$)/i.test(location.pathname);
+  if(window.IS_STAGING){
+    document.title="STAGING – "+document.title;
+    var m=document.createElement("meta");m.name="robots";m.content="noindex,nofollow";document.head.appendChild(m);
+  }else{
+    /* Privacy-friendly analytics by Plausible (alleen op live) */
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)};
+    plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    var ps=document.createElement("script");ps.async=true;ps.src="https://plausible.io/js/pa-7S4BVQN2dziziJLYpUKIp.js";document.head.appendChild(ps);
+    plausible.init();
+  }
 </script>
 </head>
 <body data-view="bad">
+<script>if(window.IS_STAGING){var b=document.createElement("div");b.className="stg";b.textContent="STAGING – testomgeving";document.body.appendChild(b);document.addEventListener("DOMContentLoaded",function(){var bl=document.querySelector(".beta");if(bl)bl.textContent+=" · STAGING"})}</script>
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.7</div></div></div>
+  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.8</div></div></div>
   <div class="nv" role="group" aria-label="Menu">
     <button class="ni" id="m-bad" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD</button>
     <button class="ni" id="m-bed" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>STREAK</button>
@@ -523,14 +534,23 @@ init();loadDb();
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import {getAuth,signInAnonymously,signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import {getFirestore,collection,getDocs,doc,setDoc,deleteDoc} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-const app=initializeApp({
+const CFG_LIVE={
   apiKey:"AIzaSyDMFw-ijOJ7NtK0llFuk0_fAcb4LOvAkS0",
   authDomain:"beat-challenge-app.firebaseapp.com",
   projectId:"beat-challenge-app",
   storageBucket:"beat-challenge-app.firebasestorage.app",
   messagingSenderId:"130884755647",
   appId:"1:130884755647:web:15e479b46efbe5990da60a"
-});
+};
+const CFG_STAGING={
+  apiKey:"AIzaSyB70pn34TEgsSbNuvdychxEthVEZlA-X0I",
+  authDomain:"beat-challenge-staging.firebaseapp.com",
+  projectId:"beat-challenge-staging",
+  storageBucket:"beat-challenge-staging.firebasestorage.app",
+  messagingSenderId:"552411211386",
+  appId:"1:552411211386:web:8b1a8608d5914a7afafdc3"
+};
+const app=initializeApp(window.IS_STAGING?CFG_STAGING:CFG_LIVE);
 const auth=getAuth(app),db=getFirestore(app);
 const ensureAuth=async()=>{if(!auth.currentUser)await signInAnonymously(auth)};
 const ensureAdmin=async()=>{
