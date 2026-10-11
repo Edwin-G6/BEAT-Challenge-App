@@ -145,16 +145,14 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
 .en{font-size:12px;color:var(--mute)}
 @media (max-width:900px){
   .app{display:block}
-  .side{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 12px;border-right:0;border-bottom:1px solid var(--line);overflow:visible}
+  .side{position:sticky;top:0;z-index:40;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 12px;border-right:0;border-bottom:1px solid var(--line);overflow:visible}
   .brand{order:1;flex:1 1 auto;border:0;margin:0;padding:0}
   .bl{width:40px;height:40px;border-radius:12px;font-size:20px}
   .bt{font-size:16px}
   .sg{display:none}
   .ac{display:contents}
-  .ni svg{display:none}
-  #add{order:2;flex:none;width:auto;justify-content:center;background:var(--dt);color:#fff;border-radius:999px;padding:10px 18px;font-size:12px}
-  .nv{order:3;flex:1 1 100%;flex-direction:row;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px}
-  .nv .ni{flex:1;justify-content:center;border-radius:999px;padding:10px;font-size:12px}
+  #add{order:2;flex:none;width:46px;height:46px;min-height:46px;padding:0;gap:0;justify-content:center;background:var(--dt);color:#fff;border-radius:16px;font-size:0;box-shadow:0 6px 14px rgba(42,122,116,.3)}
+  #add svg{display:block;width:24px;height:24px}
   .tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
   .pods{grid-template-columns:1fr}
   #load{order:4;flex:1 1 100%;justify-content:center;font-size:11px;padding:6px 10px;min-height:36px;border:1px dashed var(--line);border-radius:999px}
@@ -242,7 +240,19 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 @media (max-width:1000px){.zg3{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:560px){.zg3{grid-template-columns:1fr}}
 @media (max-width:700px){.zg{grid-template-columns:1fr}.tb{padding:20px 18px}.tb h1{font-size:26px}.soon{padding:44px 16px}}
-@media (max-width:640px){.nv .ni{font-size:10px;padding:10px 2px;letter-spacing:.03em;line-height:1.15}}
+.burger,.tabbar{display:none}
+@media (max-width:900px){
+  .burger{display:grid;place-items:center;order:3;flex:none;width:46px;height:46px;min-height:46px;padding:0;border-radius:16px;background:var(--card);color:var(--ink);border:1px solid var(--line)}
+  .nv{display:none;position:absolute;top:calc(100% + 6px);left:12px;right:12px;z-index:60;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:8px;gap:4px;box-shadow:0 18px 40px rgba(18,40,60,.2)}
+  body.mo .nv{display:flex}
+  .nv .ni{padding:14px;font-size:13px}
+  .tabbar{display:grid;grid-template-columns:1fr 1fr 78px 1fr 1fr;align-items:center;position:fixed;left:0;right:0;bottom:0;z-index:45;background:var(--card);border-top:1px solid var(--line);padding:6px 6px calc(8px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 20px rgba(18,40,60,.07)}
+  .tabbar .ti{background:transparent;color:var(--mute);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px 1px;min-height:52px;border-radius:12px;font-size:9.5px;letter-spacing:.02em;text-transform:uppercase;font-weight:800;line-height:1.1;text-align:center}
+  .tabbar .ti[aria-pressed=true]{color:var(--dt)}
+  .tabbar .fab{justify-self:center;width:60px;height:60px;min-height:60px;border-radius:50%;padding:0;transform:translateY(-18px);background:var(--dt);color:#fff;border:4px solid var(--card);box-shadow:0 8px 20px rgba(42,122,116,.4);display:grid;place-items:center}
+  .main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+  .stg{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+}
 </style>
 <!-- Omgeving: staging = adres bevat /staging/ -->
 <script>
@@ -263,8 +273,9 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <script>if(window.IS_STAGING){var b=document.createElement("div");b.className="stg";b.textContent="STAGING – testomgeving";document.body.appendChild(b);document.addEventListener("DOMContentLoaded",function(){var bl=document.querySelector(".beta");if(bl)bl.textContent+=" · STAGING"})}</script>
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.10</div></div></div>
-  <div class="nv" role="group" aria-label="Menu">
+  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.11</div></div></div>
+  <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <div class="nv" id="menu" role="group" aria-label="Menu">
     <button class="ni" id="m-bad" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD</button>
     <button class="ni" id="m-bed" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>STREAK</button>
     <button class="ni" id="m-hof" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>Hall of Fame</button>
@@ -328,7 +339,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 </div>
 <div class="zo">
   <section class="card tb"><h1>Zo werkt het: de <em>BEAT Challenges</em></h1></section>
-  <div class="yb row"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div><b>Let op: dit is een bètaversie.</b> De BEAT Challenge app is nieuw en nog volop in ontwikkeling. Merk je problemen of werkt iets niet goed? Meld het dan (graag zelf!) in het Clubhuis, zodat we het kunnen oplossen.</div></div>
+  <div class="yb row"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div><b>Let op: dit is een bètaversie.</b> De BEAT Challenge app is nieuw en nog volop in ontwikkeling. Merk je problemen of werkt iets niet goed? Meld het dan (graag zelfs!) in het Clubhuis, zodat we het kunnen oplossen.</div></div>
 
   <div class="zl"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>De twee klassementen</div>
   <div class="zg">
@@ -379,12 +390,19 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 
   <div class="mailbox">
     <div class="ki"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
-    <div class="mt"><b>Vragen of opmerkingen?</b><span>Opmerkingen over de challenge of over de app kunnen worden gesteld via de mail aan:</span></div>
+    <div class="mt"><b>Vragen of opmerkingen?</b><span>Opmerkingen over de challenge of over de app kunnen worden gesteld in het BEAT Online Clubhuis of via de mail aan:</span></div>
     <a class="mp" href="mailto:edwin@beatcyclingclub.com"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>edwin@beatcyclingclub.com</a>
   </div>
 </div>
 </main>
 </div>
+<nav class="tabbar" aria-label="Hoofdmenu">
+  <button class="ti" id="t-bad" aria-pressed="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD</button>
+  <button class="ti" id="t-bed" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>STREAK</button>
+  <button class="fab" id="t-add" aria-label="Rit invoeren"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+  <button class="ti" id="t-hof" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>Hall of Fame</button>
+  <button class="ti" id="t-zo" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Zo werkt het</button>
+</nav>
 <dialog id="dlg">
   <div class="dh">Rit invoeren</div>
   <div class="db">
@@ -466,7 +484,8 @@ function renderBed(){
   document.querySelectorAll("th[data-b]").forEach(th=>th.onclick=()=>{const k=th.dataset.b;track("Tabel gesorteerd",{tabel:"STREAK",kolom:k});if(k===bsK)bsD*=-1;else{bsK=k;bsD=k==="name"?1:-1}renderBed()});
 }
 const VIEWS={bad:["m-bad","BAD"],bed:["m-bed","STREAK"],hof:["m-hof","Hall of Fame"],zo:["m-zo","Zo werkt het"]};
-function setView(v){if(document.body.dataset.view!==v){track("Tab bekeken",{tab:VIEWS[v][1]});try{window.scrollTo(0,0)}catch(e){}}document.body.dataset.view=v;for(const k in VIEWS)$(VIEWS[k][0]).setAttribute("aria-pressed",k===v)}
+function toggleMenu(f){const o=f===undefined?!document.body.classList.contains("mo"):f;document.body.classList.toggle("mo",o);const b=$("burger");if(b)b.setAttribute("aria-expanded",o)}
+function setView(v){if(document.body.dataset.view!==v){track("Tab bekeken",{tab:VIEWS[v][1]});try{window.scrollTo(0,0)}catch(e){}}document.body.dataset.view=v;for(const k in VIEWS){const on=k===v;$(VIEWS[k][0]).setAttribute("aria-pressed",on);const t=$("t-"+k);if(t)t.setAttribute("aria-pressed",on)}toggleMenu(false)}
 function agg(list){const m=new Map();for(const r of list){let o=m.get(r[1]);if(!o){o={name:r[1],out:0,in:0,city:0,el:0,tot:0,hm:0};m.set(r[1],o)}
   o.out+=r[2];o.in+=r[3];o.city+=r[4];o.el+=r[5];o.tot+=r[6];o.hm+=r[7]}return m}
 function dl(d){return new Date(d+"T12:00:00").toLocaleDateString("nl-NL",{weekday:"short",day:"numeric",month:"short"})}
@@ -536,7 +555,7 @@ $("prev").onclick=()=>{track("Dag gewijzigd",{via:"pijltjes"});picked=true;sel=d
 $("next").onclick=()=>{track("Dag gewijzigd",{via:"pijltjes"});picked=true;sel=days[days.indexOf(sel)+1];render()};
 $("add").onclick=openAdd;$("e-today").onclick=()=>setDay(today());$("e-yest").onclick=()=>setDay(yest());$("e-name").onchange=byName;$("e-num").oninput=byNum;$("e-date").onchange=elist;$("e-cancel").onclick=()=>{track("Rit invoeren geannuleerd");$("dlg").close()};$("e-save").onclick=saveEntry;
 ["out","in","city","el"].forEach(k=>$("e-"+k).oninput=etot);
-$("m-bad").onclick=()=>setView("bad");$("m-bed").onclick=()=>setView("bed");$("m-hof").onclick=()=>setView("hof");$("m-zo").onclick=()=>setView("zo");$("q").oninput=()=>{if(!_sq&&$("q").value){_sq=true;track("Zoeken gebruikt")}render()};$("lid").onchange=()=>{track("Filter alleen BEAT leden",{stand:$("lid").checked?"aan":"uit"});init(sel)};$("act").onchange=()=>{track("Filter alleen actief",{stand:$("act").checked?"aan":"uit"});render()};
+$("m-bad").onclick=()=>setView("bad");$("m-bed").onclick=()=>setView("bed");$("m-hof").onclick=()=>setView("hof");$("m-zo").onclick=()=>setView("zo");for(const k in VIEWS){const t=$("t-"+k);if(t)t.onclick=()=>setView(k)}$("t-add").onclick=()=>$("add").click();$("burger").onclick=e=>{e.stopPropagation();toggleMenu()};document.addEventListener("click",e=>{if(document.body.classList.contains("mo")&&!e.target.closest(".nv"))toggleMenu(false)});document.addEventListener("keydown",e=>{if(e.key==="Escape")toggleMenu(false)});$("q").oninput=()=>{if(!_sq&&$("q").value){_sq=true;track("Zoeken gebruikt")}render()};$("lid").onchange=()=>{track("Filter alleen BEAT leden",{stand:$("lid").checked?"aan":"uit"});init(sel)};$("act").onchange=()=>{track("Filter alleen actief",{stand:$("act").checked?"aan":"uit"});render()};
 $("load").onclick=()=>$("file").click();
 /* Plausible-gebeurtenissen. Er gaan nooit namen, rugnummers of zoektermen mee. */
 const track=(n,pr)=>{try{if(window.plausible)window.plausible(n,pr?{props:pr}:undefined)}catch(e){}};
