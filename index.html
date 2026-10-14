@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>BEAT Challenge App</title>
+<title>BEAT Every Day</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%232a706a'/%3E%3Ccircle%20cx='32'%20cy='32'%20r='26'%20fill='none'%20stroke='%2355bdb6'%20stroke-width='3'%20opacity='.55'/%3E%3Cg%20fill='none'%20stroke='%2355bdb6'%20stroke-width='4'%20stroke-linecap='round'%3E%3Cpath%20d='M6%2024h9M4%2033h9M8%2042h8'/%3E%3C/g%3E%3Cg%20transform='translate%288.5%200%29%20skewX%28-12%29'%20fill='none'%20stroke='%23fff'%20stroke-width='7.5'%20stroke-linejoin='round'%20stroke-linecap='round'%3E%3Cpath%20d='M24%2017v30M24%2017h12.5a7.5%207.5%200%200%201%200%2015H24m0%200h14a7.5%207.5%200%200%201%200%2015H24'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,400;0,600;0,800;0,900;1,800;1,900&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap">
 <style>
@@ -213,6 +213,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .soon{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:64px 20px}
 .soon .ki{margin:0}
 .soon h2{font-size:30px}
+.soon .soonsub{margin:0;font-size:15px;font-weight:600;color:var(--sl)}
 .zl{display:flex;align-items:center;gap:8px;margin:26px 4px 12px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
 .zl svg{color:var(--tq)}
 .zg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
@@ -273,7 +274,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <script>if(window.IS_STAGING){var b=document.createElement("div");b.className="stg";b.textContent="STAGING – testomgeving";document.body.appendChild(b);document.addEventListener("DOMContentLoaded",function(){var bl=document.querySelector(".beta");if(bl)bl.textContent+=" · STAGING"})}</script>
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Challenge App</div><div class="beta">BETA versie 1.11</div></div></div>
+  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 1.12</div></div></div>
   <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <div class="nv" id="menu" role="group" aria-label="Menu">
     <button class="ni" id="m-bad" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD</button>
@@ -335,11 +336,12 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   <section class="card soon">
     <div class="ki"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>
     <h2>Coming soon</h2>
+    <p class="soonsub">Ja, ja, ik zei soon. Echt. Blijf het vooral checken 😝</p>
   </section>
 </div>
 <div class="zo">
   <section class="card tb"><h1>Zo werkt het: de <em>BEAT Challenges</em></h1></section>
-  <div class="yb row"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div><b>Let op: dit is een bètaversie.</b> De BEAT Challenge app is nieuw en nog volop in ontwikkeling. Merk je problemen of werkt iets niet goed? Meld het dan (graag zelfs!) in het Clubhuis, zodat we het kunnen oplossen.</div></div>
+  <div class="yb row"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div><b>Let op: dit is een bètaversie.</b> BEAT Every Day is nieuw en nog volop in ontwikkeling. Merk je problemen of werkt iets niet goed? Meld het dan (graag zelfs!) in het Clubhuis, zodat we het kunnen oplossen.</div></div>
 
   <div class="zl"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>De twee klassementen</div>
   <div class="zg">
