@@ -70,10 +70,12 @@ h2{font-size:24px}
 .pc .nm{flex:1;min-width:0;font-weight:800;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pc .v{font:700 17px "JetBrains Mono",ui-monospace,monospace;white-space:nowrap}
 .pc li:first-child .v{color:var(--dt)}
-.pc .dw{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.pc .dw{display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 16px 12px 12px;border:2px solid var(--tq);border-radius:20px;background:linear-gradient(180deg,var(--card),var(--hl));box-shadow:0 10px 24px rgba(79,189,183,.22)}
+.pc .dw .nm{font-size:18px}
+.pc .dw .v{font-size:19px}
 .pc .dw .v{color:var(--dt)}
 .pc .dw .mu{color:var(--mute);font-weight:600}
-.rb.dwi{background:var(--mint);color:var(--dt)}
+.rb.dwi{width:42px;height:42px;border-radius:13px;background:var(--tq);color:#fff}
 .pc .v small{font-size:11px;font-weight:500;letter-spacing:.08em;margin-left:5px;color:var(--mute)}
 .podium{display:grid;grid-template-columns:1fr 1.12fr 1fr;gap:16px;align-items:end;margin-top:18px}
 .pcd{position:relative;border:1px solid var(--line);border-radius:28px;padding:22px;background:linear-gradient(180deg,var(--card),var(--hl));min-height:210px}
@@ -278,7 +280,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <script>if(window.IS_STAGING){var b=document.createElement("div");b.className="stg";b.textContent="STAGING – testomgeving";document.body.appendChild(b);document.addEventListener("DOMContentLoaded",function(){var bl=document.querySelector(".beta");if(bl)bl.textContent+=" · STAGING"})}</script>
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 1.14</div></div></div>
+  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 1.15</div></div></div>
   <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <div class="nv" id="menu" role="group" aria-label="Menu">
     <button class="ni" id="m-bad" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD</button>
@@ -532,7 +534,7 @@ function render(){
   const dwin=k=>{let b=null;for(const o of dm.values())if(Math.round(o[k])>0&&(!b||o[k]>b[k]))b=o;return b};
   $("podium").innerHTML=[["out","Road Warrior","KM","bike"],["in","Zwift Warrior","KM","zap"],["hm","Bergbaas (hoogtemeters)","HM","mountain"]].map(([k,l,u,i])=>{
     const top=[...cm.values()].filter(o=>Math.round(o[k])>0).sort((a,b)=>b[k]-a[k]).slice(0,3);
-    return `<div class="pc"><h3><span class="pi2">${ic(i,22)}</span>${l}</h3>`+(top.length?`<ol>`+top.map((o,j)=>`<li>${rb(j)}<span class="nm">${esc(o.name)}</span><span class="v">${f0(o[k])}<small>${u}</small></span></li>`).join("")+`</ol>`:`<div class="sub" style="padding:10px 0">Nog geen ritten</div>`)+(()=>{const w=dwin(k);return `<div class="dw"><span class="rb dwi" title="Dagwinnaar ${dl(sel)}">${ic("trophy",18)}</span>`+(w?`<span class="nm">${esc(w.name)}</span><span class="v">+${f0(w[k])}<small>${u}</small></span>`:`<span class="nm mu">Geen rit</span>`)+`</div>`})()+`</div>`}).join("");
+    return `<div class="pc"><h3><span class="pi2">${ic(i,22)}</span>${l}</h3>`+(top.length?`<ol>`+top.map((o,j)=>`<li>${rb(j)}<span class="nm">${esc(o.name)}</span><span class="v">${f0(o[k])}<small>${u}</small></span></li>`).join("")+`</ol>`:`<div class="sub" style="padding:10px 0">Nog geen ritten</div>`)+(()=>{const w=dwin(k);return `<div class="dw"><span class="rb dwi" title="Dagwinnaar ${dl(sel)}">${ic("trophy",22)}</span>`+(w?`<span class="nm">${esc(w.name)}</span><span class="v">+${f0(w[k])}<small>${u}</small></span>`:`<span class="nm mu">Geen rit</span>`)+`</div>`})()+`</div>`}).join("");
   $("tdesc").textContent=`Totaal t/m ${dl(sel)} · groen = erbij op ${dl(sel)} · stip = reed op ${dl(sel)} · klik op een kolomtitel om te sorteren`;
   const ar=k=>k===sortK?(sortD<0?" ↓":" ↑"):' <span class="so">⇅</span>';
   $("thead").innerHTML=`<tr><th>#</th><th data-k="name" class="${sortK==="name"?"on":""}">Naam${ar("name")}</th>`+`<th data-k="sur" class="sur ${sortK==="sur"?"on":""}">Surplus${ar("sur")}</th>`+COLS.map(([k,l])=>`<th data-k="${k}" class="${sortK===k?"on":""}">${l}${ar(k)}</th>`).join("")+`</tr>`;
