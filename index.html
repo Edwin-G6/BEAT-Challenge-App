@@ -70,6 +70,12 @@ h2{font-size:24px}
 .pc .nm{flex:1;min-width:0;font-weight:800;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pc .v{font:700 17px "JetBrains Mono",ui-monospace,monospace;white-space:nowrap}
 .pc li:first-child .v{color:var(--dt)}
+.pc .dw{display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 16px 12px 12px;border:2px solid var(--tq);border-radius:20px;background:linear-gradient(180deg,var(--card),var(--hl));box-shadow:0 10px 24px rgba(79,189,183,.22)}
+.pc .dw .nm{font-size:18px}
+.pc .dw .v{font-size:19px}
+.pc .dw .v{color:var(--dt)}
+.pc .dw .mu{color:var(--mute);font-weight:600}
+.rb.dwi{width:42px;height:42px;border-radius:13px;background:var(--tq);color:#fff}
 .pc .v small{font-size:11px;font-weight:500;letter-spacing:.08em;margin-left:5px;color:var(--mute)}
 .podium{display:grid;grid-template-columns:1fr 1.12fr 1fr;gap:16px;align-items:end;margin-top:18px}
 .pcd{position:relative;border:1px solid var(--line);border-radius:28px;padding:22px;background:linear-gradient(180deg,var(--card),var(--hl));min-height:210px}
@@ -274,7 +280,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <script>if(window.IS_STAGING){var b=document.createElement("div");b.className="stg";b.textContent="STAGING – testomgeving";document.body.appendChild(b);document.addEventListener("DOMContentLoaded",function(){var bl=document.querySelector(".beta");if(bl)bl.textContent+=" · STAGING"})}</script>
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 1.12</div></div></div>
+  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 1.15</div></div></div>
   <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <div class="nv" id="menu" role="group" aria-label="Menu">
     <button class="ni" id="m-bad" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD</button>
@@ -457,6 +463,7 @@ function parseCSV(t){
   return all.filter(r=>r[0]>=BSTART).map(r=>{r[8]=mem.has(r[1])?1:0;return r});
 }
 const ICONS={"users":"<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75\"/>","bike":"<circle cx=\"5.5\" cy=\"17.5\" r=\"3.5\"/><circle cx=\"18.5\" cy=\"17.5\" r=\"3.5\"/><path d=\"M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2\"/>","zap":"<path d=\"M13 2 3 14h9l-1 8 10-12h-9l1-8z\"/>","building":"<path d=\"M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9h.01M9 12h.01M9 15h.01M9 18h.01\"/>","gauge":"<path d=\"m12 14 4-4\"/><path d=\"M3.34 19a10 10 0 1 1 17.32 0\"/>","mountain":"<path d=\"m8 3 4 8 5-5 5 15H2L8 3z\"/>","trophy":"<path d=\"M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2z\"/>","crown":"<path d=\"m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zM5 20h14\"/>","flame":"<path d=\"M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z\"/>","grid":"<rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/>","plus":"<path d=\"M12 5v14M5 12h14\"/>","upload":"<path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12\"/>","search":"<circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m21 21-4.3-4.3\"/>","shield":"<path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><path d=\"m9 12 2 2 4-4\"/>"};
+ICONS.trophy="<path d=\"M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18\"/><path d=\"M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22\"/><path d=\"M18 2H6v7a6 6 0 0 0 12 0V2Z\"/>";
 const ic=(n,s=20)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
 const rb=i=>`<span class="rb r${i<3?i+1:0}">${i+1}</span>`;
 let pk="out";
@@ -523,10 +530,11 @@ function render(){
   const sumC=k=>[...cm.values()].reduce((s,o)=>s+o[k],0);
   $("tiles").innerHTML=[["users","Deelnemers",nl(cm.size),""],["bike","Road Warrior",f0(sumC("out")),"KM"],["zap","Zwift Warrior",f0(sumC("in")),"KM"],["building","Stadsfietsbeuker",f0(sumC("city")),"KM"],["gauge","Totaal KM",f0(sumC("tot")),"KM"],["mountain","Bergbaas",f0(sumC("hm")),"HM"]]
     .map(([i,l,v,u])=>`<div class="kpi"><div class="ki">${ic(i,24)}</div><div class="kl">${l}</div><div class="kv">${v}${u?`<small>${u}</small>`:""}</div></div>`).join("");
-  $("podcap").textContent=`Top 3 · cumulatief ${dl(ms)} t/m ${dl(sel)}`;
+  $("podcap").textContent=`Top 3 · cumulatief ${dl(ms)} t/m ${dl(sel)} · onderste regel = dagwinnaar ${dl(sel)}`;
+  const dwin=k=>{let b=null;for(const o of dm.values())if(Math.round(o[k])>0&&(!b||o[k]>b[k]))b=o;return b};
   $("podium").innerHTML=[["out","Road Warrior","KM","bike"],["in","Zwift Warrior","KM","zap"],["hm","Bergbaas (hoogtemeters)","HM","mountain"]].map(([k,l,u,i])=>{
     const top=[...cm.values()].filter(o=>Math.round(o[k])>0).sort((a,b)=>b[k]-a[k]).slice(0,3);
-    return `<div class="pc"><h3><span class="pi2">${ic(i,22)}</span>${l}</h3>`+(top.length?`<ol>`+top.map((o,j)=>`<li>${rb(j)}<span class="nm">${esc(o.name)}</span><span class="v">${f0(o[k])}<small>${u}</small></span></li>`).join("")+`</ol>`:`<div class="sub" style="padding:10px 0">Nog geen ritten</div>`)+`</div>`}).join("");
+    return `<div class="pc"><h3><span class="pi2">${ic(i,22)}</span>${l}</h3>`+(top.length?`<ol>`+top.map((o,j)=>`<li>${rb(j)}<span class="nm">${esc(o.name)}</span><span class="v">${f0(o[k])}<small>${u}</small></span></li>`).join("")+`</ol>`:`<div class="sub" style="padding:10px 0">Nog geen ritten</div>`)+(()=>{const w=dwin(k);return `<div class="dw"><span class="rb dwi" title="Dagwinnaar ${dl(sel)}">${ic("trophy",22)}</span>`+(w?`<span class="nm">${esc(w.name)}</span><span class="v">+${f0(w[k])}<small>${u}</small></span>`:`<span class="nm mu">Geen rit</span>`)+`</div>`})()+`</div>`}).join("");
   $("tdesc").textContent=`Totaal t/m ${dl(sel)} · groen = erbij op ${dl(sel)} · stip = reed op ${dl(sel)} · klik op een kolomtitel om te sorteren`;
   const ar=k=>k===sortK?(sortD<0?" ↓":" ↑"):' <span class="so">⇅</span>';
   $("thead").innerHTML=`<tr><th>#</th><th data-k="name" class="${sortK==="name"?"on":""}">Naam${ar("name")}</th>`+`<th data-k="sur" class="sur ${sortK==="sur"?"on":""}">Surplus${ar("sur")}</th>`+COLS.map(([k,l])=>`<th data-k="${k}" class="${sortK===k?"on":""}">${l}${ar(k)}</th>`).join("")+`</tr>`;
@@ -585,6 +593,15 @@ async function loadDb(){
     const saved=[];snap.docs.forEach(d=>{const x=d.data();if(x&&Array.isArray(x.rows))saved.push(...x.rows.filter(r=>r[0]>=BSTART))});
     if(saved.length){ALL=mergeDays(RAW,saved);init(sel)}
   }catch(e){}
+  if(window.__fbListen){
+    try{await window.__fbListen("entries",docs=>{
+      const got=[];docs.forEach(d=>{const x=d.data();if(x&&x.date>=BSTART&&x.name)got.push(entRow(x,d.id))});
+      ENT=got;init(sel);
+      if($("dlg").open)elist();
+    },()=>loadEntriesOnce())}catch(e){loadEntriesOnce()}
+  }else loadEntriesOnce();
+}
+async function loadEntriesOnce(){
   try{
     const es=await DB.collection("entries").limit(2000).get(),got=[];
     es.docs.forEach(d=>{const x=d.data();if(x&&x.date>=BSTART&&x.name)got.push(entRow(x,d.id))});
@@ -638,7 +655,7 @@ async function saveEntry(){
     if(DB)await DB.doc("entries/"+id).set(doc);
   }catch(err){m.textContent="Opslaan niet gelukt: "+fbErr(err)+".";$("e-save").disabled=false;return}
   $("e-save").disabled=false;
-  ENT=ENT.concat([entRow(doc,id)]);
+  ENT=ENT.filter(r=>r[9]!==id).concat([entRow(doc,id)]);
   track("Rit opgeslagen",{dag:date===today()?"vandaag":date===yest()?"gisteren":"eerder"});
   $("dlg").close();init(sel);
   $("msg").textContent=`Rit opgeslagen: ${name}, ${date}`+(DB?"":" (alleen in deze sessie)");
@@ -659,7 +676,7 @@ init();loadDb();
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import {getAuth,signInAnonymously,signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import {getFirestore,collection,getDocs,doc,setDoc,deleteDoc} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import {getFirestore,collection,getDocs,doc,setDoc,deleteDoc,onSnapshot} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 const CFG_LIVE={
   apiKey:"AIzaSyDMFw-ijOJ7NtK0llFuk0_fAcb4LOvAkS0",
   authDomain:"beat-challenge-app.firebaseapp.com",
@@ -685,6 +702,7 @@ const ensureAdmin=async()=>{
   if(!pw)throw new Error("Inloggen geannuleerd");
   await signInWithEmailAndPassword(auth,window.ADMIN_EMAIL,pw);
 };
+window.__fbListen=async(name,cb,err)=>{await ensureAuth();return onSnapshot(collection(db,name),s=>cb(s.docs.map(d=>({id:d.id,data:()=>d.data()}))),e=>err&&err(e))};
 window.__fbRes({
   collection:name=>({
     limit(){return this},
