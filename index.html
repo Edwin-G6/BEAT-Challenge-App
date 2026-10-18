@@ -189,6 +189,10 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
   th:first-child,td:first-child{display:none}
   th:nth-child(2),td:nth-child(2){position:sticky;left:0;z-index:1;background:var(--card);box-shadow:2px 0 0 var(--line)}
   th:nth-child(2){z-index:2}
+  #ptable th:first-child,#ptable td:first-child{display:table-cell;position:sticky;left:0;z-index:1;background:var(--card);width:44px;min-width:44px;padding-left:10px;padding-right:2px;box-shadow:none}
+  #ptable th:first-child{z-index:3}
+  #ptable th:nth-child(2),#ptable td:nth-child(2){left:44px}
+  #ptable tr.tot td:first-child{background:var(--mint) !important}
   tr.tot td:nth-child(2){background:var(--mint) !important}
   tbody tr:hover td:nth-child(2){background:var(--hl)}
   td.sur{font-size:15px}
@@ -216,6 +220,42 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
 th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .tb{padding:24px 28px}
 .tb h1 em{font-style:inherit;color:var(--dt)}
+.tb.hoft{display:flex;align-items:center;gap:16px}
+.tb.hoft .ki{margin:0;flex:none}
+#hoft th .hth{display:inline-flex;align-items:center;gap:6px}
+#hoft th svg{flex:none;color:var(--dt)}
+.hofl{display:flex;align-items:center;gap:18px;flex-wrap:wrap;border:2px solid var(--tq);background:linear-gradient(180deg,var(--card),var(--hl))}
+.hofl .ki{margin:0;flex:none;width:56px;height:56px;border-radius:17px;background:var(--tq);color:#fff}
+.hofl .lt{flex:none;min-width:160px}
+.hofl .lnm{flex:1;min-width:180px;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 8px}
+.hofl .lnm .ln{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1.05;color:var(--ink)}
+.hofl .lnm .ld{margin-top:6px;font-size:14px}
+.hofl h2{font-size:26px;margin:2px 0 0}
+.hofl .lw{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:6px}
+.hofl .ln{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.hofl .lk{text-align:right}
+.hofl .lk b{display:block;font:800 34px/1 "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;color:var(--dt)}
+.hofl .lk b small{font-size:15px;font-weight:700;margin-left:4px}
+.hofl .ld{display:block;margin-top:4px;font-size:13px;font-weight:700;color:var(--sl)}
+.hofl .lm{color:var(--mute);font-weight:600}
+@media (max-width:700px){.hofl{gap:14px}.hofl .lnm{order:3;flex:none;width:100%;align-items:flex-start;text-align:left;padding:0}.hofl .lnm .ln{font-size:30px}.hofl .lk{order:4;text-align:left;width:100%}.hofl h2{font-size:22px}}
+.hofh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.hofh h2{font-size:26px;text-transform:capitalize;margin:2px 0 0}
+.hofn{display:flex;gap:8px}
+.cb:disabled{opacity:.35;cursor:default}
+#hoft{min-width:540px}
+#hoft th{cursor:default;text-align:left}
+#hoft td{text-align:left;font-size:15px;font-weight:600;padding:10px 12px}
+#hoft td:first-child{font-weight:800;color:var(--sl);width:96px}
+#hoft .w{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+#hoft .w b{font-weight:800}
+#hoft .w i{font:700 13px "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-style:normal;color:var(--dt)}
+#hoft tr.fu td{color:var(--mute)}
+#hoft tr.fu td:not(:first-child){color:var(--line)}
+#hoft tr.td td{background:var(--hl)}
+#hoft tr.td td:first-child{box-shadow:inset 4px 0 0 var(--tq)}
+#hoft thead th:first-child,#hoft tbody td:first-child{display:table-cell}
+@media (max-width:700px){.hofh h2{font-size:22px}#hoft{min-width:0}#hoft th{font-size:9.5px;letter-spacing:.04em}#hoft th,#hoft td{padding:9px 5px;font-size:12.5px}#hoft{table-layout:fixed}#hoft th:first-child,#hoft td:first-child{width:44px}#hoft .hm{display:none}#hoft td:first-child{white-space:nowrap}#hoft .w{flex-direction:column;gap:1px}#hoft .w i{font-size:11px}#hoft td{white-space:normal;word-break:break-word}}
 .soon{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:64px 20px}
 .soon .ki{margin:0}
 .soon h2{font-size:30px}
@@ -280,7 +320,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <script>if(window.IS_STAGING){var b=document.createElement("div");b.className="stg";b.textContent="STAGING – testomgeving";document.body.appendChild(b);document.addEventListener("DOMContentLoaded",function(){var bl=document.querySelector(".beta");if(bl)bl.textContent+=" · STAGING"})}</script>
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 1.15</div></div></div>
+  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 1.17</div></div></div>
   <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <div class="nv" id="menu" role="group" aria-label="Menu">
     <button class="ni" id="m-bad" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD</button>
@@ -320,13 +360,13 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   </section>
   <section class="card">
     <div class="sub" style="margin-bottom:10px" id="tdesc"></div>
-    <div class="tw"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+    <div class="tw"><table id="ptable"><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
     <div class="note">Per cel: het grote getal is het cumulatief sinds het begin van de maand; het groene getal eronder is wat er op de gekozen dag bij kwam. Een stip bij de naam betekent dat die renner op de gekozen dag heeft gereden. De stand geldt voor de maand van de gekozen dag en begint op de eerste dag van de volgende maand weer bij nul. Meerdere ritten op één dag zijn opgeteld; totaal km is inclusief elektrisch. Surplus = cumulatief totaal km − (dagnummer in de maand × 25) (bijvoorbeeld 25 km op dag 1 = 0, 60 km op dag 2 = +10).</div>
   </section>
 </div>
 <div class="bed">
   <section class="card">
-    <h2>De <span class="gr">100 dagen</span> plus club</h2>
+    <h2>De <span class="gr">100 dagen plus</span> club</h2>
     <div class="sub" id="clubcap" style="margin-top:8px"></div>
     <div id="club" class="chips"></div>
   </section>
@@ -338,11 +378,11 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   </section>
 </div>
 <div class="hof">
-  <section class="card tb"><h1>Hall of <em>Fame</em></h1></section>
-  <section class="card soon">
-    <div class="ki"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>
-    <h2>Coming soon</h2>
-    <p class="soonsub">Ja, ja, ik zei soon. Echt. Blijf het vooral checken 😝</p>
+  <section class="card tb hoft"><h1>Hall of <em>Fame</em></h1><div class="ki"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div></section>
+  <section class="card hofl" id="hofl"></section>
+  <section class="card hofc">
+    <div class="hofh"><div><div class="sub">Dagwinnaars</div><h2 id="hofmt"></h2></div><div class="hofn"><button class="cb" id="hprev" aria-label="Vorige maand">‹</button><button class="cb" id="hnext" aria-label="Volgende maand">›</button></div></div>
+    <div class="tw"><table id="hoft"><thead><tr><th>Dag</th><th>Road<span class="hm"> Warrior</span></th><th>Zwift<span class="hm"> Warrior</span></th><th>Berg<span class="hm">baas</span></th></tr></thead><tbody id="hofb"></tbody></table></div>
   </section>
 </div>
 <div class="zo">
@@ -542,9 +582,33 @@ function render(){
     data.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${o.on?`<span class="ad" title="Reed op deze dag"></span>`:""}${esc(o.name)}</td>`+sc(o.s)+COLS.map(([k])=>cell(o.d,o.c,k)).join("")+`</tr>`).join("")
     :`<tr><td colspan="9" class="empty">Geen resultaten.</td></tr>`;
   document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;track("Tabel gesorteerd",{tabel:"BAD",kolom:k});if(k===sortK)sortD*=-1;else{sortK=k;sortD=k==="name"?1:-1}render()});
-  chart();renderBed();
+  chart();renderBed();renderHof();
   const i=days.indexOf(sel);$("prev").disabled=i<=0;$("next").disabled=i>=days.length-1;
 }
+let hofM="";
+function renderHof(){
+  const tb=$("hofb");if(!tb)return;
+  const t=today(),cur=t.slice(0,7),ms=[...new Set(rows.map(r=>r[0].slice(0,7)).concat(cur>=START.slice(0,7)?[cur]:[]))].sort();
+  if(!ms.length)return;
+  if(!ms.includes(hofM))hofM=ms.includes(cur)?cur:ms[ms.length-1];
+  const y=+hofM.slice(0,4),m=+hofM.slice(5,7),n=new Date(y,m,0).getDate(),bd=byDate(rows);
+  const win=(dm,k)=>{let b=null;for(const o of dm.values())if(Math.round(o[k])>0&&(!b||o[k]>b[k]))b=o;return b};
+  const wc=(w,k,u)=>w?`<div class="w"><b>${esc(w.name)}</b><i>${f0(w[k])} ${u}</i></div>`:"·";
+  let h="";
+  for(let d=1;d<=n;d++){
+    const key=`${hofM}-${String(d).padStart(2,"0")}`,dm=agg(bd.get(key)||[]),fu=key>t;
+    h+=`<tr class="${fu?"fu":key===t?"td":""}"><td>${dl(key).replace(/ ([^ ]+)$/,"<span class=\"hm\"> $1</span>")}</td>`+[["out","KM"],["in","KM"],["hm","HM"]].map(([k,u])=>`<td>${fu?"·":wc(win(dm,k),k,u)}</td>`).join("")+`</tr>`;
+  }
+  tb.innerHTML=h;
+  let lg=null;for(let d=1;d<=n;d++){const key=`${hofM}-${String(d).padStart(2,"0")}`;if(key>t)break;for(const o of agg(bd.get(key)||[]).values())if(Math.round(o.tot)>0&&(!lg||o.tot>lg.o.tot))lg={o,key}}
+  $("hofl").innerHTML=`<div class="ki">${ic("gauge",28)}</div><div class="lt"><div class="sub">Dagrecord · ${new Date(hofM+"-01T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"})}</div><h2>De langste dag</h2></div>`+(lg?`<div class="lnm"><span class="ln">${esc(lg.o.name)}</span><span class="ld">${dl(lg.key)}</span></div><div class="lk"><b>${f0(lg.o.tot)}<small>KM</small></b></div>`:`<div class="lnm"><span class="ld lm">Nog geen ritten deze maand</span></div>`);
+  $("hoft").tHead.innerHTML=`<tr><th>Dag</th><th><span class="hth">${ic("bike",16)}<span>Road<span class="hm"> Warrior</span></span></span></th><th><span class="hth">${ic("zap",16)}<span>Zwift<span class="hm"> Warrior</span></span></span></th><th><span class="hth">${ic("mountain",16)}<span>Berg<span class="hm">baas</span></span></span></th></tr>`;
+  $("hofmt").textContent=new Date(hofM+"-01T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"});
+  const i=ms.indexOf(hofM);$("hprev").disabled=i<=0;$("hnext").disabled=i>=ms.length-1;
+}
+$("hprev").onclick=()=>{const ms=hofMonths();hofM=ms[ms.indexOf(hofM)-1]||hofM;track("Hall of Fame maand",{via:"pijltjes"});renderHof()};
+$("hnext").onclick=()=>{const ms=hofMonths();hofM=ms[ms.indexOf(hofM)+1]||hofM;track("Hall of Fame maand",{via:"pijltjes"});renderHof()};
+function hofMonths(){const cur=today().slice(0,7);return [...new Set(rows.map(r=>r[0].slice(0,7)).concat(cur>=START.slice(0,7)?[cur]:[]))].sort()}
 function chart(){
   const y=+sel.slice(0,4),m=+sel.slice(5,7),n=new Date(y,m,0).getDate(),W=n*30,H=110,bw=30;
   const tot={};rows.forEach(r=>{if(r[0].slice(0,7)===sel.slice(0,7))tot[r[0]]=(tot[r[0]]||0)+r[6]});
