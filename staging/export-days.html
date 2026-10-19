@@ -22,8 +22,16 @@ document.getElementById("go").onclick=async()=>{
     });
     out.sort((a,b)=>a.id<b.id?-1:1);
     const sql="insert into public.days (day, rows, ts) values\n"+out.map(o=>"('"+o.id+"', $j$"+JSON.stringify(o.rows)+"$j$::jsonb, "+o.ts+")").join(",\n")+"\non conflict (day) do update set rows = excluded.rows, ts = excluded.ts;\n";
-    const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([sql],{type:"text/plain"}));a.download="dagen-import.sql";a.click();
-    log("Klaar: "+out.length+" dagen, van "+(out[0]&&out[0].id)+" t/m "+(out.length&&out[out.length-1].id)+". Het bestand dagen-import.sql is gedownload.");
+    const dl=(n,t)=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/plain"}));a.download=n;a.click()};
+    dl("dagen-import.sql",sql);
+    log("Ritten ophalen…");
+    const es=await getDocs(collection(db,"entries"));
+    const q=v=>"'"+String(v).replace(/'/g,"''")+"'",n=v=>Number(v)||0,er=[];
+    es.docs.forEach(d=>{const x=d.data();if(!x||!/^\d{4}-\d{2}-\d{2}$/.test(x.date||"")||!x.name)return;
+      er.push("("+q(d.id)+", "+q(x.date)+", "+q(x.name)+", "+n(x.out)+", "+n(x.in)+", "+n(x.city)+", "+n(x.el)+", "+Math.round(n(x.hm))+", "+Math.round(n(x.ts)||Date.now())+")")});
+    er.sort();
+    setTimeout(()=>dl("ritten-import.sql","insert into public.entries (id, date, name, km_out, km_in, km_city, km_el, hm, ts)\nvalues\n"+er.join(",\n")+"\non conflict (id) do nothing;\n"),600);
+    log("Klaar: "+er.length+" ritten en "+out.length+" dagen, van "+(out[0]&&out[0].id)+" t/m "+(out.length&&out[out.length-1].id)+". De bestanden dagen-import.sql en ritten-import.sql zijn gedownload (sta meerdere downloads toe als de browser dat vraagt).");
   }catch(e){log("Fout: "+(e.code||"")+" "+e.message)}
 };
 </script></body></html>
