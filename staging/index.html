@@ -30,6 +30,7 @@ body[data-view="hof"] .hd,body[data-view="zo"] .hd{display:none !important}
 .nv,.ac{display:flex;flex-direction:column;gap:6px}
 /* Knop "Nieuwe export laden" is verborgen maar werkt nog: verwijder de volgende regel om hem weer te tonen */
 #load{display:none !important}
+.adm #load{display:flex !important}
 .sg{font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--mute);padding:16px 10px 4px;text-transform:uppercase}
 .ni{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:transparent;color:var(--sl);border:1px solid transparent;border-radius:14px;padding:12px 14px;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
 .ni:hover:not(:disabled){background:var(--hl);filter:none}
@@ -631,6 +632,7 @@ $("add").onclick=openAdd;$("e-today").onclick=()=>setDay(today());$("e-yest").on
 ["out","in","city","el"].forEach(k=>$("e-"+k).oninput=etot);
 $("m-bad").onclick=()=>setView("bad");$("m-bed").onclick=()=>setView("bed");$("m-hof").onclick=()=>setView("hof");$("m-zo").onclick=()=>setView("zo");for(const k in VIEWS){const t=$("t-"+k);if(t)t.onclick=()=>setView(k)}$("t-add").onclick=()=>$("add").click();$("burger").onclick=e=>{e.stopPropagation();toggleMenu()};document.addEventListener("click",e=>{if(document.body.classList.contains("mo")&&!e.target.closest(".nv"))toggleMenu(false)});document.addEventListener("keydown",e=>{if(e.key==="Escape")toggleMenu(false)});$("q").oninput=()=>{if(!_sq&&$("q").value){_sq=true;track("Zoeken gebruikt")}render()};$("lid").onchange=()=>{track("Filter alleen BEAT leden",{stand:$("lid").checked?"aan":"uit"});init(sel)};$("act").onchange=()=>{track("Filter alleen actief",{stand:$("act").checked?"aan":"uit"});render()};
 $("load").onclick=()=>$("file").click();
+try{if(/[?&]admin(=|&|$)/.test(location.search))document.documentElement.classList.add("adm")}catch(e){}
 /* Plausible-gebeurtenissen. Er gaan nooit namen, rugnummers of zoektermen mee. */
 const track=(n,pr)=>{try{if(window.plausible)window.plausible(n,pr?{props:pr}:undefined)}catch(e){}};
 let _sq=false;
