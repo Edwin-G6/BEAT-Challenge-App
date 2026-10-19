@@ -30,6 +30,7 @@ body[data-view="hof"] .hd,body[data-view="zo"] .hd{display:none !important}
 .nv,.ac{display:flex;flex-direction:column;gap:6px}
 /* Knop "Nieuwe export laden" is verborgen maar werkt nog: verwijder de volgende regel om hem weer te tonen */
 #load{display:none !important}
+.adm #load{display:flex !important}
 .sg{font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--mute);padding:16px 10px 4px;text-transform:uppercase}
 .ni{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:transparent;color:var(--sl);border:1px solid transparent;border-radius:14px;padding:12px 14px;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
 .ni:hover:not(:disabled){background:var(--hl);filter:none}
@@ -317,7 +318,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 </script>
 </head>
 <body data-view="bad">
-<script>if(window.IS_STAGING){var b=document.createElement("div");b.className="stg";b.textContent="STAGING – testomgeving";document.body.appendChild(b);document.addEventListener("DOMContentLoaded",function(){var bl=document.querySelector(".beta");if(bl)bl.textContent+=" · STAGING"})}</script>
+<script>if(window.IS_STAGING){var b=document.createElement("div");b.className="stg";b.textContent="STAGING – testomgeving";document.body.appendChild(b);document.addEventListener("DOMContentLoaded",function(){var bl=document.querySelector(".beta");if(bl)bl.textContent+=" · STAGING · SUPABASE"})}</script>
 <div class="app">
 <aside class="side">
   <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 1.17</div></div></div>
@@ -479,7 +480,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <script>
 /* ====== INSTELLEN: e-mailadres van de beheerder (mag uploads opslaan) ====== */
 window.ADMIN_EMAIL="edwin@beatcyclingclub.com";
-window.__fbP=new Promise((res,rej)=>{window.__fbRes=res;setTimeout(()=>rej(new Error("Firebase niet bereikbaar")),10000)});
+window.__fbP=new Promise((res,rej)=>{window.__fbRes=res;setTimeout(()=>rej(new Error("Database niet bereikbaar")),10000)});
 window.claude={use:()=>window.__fbP};
 </script>
 <script>
@@ -631,15 +632,20 @@ $("add").onclick=openAdd;$("e-today").onclick=()=>setDay(today());$("e-yest").on
 ["out","in","city","el"].forEach(k=>$("e-"+k).oninput=etot);
 $("m-bad").onclick=()=>setView("bad");$("m-bed").onclick=()=>setView("bed");$("m-hof").onclick=()=>setView("hof");$("m-zo").onclick=()=>setView("zo");for(const k in VIEWS){const t=$("t-"+k);if(t)t.onclick=()=>setView(k)}$("t-add").onclick=()=>$("add").click();$("burger").onclick=e=>{e.stopPropagation();toggleMenu()};document.addEventListener("click",e=>{if(document.body.classList.contains("mo")&&!e.target.closest(".nv"))toggleMenu(false)});document.addEventListener("keydown",e=>{if(e.key==="Escape")toggleMenu(false)});$("q").oninput=()=>{if(!_sq&&$("q").value){_sq=true;track("Zoeken gebruikt")}render()};$("lid").onchange=()=>{track("Filter alleen BEAT leden",{stand:$("lid").checked?"aan":"uit"});init(sel)};$("act").onchange=()=>{track("Filter alleen actief",{stand:$("act").checked?"aan":"uit"});render()};
 $("load").onclick=()=>$("file").click();
+try{if(/[?&]admin(=|&|$)/.test(location.search))document.documentElement.classList.add("adm")}catch(e){}
 /* Plausible-gebeurtenissen. Er gaan nooit namen, rugnummers of zoektermen mee. */
 const track=(n,pr)=>{try{if(window.plausible)window.plausible(n,pr?{props:pr}:undefined)}catch(e){}};
 let _sq=false;
 const fbErr=e=>{const c=(e&&e.code)||"",m=(e&&e.message)||String(e);
   if(/geannuleerd/i.test(m))return"inloggen geannuleerd";
   if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c))return"wachtwoord of e-mailadres klopt niet ("+c+")";
-  if(c==="permission-denied")return"geen toestemming; controleer de Firestore-regels en of je bent ingelogd als beheerder ("+c+")";
-  if(c==="auth/operation-not-allowed")return"inloggen met e-mail en wachtwoord staat uit in Firebase ("+c+")";
-  if(/network|unavailable/.test(c))return"geen verbinding met Firebase ("+c+")";
+  if(c==="permission-denied")return"geen toestemming; controleer de database-regels en of je bent ingelogd als beheerder ("+c+")";
+  if(c==="auth/operation-not-allowed")return"inloggen met e-mail en wachtwoord staat uit in de database ("+c+")";
+  if(/network|unavailable/.test(c))return"geen verbinding met de database ("+c+")";
+  if(/invalid_credentials|Invalid login/i.test(c+" "+m))return"wachtwoord of e-mailadres klopt niet";
+  if(c==="42501"||/row-level security|permission denied/i.test(m))return"geen toestemming; controleer of je bent ingelogd als beheerder ("+(c||"RLS")+")";
+  if(/anonymous_provider_disabled|Anonymous sign-ins are disabled/i.test(c+" "+m))return"anoniem inloggen staat uit in Supabase";
+  if(/Failed to fetch|NetworkError/i.test(m))return"geen verbinding met de database";
   return c||m};
 let DB=null,ENT=[];
 function eff(){
@@ -738,55 +744,98 @@ $("file").onchange=async e=>{const f=e.target.files[0];if(!f)return;
 init();loadDb();
 </script>
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import {getAuth,signInAnonymously,signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import {getFirestore,collection,getDocs,doc,setDoc,deleteDoc,onSnapshot} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-const CFG_LIVE={
-  apiKey:"AIzaSyDMFw-ijOJ7NtK0llFuk0_fAcb4LOvAkS0",
-  authDomain:"beat-challenge-app.firebaseapp.com",
-  projectId:"beat-challenge-app",
-  storageBucket:"beat-challenge-app.firebasestorage.app",
-  messagingSenderId:"130884755647",
-  appId:"1:130884755647:web:15e479b46efbe5990da60a"
-};
-const CFG_STAGING={
-  apiKey:"AIzaSyB70pn34TEgsSbNuvdychxEthVEZlA-X0I",
-  authDomain:"beat-challenge-staging.firebaseapp.com",
-  projectId:"beat-challenge-staging",
-  storageBucket:"beat-challenge-staging.firebasestorage.app",
-  messagingSenderId:"552411211386",
-  appId:"1:552411211386:web:8b1a8608d5914a7afafdc3"
-};
-const app=initializeApp(window.IS_STAGING?CFG_STAGING:CFG_LIVE);
-const auth=getAuth(app),db=getFirestore(app);
-const ensureAuth=async()=>{if(!auth.currentUser)await signInAnonymously(auth)};
-const ensureAdmin=async()=>{
-  if(auth.currentUser&&auth.currentUser.email===window.ADMIN_EMAIL)return;
-  const pw=prompt("Wachtwoord van "+window.ADMIN_EMAIL+" (alleen de beheerder kan uploads opslaan):");
-  if(!pw)throw new Error("Inloggen geannuleerd");
-  await signInWithEmailAndPassword(auth,window.ADMIN_EMAIL,pw);
-};
-window.__fbListen=async(name,cb,err)=>{await ensureAuth();return onSnapshot(collection(db,name),s=>cb(s.docs.map(d=>({id:d.id,data:()=>d.data()}))),e=>err&&err(e))};
-window.__fbRes({
-  collection:name=>({
-    limit(){return this},
-    async get(){
-      await ensureAuth();
-      const s=await getDocs(collection(db,name));
-      return {docs:s.docs.map(d=>({id:d.id,data:()=>{const x=d.data();return x.rowsJson?{rows:JSON.parse(x.rowsJson)}:x}}))};
+/* ====== Database: Supabase (staging en live hebben elk een eigen project) ====== */
+const SB_STAGING={url:"https://ijtsrhhovbakxhuvzupw.supabase.co",key:"sb_publishable_NCAyjCkD7syTVKXt9U57zg_x78_MuMw"};
+const SB_LIVE={url:"https://gqxkppyvlvssawhqzqhx.supabase.co",key:"sb_publishable_G_rFS8JvGwxBaFpuHcG1Dw_PC_M3ao5"};
+const SB=window.IS_STAGING?SB_STAGING:SB_LIVE;
+
+async function startSupabase(){
+  const {createClient}=await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/+esm");
+  const mem={};
+  const store={
+    getItem:k=>{try{return localStorage.getItem(k)}catch(e){return k in mem?mem[k]:null}},
+    setItem:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){mem[k]=v}},
+    removeItem:k=>{try{localStorage.removeItem(k)}catch(e){delete mem[k]}}
+  };
+  const sb=createClient(SB.url,SB.key,{auth:{storage:store,persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+  const session=async()=>(await sb.auth.getSession()).data.session;
+  let authP=null;
+  const ensureAuth=()=>authP||(authP=(async()=>{
+    if(await session())return;
+    const {error}=await sb.auth.signInAnonymously();
+    if(error)throw error;
+  })().finally(()=>{authP=null}));
+  const ensureAdmin=async()=>{
+    const s=await session();
+    if(s&&s.user&&(s.user.email||"").toLowerCase()===window.ADMIN_EMAIL.toLowerCase())return;
+    const pw=prompt("Wachtwoord van "+window.ADMIN_EMAIL+" (alleen de beheerder kan uploads opslaan):");
+    if(!pw)throw new Error("Inloggen geannuleerd");
+    const {error}=await sb.auth.signInWithPassword({email:window.ADMIN_EMAIL,password:pw});
+    if(error)throw error;
+  };
+  const fetchAll=async(t,col)=>{
+    const out=[];
+    for(let a=0;;a+=1000){
+      const {data,error}=await sb.from(t).select("*").order(col).range(a,a+999);
+      if(error)throw error;
+      out.push(...data);
+      if(data.length<1000)break;
     }
-  }),
-  doc:path=>{
-    const [c,id]=path.split("/"),ref=doc(db,c,id);
-    return {
-      async set(v){
-        if(c==="days"){await ensureAdmin();return setDoc(ref,{rowsJson:JSON.stringify(v.rows),ts:Date.now()})}
-        await ensureAuth();return setDoc(ref,v);
-      },
-      async delete(){await ensureAuth();return deleteDoc(ref)}
-    };
-  }
-});
+    return out;
+  };
+  const eData=r=>({name:r.name,date:r.date,out:+r.km_out,in:+r.km_in,city:+r.km_city,el:+r.km_el,hm:+r.hm,ts:+r.ts});
+  const wrap=(c,r)=>c==="days"?{id:r.day,data:()=>({rows:r.rows})}:{id:r.id,data:()=>eData(r)};
+  window.__fbListen=async(name,cb,err)=>{
+    if(name!=="entries")throw new Error("alleen entries");
+    await ensureAuth();
+    const m=new Map();
+    const emit=()=>cb([...m.values()].map(r=>wrap("entries",r)));
+    const load=async()=>{const rows=await fetchAll("entries","id");m.clear();rows.forEach(r=>m.set(r.id,r));emit()};
+    await load();
+    let first=true;
+    const ch=sb.channel("entries-live").on("postgres_changes",{event:"*",schema:"public",table:"entries"},p=>{
+      if(p.eventType==="DELETE"){if(p.old&&p.old.id)m.delete(p.old.id)}
+      else if(p.new&&p.new.id)m.set(p.new.id,p.new);
+      emit();
+    }).subscribe(st=>{
+      if(st==="SUBSCRIBED"){first=false;load().catch(()=>{})}
+      else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT"){if(err)err(new Error(st))}
+    });
+    return ()=>sb.removeChannel(ch);
+  };
+  window.__fbRes({
+    collection:name=>({
+      limit(){return this},
+      async get(){
+        await ensureAuth();
+        const rows=await fetchAll(name,name==="days"?"day":"id");
+        return {docs:rows.map(r=>wrap(name,r))};
+      }
+    }),
+    doc:path=>{
+      const [c,id]=path.split("/");
+      return {
+        async set(v){
+          if(c==="days"){
+            await ensureAdmin();
+            const {error}=await sb.from("days").upsert({day:id,rows:v.rows,ts:Date.now()});
+            if(error)throw error;return;
+          }
+          await ensureAuth();
+          const {error}=await sb.from("entries").insert({id,date:v.date,name:v.name,km_out:v.out,km_in:v.in,km_city:v.city,km_el:v.el,hm:v.hm,ts:v.ts});
+          if(error)throw error;
+        },
+        async delete(){
+          await ensureAuth();
+          const {error}=await sb.from("entries").delete().eq("id",id);
+          if(error)throw error;
+        }
+      };
+    }
+  });
+}
+
+try{await startSupabase()}catch(e){console.error("Koppeling met de database mislukt",e)}
 </script>
 </body>
 </html>
