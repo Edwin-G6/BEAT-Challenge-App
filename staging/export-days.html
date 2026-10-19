@@ -1,0 +1,29 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Export dagen</title>
+<style>body{font:16px system-ui;max-width:640px;margin:40px auto;padding:0 16px}button{font:inherit;padding:12px 20px;border-radius:10px;border:0;background:#2f7d74;color:#fff;cursor:pointer}pre{background:#f3f3f3;padding:12px;border-radius:8px;white-space:pre-wrap}</style></head><body>
+<h1>Dagen uit Firebase halen</h1>
+<p>Deze pagina leest de tabel met dagen uit het oude Firebase-project en maakt er een SQL-bestand van voor Supabase.</p>
+<button id="go">Start export</button><pre id="log">Klaar om te starten.</pre>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import {getAuth,signInAnonymously} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import {getFirestore,collection,getDocs} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyDMFw-ijOJ7NtK0llFuk0_fAcb4LOvAkS0",authDomain:"beat-challenge-app.firebaseapp.com",projectId:"beat-challenge-app",storageBucket:"beat-challenge-app.firebasestorage.app",messagingSenderId:"130884755647",appId:"1:130884755647:web:15e479b46efbe5990da60a"});
+const auth=getAuth(app),db=getFirestore(app),log=t=>document.getElementById("log").textContent=t;
+document.getElementById("go").onclick=async()=>{
+  try{
+    log("Inloggen…");await signInAnonymously(auth);
+    log("Dagen ophalen…");
+    const s=await getDocs(collection(db,"days"));
+    const out=[];
+    s.docs.forEach(d=>{
+      const x=d.data();let rows=x.rowsJson?JSON.parse(x.rowsJson):x.rows;
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(d.id)||!Array.isArray(rows))return;
+      out.push({id:d.id,rows,ts:x.ts||Date.now()});
+    });
+    out.sort((a,b)=>a.id<b.id?-1:1);
+    const sql="insert into public.days (day, rows, ts) values\n"+out.map(o=>"('"+o.id+"', $j$"+JSON.stringify(o.rows)+"$j$::jsonb, "+o.ts+")").join(",\n")+"\non conflict (day) do update set rows = excluded.rows, ts = excluded.ts;\n";
+    const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([sql],{type:"text/plain"}));a.download="dagen-import.sql";a.click();
+    log("Klaar: "+out.length+" dagen, van "+(out[0]&&out[0].id)+" t/m "+(out.length&&out[out.length-1].id)+". Het bestand dagen-import.sql is gedownload.");
+  }catch(e){log("Fout: "+(e.code||"")+" "+e.message)}
+};
+</script></body></html>
