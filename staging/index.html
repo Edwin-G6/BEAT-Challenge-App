@@ -30,6 +30,21 @@ body[data-view="hof"] .hd,body[data-view="zo"] .hd{display:none !important}
 .nv,.ac{display:flex;flex-direction:column;gap:6px}
 /* Knop "Nieuwe export laden" is verborgen maar werkt nog: verwijder de volgende regel om hem weer te tonen */
 #load{display:none !important}
+#logout[hidden]{display:none}
+body:not(.in) .app{visibility:hidden}
+#gate{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px;background:var(--bg)}
+body.in #gate{display:none}
+.gc{width:100%;max-width:420px;background:var(--card);border:1px solid var(--line);border-radius:28px;padding:32px 28px;box-shadow:var(--sh);text-align:center}
+.gl{width:56px;height:56px;margin:0 auto 14px;border-radius:16px;background:linear-gradient(135deg,#55c7c0,#2a7a74);color:#fff;font:900 italic 28px Outfit,sans-serif;display:grid;place-items:center}
+.gc h1{margin:0 0 14px;font-size:24px;font-style:italic;font-weight:800;letter-spacing:-.03em;text-transform:uppercase}
+.gc h1 span{color:var(--dt)}
+.gc p{margin:0 0 14px;font-size:15px;line-height:1.45;color:var(--sl)}
+.gc form{display:flex;flex-direction:column;gap:10px}
+.gc input{font:inherit;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:16px}
+.gc button{font:inherit;font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:13px;padding:13px 16px;border-radius:14px;border:0;background:var(--dt);color:#fff;cursor:pointer;margin-top:4px}
+.gc button.gs{background:transparent;color:var(--dt);border:1px solid var(--line)}
+.gc button:disabled{opacity:.6;cursor:default}
+.gx{min-height:20px;margin-top:10px;font-size:13px;color:#b8402f}
 .adm #load{display:flex !important}
 .sg{font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--mute);padding:16px 10px 4px;text-transform:uppercase}
 .ni{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:transparent;color:var(--sl);border:1px solid transparent;border-radius:14px;padding:12px 14px;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
@@ -319,6 +334,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 </head>
 <body data-view="bad">
 <script>if(window.IS_STAGING){var b=document.createElement("div");b.className="stg";b.textContent="STAGING – testomgeving";document.body.appendChild(b);document.addEventListener("DOMContentLoaded",function(){var bl=document.querySelector(".beta");if(bl)bl.textContent+=" · STAGING · SUPABASE"})}</script>
+<div id="gate"><div class="gc"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1><p>Even laden…</p></div></div>
 <div class="app">
 <aside class="side">
   <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 1.17</div></div></div>
@@ -328,6 +344,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
     <button class="ni" id="m-bed" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>STREAK</button>
     <button class="ni" id="m-hof" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>Hall of Fame</button>
     <button class="ni" id="m-zo" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Zo werkt het</button>
+    <button class="ni" id="logout" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg><span id="lo-t">Uitloggen</span></button>
   </div>
   <div class="sg">Beheer</div>
   <div class="ac">
@@ -480,7 +497,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <script>
 /* ====== INSTELLEN: e-mailadres van de beheerder (mag uploads opslaan) ====== */
 window.ADMIN_EMAIL="edwin@beatcyclingclub.com";
-window.__fbP=new Promise((res,rej)=>{window.__fbRes=res;setTimeout(()=>rej(new Error("Firebase niet bereikbaar")),10000)});
+window.__fbP=new Promise((res,rej)=>{window.__fbRes=res;setTimeout(()=>{if(!window.__fbGate)rej(new Error("Database niet bereikbaar"))},10000)});
 window.claude={use:()=>window.__fbP};
 </script>
 <script>
@@ -639,9 +656,9 @@ let _sq=false;
 const fbErr=e=>{const c=(e&&e.code)||"",m=(e&&e.message)||String(e);
   if(/geannuleerd/i.test(m))return"inloggen geannuleerd";
   if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c))return"wachtwoord of e-mailadres klopt niet ("+c+")";
-  if(c==="permission-denied")return"geen toestemming; controleer de Firestore-regels en of je bent ingelogd als beheerder ("+c+")";
-  if(c==="auth/operation-not-allowed")return"inloggen met e-mail en wachtwoord staat uit in Firebase ("+c+")";
-  if(/network|unavailable/.test(c))return"geen verbinding met Firebase ("+c+")";
+  if(c==="permission-denied")return"geen toestemming; controleer de database-regels en of je bent ingelogd als beheerder ("+c+")";
+  if(c==="auth/operation-not-allowed")return"inloggen met e-mail en wachtwoord staat uit in de database ("+c+")";
+  if(/network|unavailable/.test(c))return"geen verbinding met de database ("+c+")";
   if(/invalid_credentials|Invalid login/i.test(c+" "+m))return"wachtwoord of e-mailadres klopt niet";
   if(c==="42501"||/row-level security|permission denied/i.test(m))return"geen toestemming; controleer of je bent ingelogd als beheerder ("+(c||"RLS")+")";
   if(/anonymous_provider_disabled|Anonymous sign-ins are disabled/i.test(c+" "+m))return"anoniem inloggen staat uit in Supabase";
@@ -691,11 +708,12 @@ function byName(){const v=$("e-name").value;$("e-num").value=rugnr(v);$("e-nh").
 function setDay(s){$("e-date").value=s<BSTART?BSTART:s;elist()}
 function openAdd(){
   track("Rit invoeren geopend");
-  const names=[...new Set(bedRows.map(r=>r[1]))].sort((a,b)=>a.localeCompare(b));
-  $("e-name").innerHTML='<option value="">Kies je naam…</option>'+names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join("");
+  const names=window.__me?[window.__me]:[...new Set(bedRows.map(r=>r[1]))].sort((a,b)=>a.localeCompare(b));
+  $("e-name").innerHTML=(window.__me?'':'<option value="">Kies je naam…</option>')+names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join("");
+  $("e-name").disabled=!!window.__me;$("e-num").closest("label").style.display=window.__me?"none":"";
   const d=$("e-date");d.min=BSTART;d.max=today();d.value=today();
   ["out","in","city","el","hm"].forEach(k=>$("e-"+k).value="");
-  $("e-num").value="";$("e-nh").textContent="";$("e-msg").textContent="";etot();elist();$("dlg").showModal();
+  $("e-num").value="";$("e-nh").textContent="";$("e-msg").textContent="";if(window.__me){$("e-name").value=window.__me;byName()}etot();elist();$("dlg").showModal();
 }
 const num=id=>{const s=$(id).value.trim().replace(",",".");return s===""?0:Number(s)};
 function etot(){$("e-tot").textContent=nl(Math.round(["out","in","city","el"].reduce((s,k)=>s+(num("e-"+k)||0),0)*100)/100)}
@@ -744,16 +762,10 @@ $("file").onchange=async e=>{const f=e.target.files[0];if(!f)return;
 init();loadDb();
 </script>
 <script type="module">
-/* ====== STAGING gebruikt Supabase, LIVE gebruikt nog Firebase ====== */
-const SB={url:"https://ijtsrhhovbakxhuvzupw.supabase.co",key:"sb_publishable_NCAyjCkD7syTVKXt9U57zg_x78_MuMw"};
-const CFG_LIVE={
-  apiKey:"AIzaSyDMFw-ijOJ7NtK0llFuk0_fAcb4LOvAkS0",
-  authDomain:"beat-challenge-app.firebaseapp.com",
-  projectId:"beat-challenge-app",
-  storageBucket:"beat-challenge-app.firebasestorage.app",
-  messagingSenderId:"130884755647",
-  appId:"1:130884755647:web:15e479b46efbe5990da60a"
-};
+/* ====== Database: Supabase (staging en live hebben elk een eigen project) ====== */
+const SB_STAGING={url:"https://ijtsrhhovbakxhuvzupw.supabase.co",key:"sb_publishable_NCAyjCkD7syTVKXt9U57zg_x78_MuMw"};
+const SB_LIVE={url:"https://gqxkppyvlvssawhqzqhx.supabase.co",key:"sb_publishable_G_rFS8JvGwxBaFpuHcG1Dw_PC_M3ao5"};
+const SB=window.IS_STAGING?SB_STAGING:SB_LIVE;
 
 async function startSupabase(){
   const {createClient}=await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/+esm");
@@ -763,21 +775,13 @@ async function startSupabase(){
     setItem:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){mem[k]=v}},
     removeItem:k=>{try{localStorage.removeItem(k)}catch(e){delete mem[k]}}
   };
-  const sb=createClient(SB.url,SB.key,{auth:{storage:store,persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+  const sb=createClient(SB.url,SB.key,{auth:{storage:store,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"implicit"}});
   const session=async()=>(await sb.auth.getSession()).data.session;
-  let authP=null;
-  const ensureAuth=()=>authP||(authP=(async()=>{
-    if(await session())return;
-    const {error}=await sb.auth.signInAnonymously();
-    if(error)throw error;
-  })().finally(()=>{authP=null}));
+  const ensureAuth=async()=>{const s=await session();if(!s||s.user.is_anonymous)throw new Error("Niet ingelogd")};
   const ensureAdmin=async()=>{
     const s=await session();
     if(s&&s.user&&(s.user.email||"").toLowerCase()===window.ADMIN_EMAIL.toLowerCase())return;
-    const pw=prompt("Wachtwoord van "+window.ADMIN_EMAIL+" (alleen de beheerder kan uploads opslaan):");
-    if(!pw)throw new Error("Inloggen geannuleerd");
-    const {error}=await sb.auth.signInWithPassword({email:window.ADMIN_EMAIL,password:pw});
-    if(error)throw error;
+    throw new Error("Alleen de beheerder kan uploads opslaan");
   };
   const fetchAll=async(t,col)=>{
     const out=[];
@@ -809,6 +813,42 @@ async function startSupabase(){
     });
     return ()=>sb.removeChannel(ch);
   };
+
+  /* ====== Inloggen met e-mail-link ====== */
+  window.__fbGate=true;
+  const G=document.getElementById("gate");
+  const gx=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const show=h=>{G.innerHTML='<div class="gc"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1>'+h+'</div>'};
+  const redirect=location.origin+location.pathname;
+  const realUser=async()=>{const s=await session();return s&&!s.user.is_anonymous?s.user:null};
+  const mapErr=e=>/rate limit|too many|security purposes/i.test(e.message||"")?"Er zijn te veel inloglinks aangevraagd. Wacht even en probeer het straks opnieuw.":/invalid.*email|valid email/i.test(e.message||"")?"Dit is geen geldig e-mailadres.":"Versturen mislukt: "+(e.message||e);
+  const logout=async()=>{try{await sb.auth.signOut()}catch(e){}location.href=redirect};
+  const waitSignIn=()=>new Promise(res=>{const {data}=sb.auth.onAuthStateChange((ev,ses)=>{if(ses&&!ses.user.is_anonymous){data.subscription.unsubscribe();res()}})});
+  const loginForm=()=>{
+    show('<p>Log in met het e-mailadres waarmee je je hebt aangemeld. Je krijgt een inloglink in je mail, een wachtwoord is niet nodig.</p><form id="gf"><input id="gm" type="email" required autocomplete="email" placeholder="jouw@e-mailadres.nl"><button id="gb">Stuur inloglink</button></form><div class="gx" id="gx2"></div>');
+    document.getElementById("gf").onsubmit=async ev=>{
+      ev.preventDefault();
+      const email=document.getElementById("gm").value.trim().toLowerCase(),b=document.getElementById("gb"),m=document.getElementById("gx2");
+      b.disabled=true;m.textContent="Bezig…";
+      const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:redirect,shouldCreateUser:true}});
+      if(error){m.textContent=mapErr(error);b.disabled=false;return}
+      show('<p><b>Check je mail.</b></p><p>We hebben een inloglink gestuurd naar <b>'+gx(email)+'</b>. Open de link op dit apparaat. Zie je niets, kijk dan ook in je spam.</p><button class="gs" id="gr">Ander e-mailadres</button>');
+      document.getElementById("gr").onclick=loginForm;
+    };
+  };
+  const stop=(html)=>{show(html+'<button id="g1">Opnieuw controleren</button><button class="gs" id="g2">Uitloggen</button>');document.getElementById("g1").onclick=()=>location.reload();document.getElementById("g2").onclick=logout;return new Promise(()=>{})};
+  let u=await realUser();
+  if(!u){loginForm();await waitSignIn();u=await realUser()}
+  const isAdmin=(u.email||"").toLowerCase()===window.ADMIN_EMAIL.toLowerCase();
+  const rr=await sb.from("riders").select("first_name,last_name,display_name,status,bib").eq("email",(u.email||"").toLowerCase()).maybeSingle();
+  if(rr.error&&!isAdmin)await stop('<p>Je gegevens konden niet worden opgehaald ('+gx(rr.error.message)+').</p>');
+  const rd=rr.data;
+  if(!rd&&!isAdmin)await stop('<p>Het e-mailadres <b>'+gx(u.email)+'</b> is nog niet gekoppeld aan een deelnemer. Neem contact op met BEAT Cycling Club.</p>');
+  if(rd&&(rd.status!=="actief"||!rd.bib)&&!isAdmin)await stop('<p>Je aanmelding is ontvangen. Zodra je een rugnummer hebt gekregen, kun je hier inloggen.</p>');
+  window.__me=rd&&rd.display_name||null;
+  if(isAdmin)document.documentElement.classList.add("adm");
+  const lo=document.getElementById("logout");lo.hidden=false;lo.onclick=logout;document.getElementById("lo-t").textContent="Uitloggen"+(window.__me?" ("+window.__me+")":"");
+  document.body.classList.add("in");
   window.__fbRes({
     collection:name=>({
       limit(){return this},
@@ -841,43 +881,7 @@ async function startSupabase(){
   });
 }
 
-async function startFirebase(){
-  const {initializeApp}=await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js");
-  const {getAuth,signInAnonymously,signInWithEmailAndPassword}=await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js");
-  const {getFirestore,collection,getDocs,doc,setDoc,deleteDoc,onSnapshot}=await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js");
-  const app=initializeApp(CFG_LIVE);
-  const auth=getAuth(app),db=getFirestore(app);
-  const ensureAuth=async()=>{if(!auth.currentUser)await signInAnonymously(auth)};
-  const ensureAdmin=async()=>{
-    if(auth.currentUser&&auth.currentUser.email===window.ADMIN_EMAIL)return;
-    const pw=prompt("Wachtwoord van "+window.ADMIN_EMAIL+" (alleen de beheerder kan uploads opslaan):");
-    if(!pw)throw new Error("Inloggen geannuleerd");
-    await signInWithEmailAndPassword(auth,window.ADMIN_EMAIL,pw);
-  };
-  window.__fbListen=async(name,cb,err)=>{await ensureAuth();return onSnapshot(collection(db,name),s=>cb(s.docs.map(d=>({id:d.id,data:()=>d.data()}))),e=>err&&err(e))};
-  window.__fbRes({
-    collection:name=>({
-      limit(){return this},
-      async get(){
-        await ensureAuth();
-        const s=await getDocs(collection(db,name));
-        return {docs:s.docs.map(d=>({id:d.id,data:()=>{const x=d.data();return x.rowsJson?{rows:JSON.parse(x.rowsJson)}:x}}))};
-      }
-    }),
-    doc:path=>{
-      const [c,id]=path.split("/"),ref=doc(db,c,id);
-      return {
-        async set(v){
-          if(c==="days"){await ensureAdmin();return setDoc(ref,{rowsJson:JSON.stringify(v.rows),ts:Date.now()})}
-          await ensureAuth();return setDoc(ref,v);
-        },
-        async delete(){await ensureAuth();return deleteDoc(ref)}
-      };
-    }
-  });
-}
-
-try{await (window.IS_STAGING?startSupabase():startFirebase())}catch(e){console.error("Koppeling met de database mislukt",e)}
+try{await startSupabase()}catch(e){console.error("Koppeling met de database mislukt",e);const g=document.getElementById("gate");if(g&&!document.body.classList.contains("in"))g.innerHTML='<div class="gc"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1><p>Geen verbinding met de database. Ververs de pagina om het opnieuw te proberen.</p></div>'}
 </script>
 </body>
 </html>
