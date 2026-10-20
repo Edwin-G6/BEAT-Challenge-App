@@ -822,26 +822,33 @@ async function startSupabase(){
   const show=h=>{G.innerHTML='<div class="gc"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1>'+h+'</div>'};
   const redirect=location.origin+location.pathname;
   const realUser=async()=>{const s=await session();return s&&!s.user.is_anonymous?s.user:null};
-  const mapErr=e=>/rate limit|too many|security purposes/i.test(e.message||"")?"Er zijn te veel inloglinks aangevraagd. Wacht even en probeer het straks opnieuw.":/invalid.*email|valid email/i.test(e.message||"")?"Dit is geen geldig e-mailadres.":"Versturen mislukt: "+(e.message||e);
+  const mapErr=e=>/rate limit|too many|security purposes/i.test(e.message||"")?"Er zijn te veel codes aangevraagd. Wacht even en probeer het straks opnieuw.":/invalid.*email|valid email/i.test(e.message||"")?"Dit is geen geldig e-mailadres.":"Versturen mislukt: "+(e.message||e);
   const logout=async()=>{try{await sb.auth.signOut()}catch(e){}location.href=redirect};
   const waitSignIn=()=>new Promise(res=>{const {data}=sb.auth.onAuthStateChange((ev,ses)=>{if(ses&&!ses.user.is_anonymous){data.subscription.unsubscribe();res()}})});
   const loginForm=(msg)=>{
-    show('<p>Log in met het e-mailadres waarmee je je hebt aangemeld. Je krijgt een inloglink in je mail, een wachtwoord is niet nodig.</p><form id="gf"><input id="gm" type="email" required autocomplete="email" placeholder="jouw@e-mailadres.nl"><button id="gb">Stuur inloglink</button></form><div class="gx" id="gx2">'+(typeof msg==="string"?gx(msg):"")+'</div>');
+    show('<p>Log in met het e-mailadres waarmee je je hebt aangemeld. Je krijgt een code in je mail, een wachtwoord is niet nodig.</p><form id="gf"><input id="gm" type="email" required autocomplete="email" placeholder="jouw@e-mailadres.nl"><button id="gb">Stuur code</button></form><div class="gx" id="gx2">'+(typeof msg==="string"?gx(msg):"")+'</div>');
     document.getElementById("gf").onsubmit=async ev=>{
       ev.preventDefault();
       const email=document.getElementById("gm").value.trim().toLowerCase(),b=document.getElementById("gb"),m=document.getElementById("gx2");
       b.disabled=true;m.textContent="Bezig…";
       const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:redirect,shouldCreateUser:true}});
       if(error){m.textContent=mapErr(error);b.disabled=false;return}
-      show('<p><b>Check je mail.</b></p><p>We hebben een inloglink gestuurd naar <b>'+gx(email)+'</b>. Open de link op dit apparaat. Zie je niets, kijk dan ook in je spam.</p><button class="gs" id="gr">Ander e-mailadres</button>');
+      show('<p><b>Check je mail.</b></p><p>We hebben een code gestuurd naar <b>'+gx(email)+'</b>. Vul die hieronder in. Zie je niets, kijk dan ook in je spam.</p><form id="gf2"><input id="gc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required placeholder="Code uit de mail"><button id="gb2">Inloggen</button></form><div class="gx" id="gx3"></div><button class="gs" id="gr">Ander e-mailadres</button>');
       document.getElementById("gr").onclick=()=>loginForm();
+      document.getElementById("gf2").onsubmit=async ev=>{
+        ev.preventDefault();
+        const b2=document.getElementById("gb2"),m2=document.getElementById("gx3"),code=document.getElementById("gc").value.replace(/\s+/g,"");
+        b2.disabled=true;m2.textContent="Bezig…";
+        const {error:e2}=await sb.auth.verifyOtp({email,token:code,type:"email"});
+        if(e2){m2.textContent=/expired|invalid/i.test(e2.message||"")?"Deze code klopt niet of is verlopen. Controleer de code of vraag een nieuwe aan.":"Inloggen mislukt: "+(e2.message||e2);b2.disabled=false}
+      };
     };
   };
   const stop=(html)=>{show(html+'<button id="g1">Opnieuw controleren</button><button class="gs" id="g2">Uitloggen</button>');document.getElementById("g1").onclick=()=>location.reload();document.getElementById("g2").onclick=logout;return new Promise(()=>{})};
   let hashErr="";
   try{const hp=new URLSearchParams(HASH0.replace(/^#/,""));
     if(hp.get("error")||hp.get("error_code")){
-      hashErr=hp.get("error_code")==="otp_expired"?"Deze inloglink is verlopen of al gebruikt. Soms opent een mailprogramma of beveiligingsfilter de link vooraf. Vraag hieronder een nieuwe link aan en klik daar meteen op.":"Inloggen mislukt: "+(hp.get("error_description")||hp.get("error"));
+      hashErr=hp.get("error_code")==="otp_expired"?"Deze inloglink is verlopen of al gebruikt. Vraag hieronder een code aan om in te loggen.":"Inloggen mislukt: "+(hp.get("error_description")||hp.get("error"));
       history.replaceState(null,"",location.pathname+location.search);
     }}catch(e){}
   let u=await realUser();
