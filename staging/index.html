@@ -44,6 +44,7 @@ body.in #gate{display:none}
 .gc button{font:inherit;font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:13px;padding:13px 16px;border-radius:14px;border:0;background:var(--dt);color:#fff;cursor:pointer;margin-top:4px}
 .gc button.gs{background:transparent;color:var(--dt);border:1px solid var(--line)}
 .gc button:disabled{opacity:.6;cursor:default}
+.gh{margin:2px 2px 0;font-size:12px;line-height:1.4;color:var(--mute);text-align:left}
 .gx{min-height:20px;margin-top:10px;font-size:13px;color:#b8402f}
 .adm #load{display:flex !important}
 .sg{font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--mute);padding:16px 10px 4px;text-transform:uppercase}
@@ -497,6 +498,8 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <script>
 /* ====== INSTELLEN: e-mailadres van de beheerder (mag uploads opslaan) ====== */
 window.ADMIN_EMAIL="edwin@beatcyclingclub.com";
+/* Cloudflare Turnstile: vul hier de site key in (publiek) om de mens-controle aan te zetten. Leeg = uit. */
+window.TURNSTILE_SITEKEY="";
 window.__fbP=new Promise((res,rej)=>{window.__fbRes=res;setTimeout(()=>{if(!window.__fbGate)rej(new Error("Database niet bereikbaar"))},10000)});
 window.claude={use:()=>window.__fbP};
 </script>
@@ -666,8 +669,10 @@ const fbErr=e=>{const c=(e&&e.code)||"",m=(e&&e.message)||String(e);
   return c||m};
 let DB=null,ENT=[];
 function eff(){
-  const have=new Set(ALL.map(r=>r[0]+"|"+r[1])),M=new Set(ALL.filter(r=>r[8]).map(r=>r[1]));
-  return ALL.concat(ENT.filter(r=>!have.has(r[0]+"|"+r[1])).map(r=>{const x=r.slice();x[8]=M.has(r[1])?1:0;return x}));
+  const mm=window.__members,A=mm&&mm.size?ALL.map(r=>{if(!r[8]&&mm.has(r[1])){const x=r.slice();x[8]=1;return x}return r}):ALL;
+  const have=new Set(A.map(r=>r[0]+"|"+r[1])),M=new Set(A.filter(r=>r[8]).map(r=>r[1]));
+  if(mm)mm.forEach(n=>M.add(n));
+  return A.concat(ENT.filter(r=>!have.has(r[0]+"|"+r[1])).map(r=>{const x=r.slice();x[8]=M.has(r[1])?1:0;return x}));
 }
 const entRow=(x,id)=>[x.date,x.name,x.out,x.in,x.city,x.el,Math.round((x.out+x.in+x.city+x.el)*100)/100,x.hm,0,id];
 const byDate=list=>{const m=new Map();for(const r of list){if(!m.has(r[0]))m.set(r[0],[]);m.get(r[0]).push(r)}return m};
@@ -825,14 +830,24 @@ async function startSupabase(){
   const mapErr=e=>/rate limit|too many|security purposes/i.test(e.message||"")?"Er zijn te veel codes aangevraagd. Wacht even en probeer het straks opnieuw.":/invalid.*email|valid email/i.test(e.message||"")?"Dit is geen geldig e-mailadres.":"Versturen mislukt: "+(e.message||e);
   const logout=async()=>{try{await sb.auth.signOut()}catch(e){}location.href=redirect};
   const waitSignIn=()=>new Promise(res=>{const {data}=sb.auth.onAuthStateChange((ev,ses)=>{if(ses&&!ses.user.is_anonymous){data.subscription.unsubscribe();res()}})});
+  const TS=window.TURNSTILE_SITEKEY||"";let capTok=null,capId=null;
+  const loadTs=()=>new Promise((res,rej)=>{if(window.turnstile)return res();const sc=document.createElement("script");sc.src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";sc.async=true;sc.onload=()=>res();sc.onerror=()=>rej(new Error("captcha"));document.head.appendChild(sc)});
+  const initCap=async(btn,msg)=>{
+    if(!TS)return;
+    capTok=null;btn.disabled=true;msg.style.color="var(--mute)";msg.textContent="Even controleren of je een mens bent…";
+    try{await loadTs();
+      capId=turnstile.render("#gcap",{sitekey:TS,appearance:"interaction-only",callback:t=>{capTok=t;btn.disabled=false;msg.textContent=""},"expired-callback":()=>{capTok=null;btn.disabled=true},"error-callback":()=>{msg.style.color="";msg.textContent="De controle kon niet worden geladen. Ververs de pagina."}});
+    }catch(e){msg.style.color="";msg.textContent="De controle kon niet worden geladen. Ververs de pagina."}
+  };
   const loginForm=(msg)=>{
-    show('<p>Log in met het e-mailadres waarmee je je hebt aangemeld. Je krijgt een code in je mail, een wachtwoord is niet nodig.</p><form id="gf"><input id="gm" type="email" required autocomplete="email" placeholder="jouw@e-mailadres.nl"><button id="gb">Stuur code</button></form><div class="gx" id="gx2">'+(typeof msg==="string"?gx(msg):"")+'</div>');
+    show('<p>Log in met het e-mailadres waarmee je je hebt aangemeld, of meld je aan met een nieuw adres. Je krijgt een code in je mail, een wachtwoord is niet nodig.</p><form id="gf"><input id="gm" type="email" required autocomplete="email" placeholder="jouw@e-mailadres.nl"><div id="gcap"></div><button id="gb">Stuur code</button></form><div class="gx" id="gx2">'+(typeof msg==="string"?gx(msg):"")+'</div>');
+    initCap(document.getElementById("gb"),document.getElementById("gx2"));
     document.getElementById("gf").onsubmit=async ev=>{
       ev.preventDefault();
       const email=document.getElementById("gm").value.trim().toLowerCase(),b=document.getElementById("gb"),m=document.getElementById("gx2");
       b.disabled=true;m.textContent="Bezig…";
-      const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:redirect,shouldCreateUser:true}});
-      if(error){m.textContent=mapErr(error);b.disabled=false;return}
+      const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:redirect,shouldCreateUser:true,captchaToken:capTok||undefined}});
+      if(error){m.style.color="";m.textContent=/captcha/i.test(error.message||"")?"De controle is mislukt. Probeer het opnieuw.":mapErr(error);if(TS&&window.turnstile){try{turnstile.reset(capId)}catch(e){}capTok=null;b.disabled=true}else b.disabled=false;return}
       show('<p><b>Check je mail.</b></p><p>We hebben een code gestuurd naar <b>'+gx(email)+'</b>. Vul die hieronder in. Zie je niets, kijk dan ook in je spam.</p><form id="gf2"><input id="gc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required placeholder="Code uit de mail"><button id="gb2">Inloggen</button></form><div class="gx" id="gx3"></div><button class="gs" id="gr">Ander e-mailadres</button>');
       document.getElementById("gr").onclick=()=>loginForm();
       document.getElementById("gf2").onsubmit=async ev=>{
@@ -844,6 +859,20 @@ async function startSupabase(){
       };
     };
   };
+  const signupForm=()=>new Promise(res=>{
+    show('<p>Welkom! Wij kennen je nog niet. Vul je naam in, dan ben je zo binnen.</p><form id="gs1"><input id="sf" required maxlength="40" autocomplete="given-name" placeholder="Voornaam" aria-label="Voornaam"><input id="sl" required maxlength="60" autocomplete="family-name" placeholder="Achternaam" aria-label="Achternaam"><p class="gh">Heb je al een BEAT-rugnummer? Vul die dan hier in. Heb je er nog geen, laat dit dan leeg.</p><input id="sn" inputmode="numeric" maxlength="4" placeholder="Rugnummer (optioneel)" aria-label="Rugnummer, optioneel"><button id="sbtn">Aanmelden</button></form><div class="gx" id="sx"></div><button class="gs" id="slo">Uitloggen</button>');
+    document.getElementById("slo").onclick=logout;
+    document.getElementById("gs1").onsubmit=async ev=>{
+      ev.preventDefault();
+      const f=document.getElementById("sf").value.trim(),l=document.getElementById("sl").value.trim(),n=document.getElementById("sn").value.trim(),m=document.getElementById("sx"),b=document.getElementById("sbtn");
+      if(n&&!/^\d{1,4}$/.test(n)){m.textContent="Een rugnummer bestaat alleen uit cijfers.";return}
+      if(/\d/.test(f)){m.textContent="Vul je voornaam zonder cijfers in.";return}
+      b.disabled=true;m.textContent="Bezig…";
+      const r=await sb.rpc("signup_rider",{p_first:f,p_last:l,p_claimed:n?parseInt(n,10):null});
+      if(r.error||!r.data){m.textContent=/ongeldige naam/i.test((r.error&&r.error.message)||"")?"Controleer je naam en probeer het opnieuw.":"Aanmelden mislukt: "+((r.error&&r.error.message)||"onbekende fout");b.disabled=false;return}
+      res(r.data);
+    };
+  });
   const stop=(html)=>{show(html+'<button id="g1">Opnieuw controleren</button><button class="gs" id="g2">Uitloggen</button>');document.getElementById("g1").onclick=()=>location.reload();document.getElementById("g2").onclick=logout;return new Promise(()=>{})};
   let hashErr="";
   try{const hp=new URLSearchParams(HASH0.replace(/^#/,""));
@@ -856,10 +885,11 @@ async function startSupabase(){
   const isAdmin=(u.email||"").toLowerCase()===window.ADMIN_EMAIL.toLowerCase();
   const rr=await sb.from("riders").select("first_name,last_name,display_name,status,bib").eq("email",(u.email||"").toLowerCase()).maybeSingle();
   if(rr.error&&!isAdmin)await stop('<p>Je gegevens konden niet worden opgehaald ('+gx(rr.error.message)+').</p>');
-  const rd=rr.data;
-  if(!rd&&!isAdmin)await stop('<p>Het e-mailadres <b>'+gx(u.email)+'</b> is nog niet gekoppeld aan een deelnemer. Neem contact op met BEAT Cycling Club.</p>');
+  let rd=rr.data;
+  if(!rd&&!isAdmin)rd=await signupForm();
   if(rd&&(rd.status!=="actief"||!rd.bib)&&!isAdmin)await stop('<p>Je aanmelding is ontvangen. Zodra je een rugnummer hebt gekregen, kun je hier inloggen.</p>');
   window.__me=rd&&rd.display_name||null;
+  try{const fl=await sb.rpc("rider_flags");if(!fl.error&&fl.data)window.__members=new Set(fl.data.filter(x=>x.is_member).map(x=>x.name))}catch(e){}
   if(isAdmin)document.documentElement.classList.add("adm");
   const lo=document.getElementById("logout");lo.hidden=false;lo.onclick=logout;document.getElementById("lo-t").textContent="Uitloggen"+(window.__me?" ("+window.__me+")":"");
   document.body.classList.add("in");
