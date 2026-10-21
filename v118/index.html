@@ -316,11 +316,11 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .bob{animation:bob 4s ease-in-out infinite;transform-origin:110px 215px}
 .eyes{animation:blink 5.2s infinite;transform-box:fill-box;transform-origin:center}
 .led{animation:pulse 2.4s ease-in-out infinite}
-.arm-r{transform-origin:150px 168px;animation:wave 2.4s ease-in-out infinite}
+.arm-r{transform-origin:156px 170px;animation:wave 2.4s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(.8deg)}}
 @keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.08)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-@keyframes wave{0%,100%{transform:rotate(0)}50%{transform:rotate(-14deg)}}
+@keyframes wave{0%,100%{transform:rotate(0)}50%{transform:rotate(-12deg)}}
 @media (prefers-reduced-motion:reduce){.bob,.eyes,.led,.arm-r{animation:none}}
 @media (max-width:440px){.botrow{grid-template-columns:64px minmax(0,1fr)}.botrow .bot{width:64px;height:64px}.botrow .bubble::before{top:22px}.botrow .say{font-size:16px}}
 </style>
@@ -382,14 +382,14 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
           </defs>
           <g class="bob">
             <!-- lijf: wielershirt -->
-            <ellipse cx="60" cy="192" rx="11" ry="22" transform="rotate(12 60 192)" fill="url(#bbT)"/>
-            <circle cx="53" cy="212" r="8" fill="#fff"/>
-            <g class="arm-r"><ellipse cx="160" cy="184" rx="11" ry="22" transform="rotate(-26 160 184)" fill="url(#bbT)"/><circle cx="174" cy="164" r="8" fill="#fff"/></g>
             <path d="M62 222 Q62 170 90 158 H130 Q158 170 158 222Z" fill="url(#bbT)"/>
             <path d="M63 200 H157" stroke="#fff" stroke-opacity=".9" stroke-width="6"/>
             <path d="M110 158 V176" stroke="#fff" stroke-opacity=".5" stroke-width="2.5" stroke-linecap="round"/>
             <circle cx="110" cy="186" r="11" fill="#fff"/>
             <text x="110" y="191" text-anchor="middle" font-family="Outfit,sans-serif" font-style="italic" font-weight="800" font-size="15" fill="#2a7a74">B</text>
+            <ellipse cx="60" cy="191" rx="11" ry="21" transform="rotate(10 60 191)" fill="url(#bbT)" stroke="#1f5f5a" stroke-opacity=".35" stroke-width="1.5"/>
+            <circle cx="56" cy="211" r="8.5" fill="#fff" stroke="#2a7a74" stroke-width="3"/>
+            <g class="arm-r"><ellipse cx="160" cy="191" rx="11" ry="21" transform="rotate(-10 160 191)" fill="url(#bbT)" stroke="#1f5f5a" stroke-opacity=".35" stroke-width="1.5"/><circle cx="164" cy="211" r="8.5" fill="#fff" stroke="#2a7a74" stroke-width="3"/></g>
             <!-- hoofd -->
             <circle cx="42" cy="102" r="13" fill="url(#bbT)"/><circle cx="178" cy="102" r="13" fill="url(#bbT)"/>
             <rect x="46" y="42" width="128" height="108" rx="42" fill="url(#bbH)"/>
