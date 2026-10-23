@@ -317,6 +317,47 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   .main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
   .stg{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 }
+.gc.hb .gl{display:none}
+.gc .botrow{grid-template-columns:1fr;justify-items:center;gap:10px;margin:0 0 16px}
+.gc .botrow .bot{width:120px;height:122px}
+.gc .botrow .bubble{text-align:center;width:100%}
+.gc .botrow .bubble::before{left:50%;top:-8px;margin-left:-8px;border:8px solid transparent;border-top:0;border-bottom-color:var(--mint2)}
+.gc .botrow .say{font-size:16px}
+.gc p.gsw{margin:14px 0 0;font-size:14px;color:var(--sl)}
+.gc a{color:var(--dt);font-weight:800}
+#botdlg{max-height:calc(100dvh - 24px);overflow:auto}
+/* BED-Bot (bots op de pagina's) + beheer van bot-teksten */
+.botv{--head:#e8f2f1;--head-shade:#c3d9d5;--visor:#0e1b2c;--led:#7ef0e6;--hair:#1b2b3d;--mint2:#e3f4f2}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .botv{--head:#d5e8e6;--head-shade:#a9c9c5;--hair:#3a5068;--mint2:#17383a}}
+:root[data-theme="dark"] .botv{--head:#d5e8e6;--head-shade:#a9c9c5;--hair:#3a5068;--mint2:#17383a}
+.botrow{display:grid;grid-template-columns:84px minmax(0,1fr);gap:12px;align-items:center;margin:0 0 16px}
+.botrow[hidden]{display:none}
+.botrow .bot{width:84px;height:84px;display:block;overflow:visible}
+.botrow .bubble{position:relative;background:var(--mint2);border-radius:18px;padding:11px 15px}
+.botrow .bubble::before{content:"";position:absolute;left:-8px;top:30px;border:8px solid transparent;border-left:0;border-right-color:var(--mint2)}
+.botrow .who{font:700 10px "JetBrains Mono",ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dt);margin-bottom:2px}
+.botrow .say{color:var(--ink);margin:0;font-size:17px;font-weight:700;line-height:1.3}
+.bob{animation:bob 4s ease-in-out infinite;transform-origin:110px 215px}
+.beyes{animation:blink 5.2s infinite;transform-box:fill-box;transform-origin:center}
+.arm-r{transform-origin:156px 170px;animation:wave 2.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(.8deg)}}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.08)}}
+@keyframes wave{0%,100%{transform:rotate(0)}50%{transform:rotate(-12deg)}}
+@media (prefers-reduced-motion:reduce){.bob,.beyes,.arm-r{animation:none}}
+@media (max-width:440px){.botrow{grid-template-columns:64px minmax(0,1fr)}.botrow .bot{width:64px;height:64px}.botrow .bubble::before{top:22px}.botrow .say{font-size:16px}}
+#botadm{display:none}.adm #botadm{display:flex}
+#botdlg .bd{padding:22px 22px 20px}
+#botdlg h2{margin:0 0 4px;font:800 20px/1.2 "Outfit",system-ui,sans-serif}
+#botdlg .bsub{margin:0 0 14px;font-size:13px;color:var(--mute)}
+#botdlg .bscr{font:700 11px "JetBrains Mono",ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--dt);margin:14px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
+#botdlg .brow{display:grid;grid-template-columns:56px minmax(0,1fr);gap:10px;align-items:start;margin-bottom:10px}
+#botdlg .brow .bot{width:56px;height:56px;display:block;overflow:visible}
+#botdlg label{display:block;font-size:12px;font-weight:700;color:var(--mute);margin:0 0 4px}
+#botdlg textarea,#botdlg select{width:100%;font:inherit;font-size:15px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+#botdlg textarea{resize:vertical;min-height:60px}
+#botdlg .bact{display:flex;gap:8px;justify-content:flex-end;align-items:center;margin-top:14px}
+#botdlg .bmsg{flex:1;font-size:13px;color:var(--dt)}
+#botdlg .bmsg.err{color:#b8402f}
 </style>
 <!-- Omgeving: staging = adres bevat /staging/ -->
 <script>
@@ -351,9 +392,11 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   <div class="ac">
     <button class="ni acc" id="add"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Rit invoeren</button>
     <button class="ni" id="load"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Nieuwe export laden</button>
+    <button class="ni" id="botadm"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Bot-teksten</button>
     <input type="file" id="file" accept=".csv,text/csv" hidden>
   </div>
 </aside>
+<dialog id="botdlg"><div class="bd" id="botbd"></div></dialog>
 <main class="main">
 <section class="card hd">
   <div>
@@ -370,6 +413,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   </div>
 </section>
 <div class="bad">
+  <div class="botrow botv" id="botrow" hidden></div>
   <div class="tiles" id="tiles"></div>
   <div class="sub sec" id="podcap"></div>
   <div class="pods" id="podium"></div>
@@ -824,7 +868,93 @@ async function startSupabase(){
   window.__fbGate=true;
   const G=document.getElementById("gate");
   const gx=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-  const show=h=>{G.innerHTML='<div class="gc"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1>'+h+'</div>'};
+  /* ====== Bots: figuren, teksten (tabel bot_texts) en beheer-module ====== */
+  const BOTS={bed:{name:"Eduardo",who:"Eduardo"},vrouw:{name:"Eduarda",who:"Eduarda"},bad:{name:"BAD-Bot",who:"de BAD-Bot"}};
+  const EM="Check je mail! Ik heb een code gestuurd naar {email}. Zie je niets, kijk dan ook in je spam.";
+  const PLACES=[
+    {id:"login",grp:"Inloggen",label:"Inlogscherm",bot:"vrouw",def:"Hoi! Log in met het e-mailadres waarmee je je hebt aangemeld. Je krijgt een code in je mail, een wachtwoord is niet nodig."},
+    {id:"login-code",grp:"Inloggen",label:"Code invullen (inloggen)",bot:"vrouw",def:EM},
+    {id:"signup-start",grp:"Aanmelden",label:"Aanmelden: e-mailadres",bot:"bed",def:"Welkom! Fijn dat je erbij wilt zijn. Vul je e-mailadres in, dan stuur ik je een code. Een wachtwoord is niet nodig."},
+    {id:"signup-code",grp:"Aanmelden",label:"Code invullen (aanmelden)",bot:"bed",def:EM},
+    {id:"signup-naam",grp:"Aanmelden",label:"Aanmelden: naam en rugnummer",bot:"bed",def:"Wij kennen je nog niet. Vul je naam in, dan ben je zo binnen."},
+    {id:"wacht",grp:"Aanmelden",label:"Wachten op rugnummer",bot:"bed",def:"Je aanmelding is ontvangen. Zodra je een rugnummer hebt gekregen, kun je hier inloggen."},
+    {id:"bad-pagina",grp:"In de app",label:"BAD-pagina",bot:"bed",def:"Je naam op een lijstje, lekker!"}
+  ];
+  const PL={};PLACES.forEach(x=>PL[x.id]=x);
+  let BT={};
+  let botN=0;
+  const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  function botSvg(k,label){
+    const id=++botN,f=k==="vrouw",b=k==="bad";
+    const led=b?"#ff7a45":"var(--led)";
+    const g=n=>"url(#"+n+id+")";
+    const body=b?"#121c2b":"";
+    const T=b?'<stop offset="0" stop-color="#2a3b52"/><stop offset="1" stop-color="#121c2b"/>':'<stop offset="0" stop-color="#55c7c0"/><stop offset="1" stop-color="#2a7a74"/>';
+    const H=b?'<stop offset="0" stop-color="#9fb4bb"/><stop offset="1" stop-color="#62797f"/>':'<stop offset="0" style="stop-color:var(--head)"/><stop offset="1" style="stop-color:var(--head-shade)"/>';
+    const acc=b?"#ff7a45":"#fff",gf=b?"#0e1b2c":"#fff",gs=b?"#ff7a45":"#2a7a74",vent=b?"#ff7a45":(f?"#ff9db0":"#fff");
+    const arm=(cx,rot,gx)=>'<ellipse cx="'+cx+'" cy="191" rx="11" ry="21" transform="rotate('+rot+' '+cx+' 191)" fill="'+g("T")+'" stroke="'+(b?"#000":"#1f5f5a")+'" stroke-opacity=".35" stroke-width="1.5"/><circle cx="'+gx+'" cy="211" r="8.5" fill="'+gf+'" stroke="'+gs+'" stroke-width="3"/>';
+    let behind="";
+    if(f)behind='<path d="M160 52 C198 40 218 76 204 116 C200 128 190 134 184 130 C194 110 192 88 160 80Z" fill="var(--hair)"/>';
+    if(b)behind='<path d="M74 40 L62 8 L96 30Z" fill="#121c2b" stroke="#ff7a45" stroke-width="2.5" stroke-linejoin="round"/><path d="M146 40 L158 8 L124 30Z" fill="#121c2b" stroke="#ff7a45" stroke-width="2.5" stroke-linejoin="round"/>';
+    const eyes='<g class="beyes" fill="'+led+'" stroke="'+led+'"><circle cx="88" cy="94" r="13" stroke="none"/><circle cx="92" cy="89" r="4.5" fill="#fff" stroke="none"/><circle cx="84" cy="99" r="2" fill="#fff" opacity=".7" stroke="none"/><path d="M120 99 Q132 85 144 99" stroke-width="5" stroke-linecap="round" fill="none"/>'+(f?'<path d="M77.4 86.5 L71.5 82.5 M82.5 82.2 L79 75.5 M142 90 L148 86" stroke-width="3" stroke-linecap="round" fill="none"/>':"")+'</g>';
+    const mouth=b?'<path d="M84 110 H136 V122 L130 117 L124 124 L117 117 L110 124 L103 117 L96 124 L90 117 L84 122Z" fill="'+led+'"/>':'<rect x="'+(f?94:87)+'" y="'+(f?111:110)+'" width="'+(f?32:46)+'" height="'+(f?12:14)+'" rx="6" fill="'+led+'" transform="rotate(-6 110 117)"/>';
+    let helmx='<path d="M42 88 H178" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>';
+    if(b)helmx+='<path d="M48 84 C44 68 54 56 62 46 C60 58 68 62 66 76 C72 66 70 58 76 50 C78 64 86 70 84 84Z" fill="#ff7a45"/><path d="M172 84 C176 68 166 56 158 46 C160 58 152 62 154 76 C148 66 150 58 144 50 C142 64 134 70 136 84Z" fill="#ff7a45"/>';
+    if(f)helmx+='<ellipse cx="166" cy="62" rx="9" ry="6" transform="rotate(-30 166 62)" fill="#ff9db0"/>';
+    const visor=b?'<path d="M60 72 H160 V84 Q160 112 133 112 Q113 110 110 92 Q107 110 87 112 Q60 112 60 84Z" fill="#000" fill-opacity=".38" stroke="#f2b705" stroke-width="4" stroke-linejoin="round"/>':'<rect x="50" y="62" width="120" height="58" rx="28" fill="'+g("L")+'" stroke="#fff" stroke-opacity=".55" stroke-width="2.5"/>';
+    return '<svg class="bot" viewBox="0 0 220 230" role="img" aria-label="'+label+'"><defs><linearGradient id="H'+id+'" x1="0" y1="0" x2="0" y2="1">'+H+'</linearGradient><linearGradient id="T'+id+'" x1="0" y1="0" x2="1" y2="1">'+T+'</linearGradient><linearGradient id="L'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".45" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity=".22"/></linearGradient></defs><g class="bob">'
+     +behind+'<path d="M62 222 Q62 170 90 158 H130 Q158 170 158 222Z" fill="'+g("T")+'"/><path d="M63 200 H157" stroke="'+acc+'" stroke-opacity=".9" stroke-width="6"/><path d="M110 158 V176" stroke="#fff" stroke-opacity=".5" stroke-width="2.5" stroke-linecap="round"/><circle cx="110" cy="186" r="11" fill="'+acc+'"/><text x="110" y="191" text-anchor="middle" font-family="Outfit,sans-serif" font-style="italic" font-weight="800" font-size="15" fill="'+(b?"#fff":"#2a7a74")+'">B</text>'
+     +arm(60,10,56)+'<g class="arm-r">'+arm(160,-10,164)+'</g>'
+     +'<circle cx="42" cy="102" r="13" fill="'+g("T")+'"/><circle cx="178" cy="102" r="13" fill="'+g("T")+'"/>'+(f?'<circle cx="40" cy="120" r="4" fill="none" stroke="#f2b705" stroke-width="2.5"/><circle cx="180" cy="120" r="4" fill="none" stroke="#f2b705" stroke-width="2.5"/>':"")
+     +'<rect x="46" y="42" width="128" height="108" rx="42" fill="'+g("H")+'"/><rect x="58" y="62" width="104" height="72" rx="30" fill="var(--visor)"/>'+eyes+mouth
+     +'<path d="M42 90 C40 40 76 22 116 22 C152 24 178 44 178 90 L178 92 H42Z" fill="'+g("T")+'"/><rect x="96" y="32" width="8" height="22" rx="4" fill="'+vent+'" opacity=".6"/><rect x="112" y="30" width="8" height="24" rx="4" fill="'+vent+'" opacity=".6"/><rect x="128" y="32" width="8" height="22" rx="4" fill="'+vent+'" opacity=".6"/>'+helmx+visor+'</g></svg>';
+  }
+  const botOf=pl=>{const k=BT[pl.id+".bot"];return BOTS[k]?k:pl.bot};
+  const textOf=(pl,v)=>{let t=BT[pl.id+".text"];if(t==null||t==="")t=pl.def;Object.keys(v||{}).forEach(k=>{t=t.split("{"+k+"}").join(v[k])});return t};
+  const botHtml=(id,v)=>{const pl=PL[id],k=botOf(pl);return '<div class="botrow botv">'+botSvg(k,BOTS[k].name)+'<div class="bubble"><div class="who">'+esc(BOTS[k].who)+'</div><p class="say">'+esc(textOf(pl,v))+'</p></div></div>'};
+  function renderBot(){const el=document.getElementById("botrow");if(!el)return;el.innerHTML=botHtml("bad-pagina").replace(/^<div class="botrow botv">|<\/div>$/g,"");el.hidden=false}
+  async function loadBotTexts(){
+    try{const r=await sb.from("bot_texts").select("key,text");if(!r.error&&r.data){BT={};r.data.forEach(x=>BT[x.key]=x.text)}}catch(e){}
+    renderBot();
+  }
+  function openBotAdmin(){
+    const bd=document.getElementById("botbd");bd.innerHTML="";
+    const mk=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+    bd.append(mk("h2",null,"Bot-teksten"),mk("p","bsub","Alleen zichtbaar voor jou. Kies per plek welke avatar praat en wat hij of zij zegt. Laat je een tekst leeg, dan geldt de standaardtekst. {email} wordt vervangen door het e-mailadres van de deelnemer."));
+    const F={};let grp="";
+    PLACES.forEach(pl=>{
+      if(pl.grp!==grp){grp=pl.grp;bd.append(mk("div","bscr",grp))}
+      const cur=botOf(pl),row=mk("div","brow botv"),pv=mk("div");pv.innerHTML=botSvg(cur,BOTS[cur].name);
+      const w=mk("div"),l=mk("label",null,pl.label),sel=mk("select"),ta=mk("textarea");
+      sel.id="bs-"+pl.id;ta.id="bt-"+pl.id;l.htmlFor=ta.id;sel.setAttribute("aria-label","Avatar bij "+pl.label);
+      Object.keys(BOTS).forEach(k=>{const o=mk("option",null,BOTS[k].name);o.value=k;sel.append(o)});
+      sel.value=cur;sel.style.marginBottom="6px";sel.onchange=()=>{pv.innerHTML=botSvg(sel.value,BOTS[sel.value].name)};
+      ta.rows=3;ta.maxLength=300;ta.value=BT[pl.id+".text"]!=null&&BT[pl.id+".text"]!==""?BT[pl.id+".text"]:pl.def;
+      F[pl.id]={sel,ta};w.append(l,sel,ta);row.append(pv,w);bd.append(row);
+    });
+    const act=mk("div","bact ba"),msg=mk("div","bmsg"),c=mk("button","dk","Sluiten"),sv=mk("button",null,"Opslaan");
+    c.type=sv.type="button";c.onclick=()=>document.getElementById("botdlg").close();
+    sv.onclick=async()=>{
+      sv.disabled=true;msg.className="bmsg";msg.textContent="Opslaan…";
+      try{
+        const up=[],del=[],now=new Date().toISOString();
+        PLACES.forEach(pl=>{
+          const tk=pl.id+".text",bk=pl.id+".bot",t=F[pl.id].ta.value.trim(),b=F[pl.id].sel.value;
+          if(t===""||t===pl.def){if(BT[tk]!=null)del.push(tk)}else if(t!==BT[tk])up.push({key:tk,text:t,updated_at:now});
+          if(b===pl.bot){if(BT[bk]!=null)del.push(bk)}else if(b!==BT[bk])up.push({key:bk,text:b,updated_at:now});
+        });
+        if(up.length){const r=await sb.from("bot_texts").upsert(up);if(r.error)throw r.error}
+        if(del.length){const r=await sb.from("bot_texts").delete().in("key",del);if(r.error)throw r.error}
+        await loadBotTexts();msg.textContent="Opgeslagen";
+      }catch(e){msg.className="bmsg err";msg.textContent="Opslaan mislukt: "+(e.message||e)}
+      sv.disabled=false;
+    };
+    act.append(msg,c,sv);bd.append(act);
+    document.getElementById("botdlg").showModal();
+  }
+  const ba=document.getElementById("botadm");if(ba)ba.onclick=openBotAdmin;
+  await loadBotTexts();
+  const show=(h,hb)=>{G.innerHTML='<div class="gc'+(hb?' hb':'')+'"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1>'+h+'</div>'};
   const redirect=location.origin+location.pathname;
   const realUser=async()=>{const s=await session();return s&&!s.user.is_anonymous?s.user:null};
   const mapErr=e=>/rate limit|too many|security purposes/i.test(e.message||"")?"Er zijn te veel codes aangevraagd. Wacht even en probeer het straks opnieuw.":/invalid.*email|valid email/i.test(e.message||"")?"Dit is geen geldig e-mailadres.":"Versturen mislukt: "+(e.message||e);
@@ -839,8 +969,10 @@ async function startSupabase(){
       capId=turnstile.render("#gcap",{sitekey:TS,appearance:"interaction-only",callback:t=>{capTok=t;btn.disabled=false;msg.textContent=""},"expired-callback":()=>{capTok=null;btn.disabled=true},"error-callback":()=>{msg.style.color="";msg.textContent="De controle kon niet worden geladen. Ververs de pagina."}});
     }catch(e){msg.style.color="";msg.textContent="De controle kon niet worden geladen. Ververs de pagina."}
   };
-  const loginForm=(msg)=>{
-    show('<p>Log in met het e-mailadres waarmee je je hebt aangemeld, of meld je aan met een nieuw adres. Je krijgt een code in je mail, een wachtwoord is niet nodig.</p><form id="gf"><input id="gm" type="email" required autocomplete="email" placeholder="jouw@e-mailadres.nl"><div id="gcap"></div><button id="gb">Stuur code</button></form><div class="gx" id="gx2">'+(typeof msg==="string"?gx(msg):"")+'</div>');
+  const loginForm=(msg,mode)=>{
+    const su=mode==="signup",pid=su?"signup-start":"login";
+    show(botHtml(pid)+'<form id="gf"><input id="gm" type="email" required autocomplete="email" placeholder="jouw@e-mailadres.nl" aria-label="E-mailadres"><div id="gcap"></div><button id="gb">Stuur code</button></form><div class="gx" id="gx2">'+(typeof msg==="string"?gx(msg):"")+'</div><p class="gsw">'+(su?'Al deelnemer? <a href="#" id="gsw">Log hier in</a>':'Nog geen deelnemer? <a href="#" id="gsw">Klik hier</a>')+'</p>',true);
+    document.getElementById("gsw").onclick=e=>{e.preventDefault();loginForm(undefined,su?"login":"signup")};
     initCap(document.getElementById("gb"),document.getElementById("gx2"));
     document.getElementById("gf").onsubmit=async ev=>{
       ev.preventDefault();
@@ -848,8 +980,8 @@ async function startSupabase(){
       b.disabled=true;m.textContent="Bezig…";
       const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:redirect,shouldCreateUser:true,captchaToken:capTok||undefined}});
       if(error){m.style.color="";m.textContent=/captcha/i.test(error.message||"")?"De controle is mislukt. Probeer het opnieuw.":mapErr(error);if(TS&&window.turnstile){try{turnstile.reset(capId)}catch(e){}capTok=null;b.disabled=true}else b.disabled=false;return}
-      show('<p><b>Check je mail.</b></p><p>We hebben een code gestuurd naar <b>'+gx(email)+'</b>. Vul die hieronder in. Zie je niets, kijk dan ook in je spam.</p><form id="gf2"><input id="gc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required placeholder="Code uit de mail"><button id="gb2">Inloggen</button></form><div class="gx" id="gx3"></div><button class="gs" id="gr">Ander e-mailadres</button>');
-      document.getElementById("gr").onclick=()=>loginForm();
+      show(botHtml(su?"signup-code":"login-code",{email})+'<form id="gf2"><input id="gc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required placeholder="Code uit de mail" aria-label="Code uit de mail"><button id="gb2">Inloggen</button></form><div class="gx" id="gx3"></div><button class="gs" id="gr">Ander e-mailadres</button>',true);
+      document.getElementById("gr").onclick=()=>loginForm(undefined,mode);
       document.getElementById("gf2").onsubmit=async ev=>{
         ev.preventDefault();
         const b2=document.getElementById("gb2"),m2=document.getElementById("gx3"),code=document.getElementById("gc").value.replace(/\s+/g,"");
@@ -860,7 +992,7 @@ async function startSupabase(){
     };
   };
   const signupForm=()=>new Promise(res=>{
-    show('<p>Welkom! Wij kennen je nog niet. Vul je naam in, dan ben je zo binnen.</p><form id="gs1"><input id="sf" required maxlength="40" autocomplete="given-name" placeholder="Voornaam" aria-label="Voornaam"><input id="sl" required maxlength="60" autocomplete="family-name" placeholder="Achternaam" aria-label="Achternaam"><p class="gh">Heb je al een BEAT-rugnummer? Vul die dan hier in. Heb je er nog geen, laat dit dan leeg.</p><input id="sn" inputmode="numeric" maxlength="4" placeholder="Rugnummer (optioneel)" aria-label="Rugnummer, optioneel"><button id="sbtn">Aanmelden</button></form><div class="gx" id="sx"></div><button class="gs" id="slo">Uitloggen</button>');
+    show(botHtml("signup-naam")+'<form id="gs1"><input id="sf" required maxlength="40" autocomplete="given-name" placeholder="Voornaam" aria-label="Voornaam"><input id="sl" required maxlength="60" autocomplete="family-name" placeholder="Achternaam" aria-label="Achternaam"><p class="gh">Heb je al een BEAT-rugnummer? Vul die dan hier in. Heb je er nog geen, laat dit dan leeg.</p><input id="sn" inputmode="numeric" maxlength="4" placeholder="Rugnummer (optioneel)" aria-label="Rugnummer, optioneel"><button id="sbtn">Aanmelden</button></form><div class="gx" id="sx"></div><button class="gs" id="slo">Uitloggen</button>',true);
     document.getElementById("slo").onclick=logout;
     document.getElementById("gs1").onsubmit=async ev=>{
       ev.preventDefault();
@@ -873,7 +1005,7 @@ async function startSupabase(){
       res(r.data);
     };
   });
-  const stop=(html)=>{show(html+'<button id="g1">Opnieuw controleren</button><button class="gs" id="g2">Uitloggen</button>');document.getElementById("g1").onclick=()=>location.reload();document.getElementById("g2").onclick=logout;return new Promise(()=>{})};
+  const stop=(html,pl)=>{show((pl?botHtml(pl):"")+html+'<button id="g1">Opnieuw controleren</button><button class="gs" id="g2">Uitloggen</button>',!!pl);document.getElementById("g1").onclick=()=>location.reload();document.getElementById("g2").onclick=logout;return new Promise(()=>{})};
   let hashErr="";
   try{const hp=new URLSearchParams(HASH0.replace(/^#/,""));
     if(hp.get("error")||hp.get("error_code")){
@@ -887,11 +1019,12 @@ async function startSupabase(){
   if(rr.error&&!isAdmin)await stop('<p>Je gegevens konden niet worden opgehaald ('+gx(rr.error.message)+').</p>');
   let rd=rr.data;
   if(!rd&&!isAdmin)rd=await signupForm();
-  if(rd&&(rd.status!=="actief"||!rd.bib)&&!isAdmin)await stop('<p>Je aanmelding is ontvangen. Zodra je een rugnummer hebt gekregen, kun je hier inloggen.</p>');
+  if(rd&&(rd.status!=="actief"||!rd.bib)&&!isAdmin)await stop('','wacht');
   window.__me=rd&&rd.display_name||null;
   try{const fl=await sb.rpc("rider_flags");if(!fl.error&&fl.data)window.__members=new Set(fl.data.filter(x=>x.is_member).map(x=>x.name))}catch(e){}
   if(isAdmin)document.documentElement.classList.add("adm");
   const lo=document.getElementById("logout");lo.hidden=false;lo.onclick=logout;document.getElementById("lo-t").textContent="Uitloggen"+(window.__me?" ("+window.__me+")":"");
+
   document.body.classList.add("in");
   window.__fbRes({
     collection:name=>({
