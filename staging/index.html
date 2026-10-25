@@ -944,7 +944,7 @@ async function startSupabase(){
     };
   };
   const signupForm=()=>new Promise(res=>{
-    show(botHtml("signup-naam")+'<form id="gs1"><input id="sf" required maxlength="40" autocomplete="given-name" placeholder="Voornaam" aria-label="Voornaam"><input id="sl" required maxlength="60" autocomplete="family-name" placeholder="Achternaam" aria-label="Achternaam"><p class="gh">Heb je al een BEAT-rugnummer? Vul die dan hier in. Heb je er nog geen, laat dit dan leeg.</p><input id="sn" inputmode="numeric" maxlength="4" placeholder="Rugnummer (optioneel)" aria-label="Rugnummer, optioneel"><button id="sbtn">Aanmelden</button></form><div class="gx" id="sx"></div><button class="gs" id="slo">Uitloggen</button>',true);
+    show(botHtml("signup-naam")+'<form id="gs1"><input id="sf" required maxlength="40" autocomplete="given-name" placeholder="Voornaam" aria-label="Voornaam"><input id="sl" required maxlength="60" autocomplete="family-name" placeholder="Achternaam" aria-label="Achternaam"><p class="gh">Je krijgt automatisch een rugnummer toegewezen. Heb je al een eigen BEAT rugnummer? Vul die dan in. De jury doet een check, en wijst deze aan je toe als dat correct is.</p><input id="sn" inputmode="numeric" maxlength="4" placeholder="Rugnummer (optioneel)" aria-label="Rugnummer, optioneel"><button id="sbtn">Aanmelden</button></form><div class="gx" id="sx"></div><button class="gs" id="slo">Uitloggen</button>',true);
     document.getElementById("slo").onclick=logout;
     document.getElementById("gs1").onsubmit=async ev=>{
       ev.preventDefault();
