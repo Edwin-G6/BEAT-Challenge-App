@@ -1,6 +1,6 @@
 {
   "_uitleg": "Teksten van Eduardo. mood: strat, motiv, trots, eigen, straks, zorg, ongeduld, zelfspot. {email} wordt het e-mailadres van de deelnemer. Per plek kan ook een eigen name staan; zonder name geldt de naam bovenaan.",
-  "name": "Eduardo",
+  "name": "De BED ploegleider",
   "places": {
     "login": {
       "mood": "motiv",
@@ -28,8 +28,31 @@
     },
     "bad-pagina": {
       "mood": "ongeduld",
-      "text": "Noem je dit een test? Pfffff....",
-      "name": "de ploegleider"
+      "text": "Noem je dit een test? Pfffff...."
+    },
+    "rb-intro": {
+      "mood": "motiv",
+      "text": "Welkom in de Rennersbriefing! Hier lees je hoe de BEAT Challenges werken, zodat je weet waar je voor fietst."
+    },
+    "rb-klassement": {
+      "mood": "strat",
+      "text": "Twee klassementen, twee manieren om te winnen. Lees even mee, dan weet je waar je staat."
+    },
+    "rb-uitdagingen": {
+      "mood": "trots",
+      "text": "Meer dan één manier om een titel te pakken. Kies jouw uitdaging."
+    },
+    "rb-spelregels": {
+      "mood": "zorg",
+      "text": "Meerdere ritten op één dag? Prima, ik tel ze netjes bij elkaar op."
+    },
+    "rb-jury": {
+      "mood": "straks",
+      "text": "Vertrouwen gaat voor alles, maar ik hou je in de gaten. Zorg dat je ritten kloppen."
+    },
+    "rb-vragen": {
+      "mood": "zelfspot",
+      "text": "Iets niet duidelijk? Dan heb ík het slecht uitgelegd. Mail me gerust."
     }
   }
 }

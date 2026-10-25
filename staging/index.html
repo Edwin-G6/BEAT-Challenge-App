@@ -329,10 +329,15 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .botrow .who{font:700 10px "JetBrains Mono",ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dt);margin-bottom:3px}
 .botrow .say{color:var(--ink);margin:0;font-size:17px;font-weight:700;line-height:1.3}
 #botrow{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:18px}
+.zb{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:18px}
 #botrow .bot{order:-1;height:124px;margin:0}
+.zb .bot{order:-1;height:124px;margin:0}
 #botrow .bubble{width:auto;max-width:560px;text-align:left;justify-self:start}
+.zb .bubble{width:auto;max-width:560px;text-align:left;justify-self:start}
 #botrow .bubble::before{bottom:auto;top:50%;left:-15px;margin:-13px 0 0;border:13px solid transparent;border-left:0;border-right-color:var(--dt)}
+.zb .bubble::before{bottom:auto;top:50%;left:-15px;margin:-13px 0 0;border:13px solid transparent;border-left:0;border-right-color:var(--dt)}
 #botrow .bubble::after{bottom:auto;top:50%;left:-10px;margin:-9px 0 0;border:9px solid transparent;border-left:0;border-right-color:var(--mint2)}
+.zb .bubble::after{bottom:auto;top:50%;left:-10px;margin:-9px 0 0;border:9px solid transparent;border-left:0;border-right-color:var(--mint2)}
 @media (max-width:440px){#botrow{gap:14px}#botrow .bot{height:92px}}
 .gc .botrow{margin-bottom:16px}
 .gc .botrow .bot{height:170px}
@@ -371,7 +376,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
     <button class="ni" id="m-bad" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD</button>
     <button class="ni" id="m-bed" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>STREAK</button>
     <button class="ni" id="m-hof" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>Hall of Fame</button>
-    <button class="ni" id="m-zo" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Zo werkt het</button>
+    <button class="ni" id="m-zo" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Rennersbriefing</button>
     <button class="ni" id="logout" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg><span id="lo-t">Uitloggen</span></button>
   </div>
   <div class="sg">Beheer</div>
@@ -433,10 +438,12 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   </section>
 </div>
 <div class="zo">
-  <section class="card tb"><h1>Zo werkt het: de <em>BEAT Challenges</em></h1></section>
+  <section class="card tb"><h1>Rennersbriefing: de <em>BEAT Challenges</em></h1></section>
+  <div class="botrow botv zb" data-bot="rb-intro" hidden></div>
   <div class="yb row"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div><b>Let op: dit is een bètaversie.</b> BEAT Every Day is nieuw en nog volop in ontwikkeling. Merk je problemen of werkt iets niet goed? Meld het dan (graag zelfs!) in het Clubhuis, zodat we het kunnen oplossen.</div></div>
 
   <div class="zl"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>De twee klassementen</div>
+  <div class="botrow botv zb" data-bot="rb-klassement" hidden></div>
   <div class="zg">
     <div class="zc">
       <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD: BEAT Average Day Ranking</h3>
@@ -452,6 +459,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   </div>
 
   <div class="zl"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>Doorlopende uitdagingen</div>
+  <div class="botrow botv zb" data-bot="rb-uitdagingen" hidden></div>
   <div class="zg3">
     <div class="zc"><h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/></svg>BEAT Road Warrior</h3><p>Meeste buiten kilometers.</p></div>
     <div class="zc"><h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>BEAT Zwift Warrior</h3><p>Meeste binnen kilometers.</p></div>
@@ -462,6 +470,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   </div>
 
   <div class="zl"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>De aanvullende basisspelregels</div>
+  <div class="botrow botv zb" data-bot="rb-spelregels" hidden></div>
   <div class="zg">
     <div class="zc">
       <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>Meerdere ritten per dag</h3>
@@ -469,6 +478,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
     </div>
   </div>
 
+  <div class="botrow botv zb" data-bot="rb-jury" hidden></div>
   <div class="yb" style="margin-top:26px">
     <h3 class="yh"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10M12 3v18M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>Eerlijkheid, data-onderbouwing &amp; juryoordeel</h3>
     <div class="zg">
@@ -478,11 +488,12 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
       </div>
       <div class="zc">
         <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Besluitvorming door de BEAT jury</h3>
-        <p>De jury van BEAT beslist bindend over alle voorkomende vraagstukken en onduidelijkheden. De jury is te allen tijde gerechtigd om deelnemers bij twijfel of onregelmatigheden uit de strijd te nemen of te diskwalificeren, zonder dat daar een verdere onderbouwing voor nodig is.</p>
+        <p>De jury van BEAT beslist bindend over alle voorkomende vraagstukken en onduidelijkheden. De jury is te allen tijde gerechtigd om renners bij twijfel of onregelmatigheden uit de strijd te nemen of te diskwalificeren, zonder dat daar een verdere onderbouwing voor nodig is.</p>
       </div>
     </div>
   </div>
 
+  <div class="botrow botv zb" data-bot="rb-vragen" hidden></div>
   <div class="mailbox">
     <div class="ki"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
     <div class="mt"><b>Vragen of opmerkingen?</b><span>Opmerkingen over de challenge of over de app kunnen worden gesteld in het BEAT Online Clubhuis of via de mail aan:</span></div>
@@ -496,7 +507,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   <button class="ti" id="t-bed" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>STREAK</button>
   <button class="fab" id="t-add" aria-label="Rit invoeren"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
   <button class="ti" id="t-hof" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>Hall of Fame</button>
-  <button class="ti" id="t-zo" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Zo werkt het</button>
+  <button class="ti" id="t-zo" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Rennersbriefing</button>
 </nav>
 <dialog id="dlg">
   <div class="dh">Rit invoeren</div>
@@ -570,7 +581,7 @@ function renderBed(){
   const club=S.filter(o=>o.cur>100||(gr&&o.pend>100)).map(o=>({...o,n:o.cur>0?o.cur:o.pend,wait:o.cur===0})).sort((a,b)=>b.n-a.n||b.max-a.max);
   $("club").innerHTML=club.length?club.map(o=>`<span class="chip"><span class="cs">${ic("crown",22)}</span><span class="ct"><b>${esc(o.name)}</b><span class="dg">${nl(o.n)} dagen op rij</span>${o.wait?`<span class="dw">rit van vandaag nog niet binnen</span>`:""}</span></span>`).join(""):`<span class="sub">Nog niemand met een huidige streak van meer dan 100 dagen.</span>`;
   const w=club.filter(o=>o.wait).length;
-  $("clubcap").textContent=`${club.length} ${club.length===1?"deelnemer":"deelnemers"} met een huidige streak van meer dan 100 dagen, t/m ${dl(sel)}`+(w?` · ${w} nog zonder rit van vandaag`:"");
+  $("clubcap").textContent=`${club.length} ${club.length===1?"renner":"renners"} met een huidige streak van meer dan 100 dagen, t/m ${dl(sel)}`+(w?` · ${w} nog zonder rit van vandaag`:"");
   const q=$("q").value.trim().toLowerCase();if(q)L=L.filter(o=>o.name.toLowerCase().includes(q));
   $("bedcap").textContent=`Streak t/m ${dl(sel)}`;
   const tb={max:["max","mk"],mk:["mk","max"],cur:["cur","ck"],ck:["ck","cur"]}[bsK];
@@ -581,7 +592,7 @@ function renderBed(){
   $("bbody").innerHTML=L.length?L.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${esc(o.name)}</td><td><span class="c">${z(o.max)}</span></td><td>${zk(o.mk)}</td><td><span class="c">${z(o.cur)}</span></td><td>${zk(o.ck)}</td></tr>`).join(""):`<tr><td colspan="6" class="empty">Geen resultaten.</td></tr>`;
   document.querySelectorAll("th[data-b]").forEach(th=>th.onclick=()=>{const k=th.dataset.b;track("Tabel gesorteerd",{tabel:"STREAK",kolom:k});if(k===bsK)bsD*=-1;else{bsK=k;bsD=k==="name"?1:-1}renderBed()});
 }
-const VIEWS={bad:["m-bad","BAD"],bed:["m-bed","STREAK"],hof:["m-hof","Hall of Fame"],zo:["m-zo","Zo werkt het"]};
+const VIEWS={bad:["m-bad","BAD"],bed:["m-bed","STREAK"],hof:["m-hof","Hall of Fame"],zo:["m-zo","Rennersbriefing"]};
 function toggleMenu(f){const o=f===undefined?!document.body.classList.contains("mo"):f;document.body.classList.toggle("mo",o);const b=$("burger");if(b)b.setAttribute("aria-expanded",o)}
 function setView(v){if(document.body.dataset.view!==v){track("Tab bekeken",{tab:VIEWS[v][1]});try{window.scrollTo(0,0)}catch(e){}}document.body.dataset.view=v;for(const k in VIEWS){const on=k===v;$(VIEWS[k][0]).setAttribute("aria-pressed",on);const t=$("t-"+k);if(t)t.setAttribute("aria-pressed",on)}toggleMenu(false)}
 function agg(list){const m=new Map();for(const r of list){let o=m.get(r[1]);if(!o){o={name:r[1],out:0,in:0,city:0,el:0,tot:0,hm:0};m.set(r[1],o)}
@@ -596,7 +607,7 @@ function init(keep){
   const yd=yest();
   sel=(picked&&days.includes(keep))?keep:([...days].reverse().find(d=>d<=yd)||days[0]);
   $("day").innerHTML=[...days].reverse().map(d=>`<option value="${d}">${dl(d)}</option>`).join("");
-  $("meta").textContent=`${dl(days[0])} t/m ${dl(days[days.length-1])} · ${new Set(rows.map(r=>r[1])).size} deelnemers · ${nl(rows.length)} ritten`;
+  $("meta").textContent=`${dl(days[0])} t/m ${dl(days[days.length-1])} · ${new Set(rows.map(r=>r[1])).size} renners · ${nl(rows.length)} ritten`;
   render();
 }
 function render(){
@@ -605,7 +616,7 @@ function render(){
   const dm=agg(rows.filter(r=>r[0]===sel)), ms=sel.slice(0,8)+"01",cm=agg(rows.filter(r=>r[0]>=ms&&r[0]<=sel));
   const mnd=new Date(sel+"T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"});
   $("mt").textContent="· "+mnd;
-  $("meta").textContent=`${mnd} · ${dl(ms)} t/m ${dl(sel)} · ${cm.size} deelnemers · ${nl(rows.filter(r=>r[0]>=ms&&r[0]<=sel).length)} ritten`;
+  $("meta").textContent=`${mnd} · ${dl(ms)} t/m ${dl(sel)} · ${cm.size} renners · ${nl(rows.filter(r=>r[0]>=ms&&r[0]<=sel).length)} ritten`;
   const z={name:"",out:0,in:0,city:0,el:0,tot:0,hm:0};
   const nd=+sel.slice(8);
   let data=[...cm.values()].map(c=>({name:c.name,d:dm.get(c.name)||z,c,s:c.tot-nd*25,on:dm.has(c.name)}));
@@ -617,7 +628,7 @@ function render(){
   const sum=(g,k)=>data.reduce((s,o)=>s+o[g][k],0);
   const cell=(d,c,k)=>{const cz=Math.round(c[k])===0,dz=Math.round(d[k])===0;return `<td class="mc${cz?" z":""}"><span class="cv">${cz?"·":f0(c[k])}</span>${dz?"":`<span class="dv">+${f0(d[k])}</span>`}</td>`};
   const sumC=k=>[...cm.values()].reduce((s,o)=>s+o[k],0);
-  $("tiles").innerHTML=[["users","Deelnemers",nl(cm.size),""],["bike","Road Warrior",f0(sumC("out")),"KM"],["zap","Zwift Warrior",f0(sumC("in")),"KM"],["building","Stadsfietsbeuker",f0(sumC("city")),"KM"],["gauge","Totaal KM",f0(sumC("tot")),"KM"],["mountain","Bergbaas",f0(sumC("hm")),"HM"]]
+  $("tiles").innerHTML=[["users","Renners",nl(cm.size),""],["bike","Road Warrior",f0(sumC("out")),"KM"],["zap","Zwift Warrior",f0(sumC("in")),"KM"],["building","Stadsfietsbeuker",f0(sumC("city")),"KM"],["gauge","Totaal KM",f0(sumC("tot")),"KM"],["mountain","Bergbaas",f0(sumC("hm")),"HM"]]
     .map(([i,l,v,u])=>`<div class="kpi"><div class="ki">${ic(i,24)}</div><div class="kl">${l}</div><div class="kv">${v}${u?`<small>${u}</small>`:""}</div></div>`).join("");
   $("podcap").textContent=`Top 3 · cumulatief ${dl(ms)} t/m ${dl(sel)} · onderste regel = dagwinnaar ${dl(sel)}`;
   const dwin=k=>{let b=null;for(const o of dm.values())if(Math.round(o[k])>0&&(!b||o[k]>b[k]))b=o;return b};
@@ -855,7 +866,7 @@ async function startSupabase(){
   /* ====== Eduardo: figuur (acht karakters) en teksten (bot.json) ====== */
   var n=0;const GLOW="#7ef0e6";
   const MOODS={strat:"Strategisch",motiv:"Motiverend",trots:"Trots",eigen:"Eigenwijs",straks:"Straks",zorg:"Zorgvuldig",ongeduld:"Ongeduldig",zelfspot:"Zelfspot"};
-  const BOT={dn:"Eduardo",name:"Eduardo"};
+  const BOT={dn:"De BED ploegleider",name:"De BED ploegleider"};
   const EM="Check je mail! Ik heb een code gestuurd naar {email}. Zie je niets, kijk dan ook in je spam.";
   const PLACES=[
     {id:"login",grp:"Inloggen",label:"Inlogscherm",mood:"motiv",def:"Hoi! Log in met het e-mailadres waarmee je je hebt aangemeld. Je krijgt een code in je mail, een wachtwoord is niet nodig."},
@@ -864,7 +875,14 @@ async function startSupabase(){
     {id:"signup-code",grp:"Aanmelden",label:"Code invullen (aanmelden)",mood:"strat",def:EM},
     {id:"signup-naam",grp:"Aanmelden",label:"Aanmelden: naam en rugnummer",mood:"eigen",def:"Wij kennen je nog niet. Vul je naam in, dan ben je zo binnen."},
     {id:"wacht",grp:"Aanmelden",label:"Wachten op rugnummer",mood:"zorg",def:"Je aanmelding is ontvangen. Zodra je een rugnummer hebt gekregen, kun je hier inloggen."},
-    {id:"bad-pagina",grp:"In de app",label:"BAD-pagina",mood:"straks",def:"Je naam op een lijstje, lekker!"}
+    {id:"bad-pagina",grp:"In de app",label:"BAD-pagina",mood:"straks",def:"Je naam op een lijstje, lekker!"},
+    {id:"rb-intro",grp:"Rennersbriefing",label:"Intro",mood:"motiv",def:"Welkom in de Rennersbriefing! Hier lees je hoe de BEAT Challenges werken, zodat je weet waar je voor fietst."},
+    {id:"rb-klassement",grp:"Rennersbriefing",label:"De twee klassementen",mood:"strat",def:"Twee klassementen, twee manieren om te winnen. Lees even mee, dan weet je waar je staat."},
+    {id:"rb-uitdagingen",grp:"Rennersbriefing",label:"Doorlopende uitdagingen",mood:"trots",def:"Meer dan één manier om een titel te pakken. Kies jouw uitdaging."},
+    {id:"rb-spelregels",grp:"Rennersbriefing",label:"Basisspelregels",mood:"zorg",def:"Meerdere ritten op één dag? Prima, ik tel ze netjes bij elkaar op."},
+    {id:"rb-jury",grp:"Rennersbriefing",label:"Eerlijkheid en jury",mood:"straks",def:"Vertrouwen gaat voor alles, maar ik hou je in de gaten. Zorg dat je ritten kloppen."},
+    {id:"rb-vragen",grp:"Rennersbriefing",label:"Vragen",mood:"zelfspot",def:"Iets niet duidelijk? Dan heb ík het slecht uitgelegd. Mail me gerust."}
+
   ];
   const PL={};PLACES.forEach(x=>PL[x.id]=x);
   let BT={};
@@ -875,7 +893,7 @@ async function startSupabase(){
   const moodOf=pl=>{const v=BT[pl.id+".mood"];return MOODS[v]?v:pl.mood};
   const textOf=(pl,v)=>{let t=BT[pl.id+".text"];if(t==null||t==="")t=pl.def;Object.keys(v||{}).forEach(k=>{t=t.split("{"+k+"}").join(v[k])});return t};
   const botHtml=(id,v)=>{const pl=PL[id];return '<div class="botrow botv"><div class="bubble"><div class="who">'+esc(BT[pl.id+".name"]||BOT.name)+'</div><p class="say">'+esc(textOf(pl,v))+'</p></div>'+bot("m",moodOf(pl),BOT.name)+'</div>'};
-  function renderBot(){const el=document.getElementById("botrow");if(!el)return;el.innerHTML=botHtml("bad-pagina").replace(/^<div class="botrow botv">|<\/div>$/g,"");el.hidden=false}
+  function renderBot(){document.querySelectorAll("#botrow,[data-bot]").forEach(el=>{const id=el.dataset.bot||"bad-pagina";if(!PL[id])return;el.innerHTML=botHtml(id).replace(/^<div class="botrow botv">|<\/div>$/g,"");el.hidden=false})}
   /* Teksten, naam en karakter per plek staan in bot.json naast deze pagina. Ontbreekt het bestand, dan gelden de standaardwaarden hierboven. */
   async function loadBotTexts(){
     try{
@@ -905,7 +923,7 @@ async function startSupabase(){
   };
   const loginForm=(msg,mode)=>{
     const su=mode==="signup",pid=su?"signup-start":"login";
-    show(botHtml(pid)+'<form id="gf"><input id="gm" type="email" required autocomplete="email" placeholder="jouw@e-mailadres.nl" aria-label="E-mailadres"><div id="gcap"></div><button id="gb">Stuur code</button></form><div class="gx" id="gx2">'+(typeof msg==="string"?gx(msg):"")+'</div><p class="gsw">'+(su?'Al deelnemer? <a href="#" id="gsw">Log hier in</a>':'Nog geen deelnemer? <a href="#" id="gsw">Klik hier</a>')+'</p>',true);
+    show(botHtml(pid)+'<form id="gf"><input id="gm" type="email" required autocomplete="email" placeholder="jouw@e-mailadres.nl" aria-label="E-mailadres"><div id="gcap"></div><button id="gb">Stuur code</button></form><div class="gx" id="gx2">'+(typeof msg==="string"?gx(msg):"")+'</div><p class="gsw">'+(su?'Ben je al renner? <a href="#" id="gsw">Log hier in</a>':'Nog geen renner? <a href="#" id="gsw">Klik hier</a>')+'</p>',true);
     document.getElementById("gsw").onclick=e=>{e.preventDefault();loginForm(undefined,su?"login":"signup")};
     initCap(document.getElementById("gb"),document.getElementById("gx2"));
     document.getElementById("gf").onsubmit=async ev=>{
