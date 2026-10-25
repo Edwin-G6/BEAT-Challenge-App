@@ -870,7 +870,7 @@ async function startSupabase(){
   let BT={};
   const setNames=()=>{const v=(BT["bot.bed.name"]||"").trim();BOT.name=v||BOT.dn};
   const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-  const IMGD={strat:[307,274],motiv:[282,268],trots:[304,266],eigen:[208,272],straks:[248,275],zorg:[311,254],ongeduld:[263,259],zelfspot:[247,263]};
+  const IMGD={strat:[345,440],motiv:[384,439],trots:[376,440],eigen:[281,440],straks:[281,423],zorg:[393,406],ongeduld:[335,421],zelfspot:[318,409]};
   const bot=(sex,m,label)=>'<img class="bot" src="bot/'+m+'.webp" width="'+IMGD[m][0]+'" height="'+IMGD[m][1]+'" alt="'+esc(label+', '+MOODS[m].toLowerCase())+'">';
   const moodOf=pl=>{const v=BT[pl.id+".mood"];return MOODS[v]?v:pl.mood};
   const textOf=(pl,v)=>{let t=BT[pl.id+".text"];if(t==null||t==="")t=pl.def;Object.keys(v||{}).forEach(k=>{t=t.split("{"+k+"}").join(v[k])});return t};
