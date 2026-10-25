@@ -410,6 +410,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <div class="bad">
   <div class="botrow botv" id="botrow" hidden></div>
   <div class="tiles" id="tiles"></div>
+  <section class="card hofl" id="hofl"></section>
   <div class="sub sec" id="podcap"></div>
   <div class="pods" id="podium"></div>
   <section class="card">
@@ -438,7 +439,6 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <div class="hof">
   <section class="card tb hoft"><h1>Hall of <em>Fame</em></h1><div class="ki"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div></section>
   <section class="card hofc"><div class="hofh"><div><div class="sub">Maandwinnaars</div><h2>Per maand</h2></div></div><div class="tw"><table id="mwt"><thead></thead><tbody id="mwb"></tbody></table></div></section>
-  <section class="card hofl" id="hofl"></section>
   <section class="card hofc">
     <div class="hofh"><div><div class="sub">Dagwinnaars</div><h2 id="hofmt"></h2></div><div class="hofn"><button class="cb" id="hprev" aria-label="Vorige maand">‹</button><button class="cb" id="hnext" aria-label="Volgende maand">›</button></div></div>
     <div class="tw"><table id="hoft"><thead><tr><th>Dag</th><th>Road<span class="hm"> Warrior</span></th><th>Zwift<span class="hm"> Warrior</span></th><th>Berg<span class="hm">baas</span></th></tr></thead><tbody id="hofb"></tbody></table></div>
@@ -668,8 +668,13 @@ function render(){
     data.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${o.on?`<span class="ad" title="Reed op deze dag"></span>`:""}${esc(o.name)}</td>`+sc(o.s)+COLS.map(([k])=>cell(o.d,o.c,k)).join("")+`</tr>`).join("")
     :`<tr><td colspan="9" class="empty">Geen resultaten.</td></tr>`;
   document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;track("Tabel gesorteerd",{tabel:"BAD",kolom:k});if(k===sortK)sortD*=-1;else{sortK=k;sortD=k==="name"?1:-1}render()});
-  chart();renderBed();renderHof();
+  chart();renderBed();renderHof();renderLangste(sel.slice(0,7));
   const i=days.indexOf(sel);$("prev").disabled=i<=0;$("next").disabled=i>=days.length-1;
+}
+function renderLangste(ym){
+  const t=today(),y=+ym.slice(0,4),m=+ym.slice(5,7),n=new Date(y,m,0).getDate(),bd=byDate(rows);
+  let lg=null;for(let d=1;d<=n;d++){const key=`${ym}-${String(d).padStart(2,"0")}`;if(key>t)break;for(const o of agg(bd.get(key)||[]).values())if(Math.round(o.tot)>0&&(!lg||o.tot>lg.o.tot))lg={o,key}}
+  $("hofl").innerHTML=`<div class="ki">${ic("gauge",28)}</div><div class="lt"><div class="sub">Dagrecord · ${new Date(ym+"-01T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"})}</div><h2>De langste dag</h2></div>`+(lg?`<div class="lnm"><span class="ln">${esc(lg.o.name)}</span><span class="ld">${dl(lg.key)}</span></div><div class="lk"><b>${f0(lg.o.tot)}<small>KM</small></b></div>`:`<div class="lnm"><span class="ld lm">Nog geen ritten deze maand</span></div>`);
 }
 let hofM="";
 function renderHof(){
@@ -686,8 +691,6 @@ function renderHof(){
     h+=`<tr class="${fu?"fu":key===t?"td":""}"><td>${dl(key).replace(/ ([^ ]+)$/,"<span class=\"hm\"> $1</span>")}</td>`+[["out","KM"],["in","KM"],["hm","HM"]].map(([k,u])=>`<td>${fu?"·":wc(win(dm,k),k,u)}</td>`).join("")+`</tr>`;
   }
   tb.innerHTML=h;
-  let lg=null;for(let d=1;d<=n;d++){const key=`${hofM}-${String(d).padStart(2,"0")}`;if(key>t)break;for(const o of agg(bd.get(key)||[]).values())if(Math.round(o.tot)>0&&(!lg||o.tot>lg.o.tot))lg={o,key}}
-  $("hofl").innerHTML=`<div class="ki">${ic("gauge",28)}</div><div class="lt"><div class="sub">Dagrecord · ${new Date(hofM+"-01T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"})}</div><h2>De langste dag</h2></div>`+(lg?`<div class="lnm"><span class="ln">${esc(lg.o.name)}</span><span class="ld">${dl(lg.key)}</span></div><div class="lk"><b>${f0(lg.o.tot)}<small>KM</small></b></div>`:`<div class="lnm"><span class="ld lm">Nog geen ritten deze maand</span></div>`);
   const mnm=ym=>new Date(ym+"-01T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"});
   const mw=ym=>{const yy=+ym.slice(0,4),mm=+ym.slice(5,7),nn=new Date(yy,mm,0).getDate(),end=`${ym}-${String(nn).padStart(2,"0")}`,nf=new Date(yy,mm,1,12).toLocaleDateString("sv");
     const top=(l,k)=>{let b=null;for(const o of agg(rows.filter(r=>r[0].startsWith(ym))).values())if(Math.round(o[k])>0&&(!b||o[k]>b.v))b={name:o.name,v:o[k]};return b};
