@@ -1,0 +1,63 @@
+# Kopieert elke nacht de ritgegevens (tabellen days en entries) van de LIVE database
+# naar de STAGING database, zodat testen op ongeveer dezelfde data gebeurt.
+# Renners, accounts en e-mailadressen worden NIET gekopieerd.
+# Handmatig starten kan ook: tabblad Actions, "Kopieer live naar staging", Run workflow.
+#
+# Benodigde secrets (GitHub, Settings > Secrets and variables > Actions):
+#   LIVE_DB_URL     Session pooler-verbinding van het LIVE project (alleen lezen nodig)
+#   STAGING_DB_URL  Session pooler-verbinding van het STAGING project
+name: Kopieer live naar staging
+
+on:
+  schedule:
+    - cron: "30 2 * * *"   # elke nacht 02:30 UTC (04:30 Nederlandse zomertijd)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kopieer-live-naar-staging
+  cancel-in-progress: false
+
+jobs:
+  kopieer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Controleer de verbindingen
+        env:
+          LIVE_DB_URL: ${{ secrets.LIVE_DB_URL }}
+          STAGING_DB_URL: ${{ secrets.STAGING_DB_URL }}
+        run: |
+          set -euo pipefail
+          [ -n "$LIVE_DB_URL" ] && [ -n "$STAGING_DB_URL" ] || { echo "Secrets LIVE_DB_URL en/of STAGING_DB_URL ontbreken."; exit 1; }
+          case "$LIVE_DB_URL" in *gqxkppyvlvssawhqzqhx*) ;; *) echo "LIVE_DB_URL hoort bij het live project te horen."; exit 1;; esac
+          case "$STAGING_DB_URL" in *ijtsrhhovbakxhuvzupw*) ;; *) echo "STAGING_DB_URL moet het staging project zijn. Gestopt om live te beschermen."; exit 1;; esac
+          case "$STAGING_DB_URL" in *gqxkppyvlvssawhqzqhx*) echo "STAGING_DB_URL wijst naar live. Gestopt."; exit 1;; esac
+
+      - name: Lees live (days en entries)
+        env:
+          LIVE_DB_URL: ${{ secrets.LIVE_DB_URL }}
+        run: |
+          set -euo pipefail
+          psql "$LIVE_DB_URL" -v ON_ERROR_STOP=1 -c "\copy (select day, rows, ts from public.days order by day) to 'days.csv' csv"
+          psql "$LIVE_DB_URL" -v ON_ERROR_STOP=1 -c "\copy (select id, date, name, km_out, km_in, km_city, km_el, hm, ts from public.entries order by date, id) to 'entries.csv' csv"
+          echo "days: $(wc -l < days.csv) regels, entries: $(wc -l < entries.csv) regels"
+          # Veiligheid: lege uitvoer betekent dat er iets mis is, dan laten we staging ongemoeid
+          [ "$(wc -l < days.csv)" -gt 0 ] || { echo "Live days is leeg. Gestopt, staging blijft zoals het was."; exit 1; }
+
+      - name: Zet in staging (alles of niets)
+        env:
+          STAGING_DB_URL: ${{ secrets.STAGING_DB_URL }}
+        run: |
+          set -euo pipefail
+          cat > laad.sql <<'SQL'
+          truncate public.entries;
+          truncate public.days;
+          \copy public.days (day, rows, ts) from 'days.csv' csv
+          \copy public.entries (id, date, name, km_out, km_in, km_city, km_el, hm, ts) from 'entries.csv' csv
+          SQL
+          sed -i 's/^          //' laad.sql
+          psql "$STAGING_DB_URL" -v ON_ERROR_STOP=1 --single-transaction -f laad.sql
+          psql "$STAGING_DB_URL" -At -c "select 'staging nu: days=' || (select count(*) from public.days) || ', entries=' || (select count(*) from public.entries)"
