@@ -1,5 +1,5 @@
 {
-  "_uitleg": "Teksten van Eduardo. mood: strat, motiv, trots, eigen, straks, zorg, ongeduld, zelfspot. {email} wordt het e-mailadres van de deelnemer.",
+  "_uitleg": "Teksten van Eduardo. mood: strat, motiv, trots, eigen, straks, zorg, ongeduld, zelfspot. {email} wordt het e-mailadres van de deelnemer. Per plek kan ook een eigen name staan; zonder name geldt de naam bovenaan.",
   "name": "Eduardo",
   "places": {
     "login": {
@@ -28,7 +28,8 @@
     },
     "bad-pagina": {
       "mood": "straks",
-      "text": "Je naam op een lijstje, lekker!"
+      "text": "Noem je dit een test? Pfffff....",
+      "name": "de ploegleider"
     }
   }
 }
