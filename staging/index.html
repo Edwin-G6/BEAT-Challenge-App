@@ -257,6 +257,9 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .hofl .ld{display:block;margin-top:4px;font-size:13px;font-weight:700;color:var(--sl)}
 .hofl .lm{color:var(--mute);font-weight:600}
 @media (max-width:700px){.hofl{gap:14px}.hofl .lnm{order:3;flex:none;width:100%;align-items:flex-start;text-align:left;padding:0}.hofl .lnm .ln{font-size:30px}.hofl .lk{order:4;text-align:left;width:100%}.hofl h2{font-size:22px}}
+.hofl .mwl{flex:1 0 100%;display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:12px}
+.hofl .mwl div{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:600;font-size:15px}
+.hofl .mwl i{font:700 13px "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-style:normal;color:var(--dt)}
 .hofh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
 .hofh h2{font-size:26px;text-transform:capitalize;margin:2px 0 0}
 .hofn{display:flex;gap:8px}
@@ -432,6 +435,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 </div>
 <div class="hof">
   <section class="card tb hoft"><h1>Hall of <em>Fame</em></h1><div class="ki"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div></section>
+  <section class="card hofl" id="hofmw"></section>
   <section class="card hofl" id="hofl"></section>
   <section class="card hofc">
     <div class="hofh"><div><div class="sub">Dagwinnaars</div><h2 id="hofmt"></h2></div><div class="hofn"><button class="cb" id="hprev" aria-label="Vorige maand">‹</button><button class="cb" id="hnext" aria-label="Volgende maand">›</button></div></div>
@@ -448,7 +452,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   <div class="zg">
     <div class="zc">
       <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>BAD: BEAT Average Day Ranking</h3>
-      <p>Dit is de doorlopende maandchallenge. Hij loopt van de eerste tot en met de laatste dag van iedere maand en begint op de 1e weer opnieuw. Het idee is dat je gedurende de maand meer dan gemiddeld <b>25 kilometer per dag</b> fietst. Rustdagen zijn toegestaan.</p>
+      <p>Dit is de doorlopende maandchallenge. Hij loopt van de eerste tot en met de laatste dag van iedere maand en begint op de 1e weer opnieuw. Het idee is dat je gedurende de maand meer dan gemiddeld <b>25 kilometer per dag</b> fietst. Rustdagen zijn toegestaan. Een maand kun je nog aanvullen tot en met de 1e van de volgende maand, daarna gaat hij op slot en staat de maandwinnaar vast.</p>
       <p>Je <b>surplus</b> geeft aan of je boven of onder die gemiddeld 25 km per dag zit. Het surplus wordt berekend als je totaal aantal kilometers min 25 km per verstreken dag. Wie het meeste surplus heeft, staat bovenaan.</p>
     </div>
     <div class="zc">
@@ -682,6 +686,15 @@ function renderHof(){
   tb.innerHTML=h;
   let lg=null;for(let d=1;d<=n;d++){const key=`${hofM}-${String(d).padStart(2,"0")}`;if(key>t)break;for(const o of agg(bd.get(key)||[]).values())if(Math.round(o.tot)>0&&(!lg||o.tot>lg.o.tot))lg={o,key}}
   $("hofl").innerHTML=`<div class="ki">${ic("gauge",28)}</div><div class="lt"><div class="sub">Dagrecord · ${new Date(hofM+"-01T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"})}</div><h2>De langste dag</h2></div>`+(lg?`<div class="lnm"><span class="ln">${esc(lg.o.name)}</span><span class="ld">${dl(lg.key)}</span></div><div class="lk"><b>${f0(lg.o.tot)}<small>KM</small></b></div>`:`<div class="lnm"><span class="ld lm">Nog geen ritten deze maand</span></div>`);
+  const mwin=ym=>{const yy=+ym.slice(0,4),mm=+ym.slice(5,7),nn=new Date(yy,mm,0).getDate(),end=`${ym}-${String(nn).padStart(2,"0")}`,nf=new Date(yy,mm,1,12).toLocaleDateString("sv");let b=null;for(const o of agg(rows.filter(r=>r[0].startsWith(ym))).values()){const sp=o.tot-nn*25;if(Math.round(sp)>0&&(!b||sp>b.s))b={name:o.name,s:sp}}return {b,st:t<=end?0:t===nf?1:2}};
+  const mnm=ym=>new Date(ym+"-01T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"});
+  const mw=mwin(hofM),done=ms.filter(x=>x!==hofM&&x>=START.slice(0,7)&&mwin(x).st>0&&mwin(x).b);
+  $("hofmw").innerHTML=`<div class="ki">${ic("trophy",28)}</div><div class="lt"><div class="sub">Maandwinnaar · ${mnm(hofM)}</div><h2>Het grootste overschot</h2></div>`+
+    (hofM<START.slice(0,7)?`<div class="lnm"><span class="ld lm">Geen maandchallenge in deze maand</span></div>`
+    :mw.st===0?`<div class="lnm"><span class="ld lm">De maand loopt nog</span></div>`
+    :mw.b?`<div class="lnm"><span class="ln">${esc(mw.b.name)}</span><span class="ld">${mw.st===1?"Voorlopig: de maand kan nog worden aangevuld tot en met vandaag":"Definitief, de maand is afgesloten"}</span></div><div class="lk"><b>+${f0(mw.b.s)}<small>KM</small></b></div>`
+    :`<div class="lnm"><span class="ld lm">Geen winnaar deze maand</span></div>`)+
+    (done.length?`<div class="mwl">`+done.slice().reverse().map(x=>{const w=mwin(x);return `<div><span>${mnm(x)}${w.st===1?" (voorlopig)":""}</span><span><b>${esc(w.b.name)}</b> <i>+${f0(w.b.s)} KM</i></span></div>`}).join("")+`</div>`:"");
   $("hoft").tHead.innerHTML=`<tr><th>Dag</th><th><span class="hth">${ic("bike",16)}<span>Road<span class="hm"> Warrior</span></span></span></th><th><span class="hth">${ic("zap",16)}<span>Zwift<span class="hm"> Warrior</span></span></span></th><th><span class="hth">${ic("mountain",16)}<span>Berg<span class="hm">baas</span></span></span></th></tr>`;
   $("hofmt").textContent=new Date(hofM+"-01T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"});
   const i=ms.indexOf(hofM);$("hprev").disabled=i<=0;$("hnext").disabled=i>=ms.length-1;
@@ -759,6 +772,9 @@ async function loadEntriesOnce(){
     if(got.length){const k=new Set(ENT.map(r=>r[9]));ENT=ENT.concat(got.filter(r=>!k.has(r[9])));init(sel)}
   }catch(e){}
 }
+/* Maandslot: een maand kan nog worden aangevuld tot en met de 1e van de volgende maand */
+const lockMin=()=>{const t=today();let y=+t.slice(0,4),m=+t.slice(5,7);if(+t.slice(8)===1){m--;if(m<1){m=12;y--}}const k=`${y}-${String(m).padStart(2,"0")}-01`;return k<BSTART?BSTART:k};
+const mNaam=ds=>new Date(ds+"T12:00:00").toLocaleDateString("nl-NL",{month:"long"});
 const today=()=>new Date().toLocaleDateString("sv"),yest=()=>{const d=new Date();d.setDate(d.getDate()-1);return d.toLocaleDateString("sv")};
 const rugnr=n=>(n.match(/-(\d+)$/)||[])[1]||"";
 function byNum(){
@@ -769,13 +785,13 @@ function byNum(){
   else{$("e-name").value="";h.textContent="Geen renner met rugnummer "+q;elist()}
 }
 function byName(){const v=$("e-name").value;$("e-num").value=rugnr(v);$("e-nh").textContent="";elist()}
-function setDay(s){$("e-date").value=s<BSTART?BSTART:s;elist()}
+function setDay(s){const lm=lockMin();$("e-date").value=s<lm?lm:s;elist()}
 function openAdd(){
   track("Rit invoeren geopend");
   const names=window.__me?[window.__me]:[...new Set(bedRows.map(r=>r[1]))].sort((a,b)=>a.localeCompare(b));
   $("e-name").innerHTML=(window.__me?'':'<option value="">Kies je naam…</option>')+names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join("");
   $("e-name").disabled=!!window.__me;$("e-num").closest("label").style.display=window.__me?"none":"";
-  const d=$("e-date");d.min=BSTART;d.max=today();d.value=today();
+  const d=$("e-date");d.min=lockMin();d.max=today();d.value=today();
   ["out","in","city","el","hm"].forEach(k=>$("e-"+k).value="");
   $("e-num").value="";$("e-nh").textContent="";$("e-msg").textContent="";if(window.__me){$("e-name").value=window.__me;byName()}etot();elist();$("dlg").showModal();
 }
@@ -785,7 +801,7 @@ function elist(){
   const name=$("e-name").value,date=$("e-date").value,L=ENT.filter(r=>r[0]===date&&r[1]===name),b=$("e-list");
   if(!name||!date||!L.length){b.innerHTML="";return}
   const tot=L.reduce((s,r)=>s+r[6],0);
-  b.innerHTML=`<div class="sub" style="margin-bottom:4px">Al ingevoerd op deze dag: ${L.length} ${L.length===1?"rit":"ritten"}, samen ${nl(Math.round(tot*100)/100)} KM</div>`+L.map(r=>`<div class="er"><span>${nl(r[6])} KM · ${nl(r[7])} HM</span><button class="dk" data-id="${esc(r[9])}">Verwijder</button></div>`).join("");
+  b.innerHTML=`<div class="sub" style="margin-bottom:4px">Al ingevoerd op deze dag: ${L.length} ${L.length===1?"rit":"ritten"}, samen ${nl(Math.round(tot*100)/100)} KM</div>`+L.map(r=>`<div class="er"><span>${nl(r[6])} KM · ${nl(r[7])} HM</span>${date<lockMin()?`<span class="sub">afgesloten</span>`:`<button class="dk" data-id="${esc(r[9])}">Verwijder</button>`}</div>`).join("");
   b.querySelectorAll("button[data-id]").forEach(x=>x.onclick=async()=>{
     try{if(DB)await DB.doc("entries/"+x.dataset.id).delete()}catch(err){$("e-msg").style.color="#b8402f";$("e-msg").textContent="Verwijderen niet gelukt.";return}
     ENT=ENT.filter(r=>r[9]!==x.dataset.id);init(sel);elist();
@@ -796,6 +812,7 @@ async function saveEntry(){
   const v={};for(const k of ["out","in","city","el","hm"])v[k]=num("e-"+k);
   if(!name){m.textContent="Kies eerst je naam.";return}
   if(!date||date<BSTART||date>today()){m.textContent="Kies een geldige datum (niet in de toekomst).";return}
+  if(date<lockMin()){m.textContent=`${mNaam(date)} is afgesloten. Een maand kan nog worden aangevuld tot en met de 1e van de volgende maand.`;return}
   if(Object.values(v).some(x=>!isFinite(x)||x<0)){m.textContent="Vul alleen getallen van 0 of hoger in.";return}
   if(v.out+v.in+v.city+v.el>1500||v.hm>30000){m.textContent="Deze waarden lijken niet te kloppen, controleer ze.";return}
   if(v.out+v.in+v.city+v.el<=0){m.textContent="Vul minstens één kilometerstand in.";return}
