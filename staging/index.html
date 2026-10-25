@@ -257,9 +257,11 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .hofl .ld{display:block;margin-top:4px;font-size:13px;font-weight:700;color:var(--sl)}
 .hofl .lm{color:var(--mute);font-weight:600}
 @media (max-width:700px){.hofl{gap:14px}.hofl .lnm{order:3;flex:none;width:100%;align-items:flex-start;text-align:left;padding:0}.hofl .lnm .ln{font-size:30px}.hofl .lk{order:4;text-align:left;width:100%}.hofl h2{font-size:22px}}
-.hofl .mwl{flex:1 0 100%;display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:12px}
-.hofl .mwl div{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:600;font-size:15px}
-.hofl .mwl i{font:700 13px "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-style:normal;color:var(--dt)}
+#mwt{min-width:0;table-layout:fixed}#mwt thead th:first-child,#mwt tbody td:first-child{display:table-cell}#mwt th{font-size:11px;white-space:normal}#mwt .hth{display:inline-flex;align-items:center;gap:5px}#mwt th{cursor:default;text-align:left}#mwt td{text-align:left;font-size:15px;font-weight:600;padding:10px 12px;vertical-align:top}
+#mwt td:first-child{font-weight:800;color:var(--sl);width:140px;text-transform:capitalize}#mwt .mws{display:block;font-weight:600;text-transform:none;font-size:12px}
+#mwt .w{display:flex;flex-direction:column;gap:2px}#mwt .w b{font-weight:800}#mwt .w i{font:700 13px "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-style:normal;color:var(--dt)}
+#mwt tr.fu td{color:var(--mute)}#mwt tr.fu .w i{color:var(--mute)}#mwt #mwb td.empty{text-align:center}
+@media (max-width:700px){#mwt .hth svg{display:none}#mwt td:first-child .hm{display:none !important}#mwt th{font-size:9.5px;letter-spacing:.04em}#mwt th,#mwt td{padding:9px 3px;font-size:11.5px}#mwt th:first-child,#mwt td:first-child{width:72px}#mwt .w i{font-size:11px}}
 .hofh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
 .hofh h2{font-size:26px;text-transform:capitalize;margin:2px 0 0}
 .hofn{display:flex;gap:8px}
@@ -435,7 +437,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 </div>
 <div class="hof">
   <section class="card tb hoft"><h1>Hall of <em>Fame</em></h1><div class="ki"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div></section>
-  <section class="card hofl" id="hofmw"></section>
+  <section class="card hofc"><div class="hofh"><div><div class="sub">Maandwinnaars</div><h2>Per maand</h2></div></div><div class="tw"><table id="mwt"><thead></thead><tbody id="mwb"></tbody></table></div></section>
   <section class="card hofl" id="hofl"></section>
   <section class="card hofc">
     <div class="hofh"><div><div class="sub">Dagwinnaars</div><h2 id="hofmt"></h2></div><div class="hofn"><button class="cb" id="hprev" aria-label="Vorige maand">‹</button><button class="cb" id="hnext" aria-label="Volgende maand">›</button></div></div>
@@ -686,15 +688,14 @@ function renderHof(){
   tb.innerHTML=h;
   let lg=null;for(let d=1;d<=n;d++){const key=`${hofM}-${String(d).padStart(2,"0")}`;if(key>t)break;for(const o of agg(bd.get(key)||[]).values())if(Math.round(o.tot)>0&&(!lg||o.tot>lg.o.tot))lg={o,key}}
   $("hofl").innerHTML=`<div class="ki">${ic("gauge",28)}</div><div class="lt"><div class="sub">Dagrecord · ${new Date(hofM+"-01T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"})}</div><h2>De langste dag</h2></div>`+(lg?`<div class="lnm"><span class="ln">${esc(lg.o.name)}</span><span class="ld">${dl(lg.key)}</span></div><div class="lk"><b>${f0(lg.o.tot)}<small>KM</small></b></div>`:`<div class="lnm"><span class="ld lm">Nog geen ritten deze maand</span></div>`);
-  const mwin=ym=>{const yy=+ym.slice(0,4),mm=+ym.slice(5,7),nn=new Date(yy,mm,0).getDate(),end=`${ym}-${String(nn).padStart(2,"0")}`,nf=new Date(yy,mm,1,12).toLocaleDateString("sv");let b=null;for(const o of agg(rows.filter(r=>r[0].startsWith(ym))).values()){const sp=o.tot-nn*25;if(Math.round(sp)>0&&(!b||sp>b.s))b={name:o.name,s:sp}}return {b,st:t<=end?0:t===nf?1:2}};
   const mnm=ym=>new Date(ym+"-01T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"});
-  const mw=mwin(hofM),done=ms.filter(x=>x!==hofM&&x>=START.slice(0,7)&&mwin(x).st>0&&mwin(x).b);
-  $("hofmw").innerHTML=`<div class="ki">${ic("trophy",28)}</div><div class="lt"><div class="sub">Maandwinnaar · ${mnm(hofM)}</div><h2>Het grootste overschot</h2></div>`+
-    (hofM<START.slice(0,7)?`<div class="lnm"><span class="ld lm">Geen maandchallenge in deze maand</span></div>`
-    :mw.st===0?`<div class="lnm"><span class="ld lm">De maand loopt nog</span></div>`
-    :mw.b?`<div class="lnm"><span class="ln">${esc(mw.b.name)}</span><span class="ld">${mw.st===1?"Voorlopig: de maand kan nog worden aangevuld tot en met vandaag":"Definitief, de maand is afgesloten"}</span></div><div class="lk"><b>+${f0(mw.b.s)}<small>KM</small></b></div>`
-    :`<div class="lnm"><span class="ld lm">Geen winnaar deze maand</span></div>`)+
-    (done.length?`<div class="mwl">`+done.slice().reverse().map(x=>{const w=mwin(x);return `<div><span>${mnm(x)}${w.st===1?" (voorlopig)":""}</span><span><b>${esc(w.b.name)}</b> <i>+${f0(w.b.s)} KM</i></span></div>`}).join("")+`</div>`:"");
+  const mw=ym=>{const yy=+ym.slice(0,4),mm=+ym.slice(5,7),nn=new Date(yy,mm,0).getDate(),end=`${ym}-${String(nn).padStart(2,"0")}`,nf=new Date(yy,mm,1,12).toLocaleDateString("sv");
+    const top=(l,k)=>{let b=null;for(const o of agg(rows.filter(r=>r[0].startsWith(ym))).values())if(Math.round(o[k])>0&&(!b||o[k]>b.v))b={name:o.name,v:o[k]};return b};
+    let ld=null;for(let d=1;d<=nn;d++){const key=`${ym}-${String(d).padStart(2,"0")}`;for(const o of agg(bd.get(key)||[]).values())if(Math.round(o.tot)>0&&(!ld||o.tot>ld.v))ld={name:o.name,v:o.tot,key}}
+    return {st:t<=end?0:t===nf?1:2,w:[[top(0,"out"),"KM"],[top(0,"in"),"KM"],[top(0,"hm"),"HM"],[ld,"KM"]]}};
+  const mcell=(w,u,st)=>w?`<td><div class="w"><b>${esc(w.name)}</b><i>${f0(w.v)} ${u}</i></div></td>`:`<td>·</td>`;
+  $("mwt").tHead.innerHTML=`<tr><th>Maand</th><th><span class="hth">${ic("bike",16)}<span>Road<span class="hm"> Warrior</span></span></span></th><th><span class="hth">${ic("zap",16)}<span>Zwift<span class="hm"> Warrior</span></span></span></th><th><span class="hth">${ic("mountain",16)}<span>Berg<span class="hm">baas</span></span></span></th><th><span class="hth">${ic("gauge",16)}<span>Langste<span class="hm"> dag</span></span></span></th></tr>`;
+  $("mwb").innerHTML=ms.filter(x=>x>=START.slice(0,7)).reverse().map(x=>{const r=mw(x);return `<tr class="${r.st===0?"fu":""}"><td>${mnm(x).replace(/ ([^ ]+)$/,"<span class=\"hm\"> $1</span>")}${r.st===0?`<span class="sub mws">loopt nog</span>`:r.st===1?`<span class="sub mws">voorlopig</span>`:""}</td>`+r.w.map(([w,u])=>mcell(w,u)).join("")+`</tr>`}).join("")||`<tr><td colspan="5" class="empty">Nog geen maanden.</td></tr>`;
   $("hoft").tHead.innerHTML=`<tr><th>Dag</th><th><span class="hth">${ic("bike",16)}<span>Road<span class="hm"> Warrior</span></span></span></th><th><span class="hth">${ic("zap",16)}<span>Zwift<span class="hm"> Warrior</span></span></span></th><th><span class="hth">${ic("mountain",16)}<span>Berg<span class="hm">baas</span></span></span></th></tr>`;
   $("hofmt").textContent=new Date(hofM+"-01T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"});
   const i=ms.indexOf(hofM);$("hprev").disabled=i<=0;$("hnext").disabled=i>=ms.length-1;
