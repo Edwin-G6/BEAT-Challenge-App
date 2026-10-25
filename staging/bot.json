@@ -4,7 +4,7 @@
   "places": {
     "login": {
       "mood": "motiv",
-      "text": "Hee renner, je kunt inloggen met je emailadres waarmee je je hebt aangemeld. Ik stuur je dan een code in de mail."
+      "text": "Hee renner, vul je e-mailadres in, dan stuur ik je een code.\n\nNog niet eerder aangemeld? Check dan even hieronder"
     },
     "login-code": {
       "mood": "strat",

@@ -327,7 +327,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .botrow .bubble::before{content:"";position:absolute;bottom:-15px;left:var(--tl);margin-left:-13px;border:13px solid transparent;border-bottom:0;border-top-color:var(--dt)}
 .botrow .bubble::after{content:"";position:absolute;bottom:-9px;left:var(--tl);margin-left:-9px;border:9px solid transparent;border-bottom:0;border-top-color:var(--mint2)}
 .botrow .who{font:700 10px "JetBrains Mono",ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dt);margin-bottom:3px}
-.botrow .say{color:var(--ink);margin:0;font-size:17px;font-weight:700;line-height:1.3}
+.botrow .say{white-space:pre-line;color:var(--ink);margin:0;font-size:17px;font-weight:700;line-height:1.3}
 #botrow{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:18px}
 .zb{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:18px}
 #botrow .bot{order:-1;height:124px;margin:0}
@@ -869,7 +869,7 @@ async function startSupabase(){
   const BOT={dn:"De BED ploegleider",name:"De BED ploegleider"};
   const EM="Check je mail! Ik heb een code gestuurd naar {email}. Zie je niets, kijk dan ook in je spam.";
   const PLACES=[
-    {id:"login",grp:"Inloggen",label:"Inlogscherm",mood:"motiv",def:"Hee renner, je kunt inloggen met je emailadres waarmee je je hebt aangemeld. Ik stuur je dan een code in de mail."},
+    {id:"login",grp:"Inloggen",label:"Inlogscherm",mood:"motiv",def:"Hee renner, vul je e-mailadres in, dan stuur ik je een code.\n\nNog niet eerder aangemeld? Check dan even hieronder"},
     {id:"login-code",grp:"Inloggen",label:"Code invullen (inloggen)",mood:"strat",def:EM},
     {id:"signup-start",grp:"Aanmelden",label:"Aanmelden: e-mailadres",mood:"trots",def:"Yup, je kunt je hier aanmelden voor de BEAT Every Day. Vul je e-mailadres in, dan stuur ik je een code."},
     {id:"signup-code",grp:"Aanmelden",label:"Code invullen (aanmelden)",mood:"strat",def:EM},
