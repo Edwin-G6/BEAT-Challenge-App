@@ -896,7 +896,7 @@ async function startSupabase(){
     {id:"signup-code",grp:"Aanmelden",label:"Code invullen (aanmelden)",mood:"strat",def:EM},
     {id:"signup-naam",grp:"Aanmelden",label:"Aanmelden: naam en rugnummer",mood:"eigen",def:"Hee, ik zie dat je nog niet op de startlijst staat, geef even je naam en achternaam door."},
     {id:"wacht",grp:"Aanmelden",label:"Wachten op rugnummer",mood:"zorg",def:"Je aanmelding is ontvangen. Zodra je een rugnummer hebt gekregen, kun je hier inloggen."},
-    {id:"bad-pagina",grp:"In de app",label:"BAD-pagina",mood:"strat",def:"Klasse, je bent binnen, ik wist wel dat het je zou lukken 😁"},
+    {id:"bad-pagina",grp:"In de app",label:"BAD-pagina",mood:"trots",def:"Klasse, je bent binnen, ik wist wel dat het je zou lukken 😁"},
     {id:"hof-winnaars",grp:"In de app",label:"Hall of Fame",mood:"motiv",def:"Winnaars!"},
     {id:"rb-intro",grp:"Rennersbriefing",label:"Intro",mood:"motiv",def:"Welkom in de Rennersbriefing! Hier lees je hoe BEAT Every Day werkt, zodat je weet waar je voor fietst."},
     {id:"rb-klassement",grp:"Rennersbriefing",label:"De twee klassementen",mood:"strat",def:"Twee klassementen, twee manieren om te winnen. Lees even mee, dan weet je waar je staat."},
@@ -916,7 +916,7 @@ async function startSupabase(){
   const bot=(sex,m,label)=>{const v=sex==="v";return '<img class="bot" src="bot/'+(v?"v/":"")+m+'.webp" width="'+(v?IMGDV:IMGD)[m][0]+'" height="'+(v?IMGDV:IMGD)[m][1]+'" alt="'+esc(label+', '+MOODS[m].toLowerCase())+'">'};
   const moodOf=pl=>{const v=BT[pl.id+".mood"];return MOODS[v]?v:pl.mood};
   const textOf=(pl,v)=>{let t=BT[pl.id+".text"];if(t==null||t==="")t=pl.def;Object.keys(v||{}).forEach(k=>{t=t.split("{"+k+"}").join(v[k])});return t};
-  const RBV={"rb-intro":"m","rb-klassement":"v","rb-uitdagingen":"m","rb-spelregels":"v","rb-jury":"m","rb-privacy":"v","rb-vragen":"m"};
+  const RBV={"bad-pagina":"v","rb-intro":"m","rb-klassement":"v","rb-uitdagingen":"m","rb-spelregels":"v","rb-jury":"m","rb-privacy":"v","rb-vragen":"m"};
   const botHtml=(id,v)=>{const pl=PL[id];return '<div class="botrow botv"><div class="bubble"><div class="who">'+esc(BT[pl.id+".name"]||BOT.name)+'</div><p class="say">'+esc(textOf(pl,v))+'</p></div>'+bot(RBV[id]||window.AV,moodOf(pl),BOT.name)+'</div>'};
   function renderBot(){document.querySelectorAll("#botrow,[data-bot]").forEach(el=>{const id=el.dataset.bot||"bad-pagina";if(!PL[id])return;el.innerHTML=botHtml(id).replace(/^<div class="botrow botv">|<\/div>$/g,"");el.hidden=false})}
   /* Teksten, naam en karakter per plek staan in bot.json naast deze pagina. Ontbreekt het bestand, dan gelden de standaardwaarden hierboven. */
