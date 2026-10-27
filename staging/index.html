@@ -911,10 +911,11 @@ async function startSupabase(){
   const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const IMGD={strat:[345,440],motiv:[384,439],trots:[376,440],eigen:[281,440],straks:[281,423],zorg:[393,406],ongeduld:[335,421],zelfspot:[318,409]};
   const IMGDV={"trots":[407,426],"strat":[379,442],"eigen":[399,410],"motiv":[399,422],"straks":[379,420],"zorg":[417,410],"zelfspot":[382,405],"ongeduld":[386,401]};
-  const bot=(sex,m,label)=>{const v=window.AV==="v";return '<img class="bot" src="bot/'+(v?"v/":"")+m+'.webp" width="'+(v?IMGDV:IMGD)[m][0]+'" height="'+(v?IMGDV:IMGD)[m][1]+'" alt="'+esc(label+', '+MOODS[m].toLowerCase())+'">'};
+  const bot=(sex,m,label)=>{const v=sex==="v";return '<img class="bot" src="bot/'+(v?"v/":"")+m+'.webp" width="'+(v?IMGDV:IMGD)[m][0]+'" height="'+(v?IMGDV:IMGD)[m][1]+'" alt="'+esc(label+', '+MOODS[m].toLowerCase())+'">'};
   const moodOf=pl=>{const v=BT[pl.id+".mood"];return MOODS[v]?v:pl.mood};
   const textOf=(pl,v)=>{let t=BT[pl.id+".text"];if(t==null||t==="")t=pl.def;Object.keys(v||{}).forEach(k=>{t=t.split("{"+k+"}").join(v[k])});return t};
-  const botHtml=(id,v)=>{const pl=PL[id];return '<div class="botrow botv"><div class="bubble"><div class="who">'+esc(BT[pl.id+".name"]||BOT.name)+'</div><p class="say">'+esc(textOf(pl,v))+'</p></div>'+bot("m",moodOf(pl),BOT.name)+'</div>'};
+  const RBV={"rb-intro":"m","rb-klassement":"v","rb-uitdagingen":"m","rb-spelregels":"v","rb-jury":"m","rb-privacy":"v","rb-vragen":"m"};
+  const botHtml=(id,v)=>{const pl=PL[id];return '<div class="botrow botv"><div class="bubble"><div class="who">'+esc(BT[pl.id+".name"]||BOT.name)+'</div><p class="say">'+esc(textOf(pl,v))+'</p></div>'+bot(RBV[id]||window.AV,moodOf(pl),BOT.name)+'</div>'};
   function renderBot(){document.querySelectorAll("#botrow,[data-bot]").forEach(el=>{const id=el.dataset.bot||"bad-pagina";if(!PL[id])return;el.innerHTML=botHtml(id).replace(/^<div class="botrow botv">|<\/div>$/g,"");el.hidden=false})}
   /* Teksten, naam en karakter per plek staan in bot.json naast deze pagina. Ontbreekt het bestand, dan gelden de standaardwaarden hierboven. */
   async function loadBotTexts(){
