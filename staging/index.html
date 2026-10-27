@@ -907,7 +907,7 @@ async function startSupabase(){
   const gx=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   /* ====== Eduardo: figuur (acht karakters) en teksten (bot.json) ====== */
   var n=0;const GLOW="#7ef0e6";
-  const MOODS={strat:"Strategisch",motiv:"Motiverend",trots:"Trots",eigen:"Eigenwijs",straks:"Straks",zorg:"Zorgvuldig",ongeduld:"Ongeduldig",zelfspot:"Zelfspot"};
+  const MOODS={strat:"Strategisch",motiv:"Motiverend",trots:"Trots",eigen:"Eigenwijs",straks:"Straks",zorg:"Zorgvuldig",ongeduld:"Ongeduldig",zelfspot:"Zelfspot",denker:"Denker"};
   const BOT={dn:"De BED ploegleider",name:"De BED ploegleider"};
   const EM="Check je mail! Ik heb een code gestuurd naar {email}. Zie je niets, kijk dan ook in je spam.";
   const PLACES=[
@@ -917,7 +917,7 @@ async function startSupabase(){
     {id:"signup-code",grp:"Aanmelden",label:"Code invullen (aanmelden)",mood:"strat",def:EM},
     {id:"signup-naam",grp:"Aanmelden",label:"Aanmelden: naam en rugnummer",mood:"eigen",def:"Hee, ik zie dat je nog niet op de startlijst staat, geef even je naam en achternaam door."},
     {id:"wacht",grp:"Aanmelden",label:"Wachten op rugnummer",mood:"zorg",def:"Je aanmelding is ontvangen. Zodra je een rugnummer hebt gekregen, kun je hier inloggen."},
-    {id:"bad-pagina",grp:"In de app",label:"BAD-pagina",mood:"straks",def:"Je naam op een lijstje, lekker!"},
+    {id:"bad-pagina",grp:"In de app",label:"BAD-pagina",mood:"denker",def:"Klasse, je bent 't binnen, ik wist wel dat het je zou lukken 😁"},
     {id:"rb-intro",grp:"Rennersbriefing",label:"Intro",mood:"motiv",def:"Welkom in de Rennersbriefing! Hier lees je hoe BEAT Every Day werkt, zodat je weet waar je voor fietst."},
     {id:"rb-klassement",grp:"Rennersbriefing",label:"De twee klassementen",mood:"strat",def:"Twee klassementen, twee manieren om te winnen. Lees even mee, dan weet je waar je staat."},
     {id:"rb-uitdagingen",grp:"Rennersbriefing",label:"Doorlopende uitdagingen",mood:"trots",def:"Meer dan één manier om een titel te pakken. Kies jouw uitdaging."},
@@ -931,7 +931,7 @@ async function startSupabase(){
   let BT={};
   const setNames=()=>{const v=(BT["bot.bed.name"]||"").trim();BOT.name=v||BOT.dn};
   const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-  const IMGD={strat:[345,440],motiv:[384,439],trots:[376,440],eigen:[281,440],straks:[281,423],zorg:[393,406],ongeduld:[335,421],zelfspot:[318,409]};
+  const IMGD={strat:[345,440],motiv:[384,439],trots:[376,440],eigen:[281,440],straks:[281,423],zorg:[393,406],ongeduld:[335,421],zelfspot:[318,409],denker:[345,439]};
   const bot=(sex,m,label)=>'<img class="bot" src="bot/'+m+'.webp" width="'+IMGD[m][0]+'" height="'+IMGD[m][1]+'" alt="'+esc(label+', '+MOODS[m].toLowerCase())+'">';
   const moodOf=pl=>{const v=BT[pl.id+".mood"];return MOODS[v]?v:pl.mood};
   const textOf=(pl,v)=>{let t=BT[pl.id+".text"];if(t==null||t==="")t=pl.def;Object.keys(v||{}).forEach(k=>{t=t.split("{"+k+"}").join(v[k])});return t};
