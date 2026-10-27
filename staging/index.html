@@ -439,6 +439,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 </div>
 <div class="hof">
   <section class="card tb hoft"><h1>Hall of <em>Fame</em></h1><div class="ki"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div></section>
+  <div class="botrow botv zb" data-bot="hof-winnaars" hidden></div>
   <section class="card hofc"><div class="hofh"><div><h2>De diepe buiging <span class="gr">maandwinnaars</span></h2></div></div><div class="tw"><table id="mwt"><thead></thead><tbody id="mwb"></tbody></table></div></section>
   <section class="card hofc">
     <div class="hofh"><div><h2>De diepe buiging <span class="gr">dagwinnaars</span></h2><div class="sub" id="hofmt"></div></div><div class="hofn"><button class="cb" id="hprev" aria-label="Vorige maand">‹</button><button class="cb" id="hnext" aria-label="Volgende maand">›</button></div></div>
@@ -896,6 +897,7 @@ async function startSupabase(){
     {id:"signup-naam",grp:"Aanmelden",label:"Aanmelden: naam en rugnummer",mood:"eigen",def:"Hee, ik zie dat je nog niet op de startlijst staat, geef even je naam en achternaam door."},
     {id:"wacht",grp:"Aanmelden",label:"Wachten op rugnummer",mood:"zorg",def:"Je aanmelding is ontvangen. Zodra je een rugnummer hebt gekregen, kun je hier inloggen."},
     {id:"bad-pagina",grp:"In de app",label:"BAD-pagina",mood:"strat",def:"Klasse, je bent binnen, ik wist wel dat het je zou lukken 😁"},
+    {id:"hof-winnaars",grp:"In de app",label:"Hall of Fame",mood:"motiv",def:"Winnaars!"},
     {id:"rb-intro",grp:"Rennersbriefing",label:"Intro",mood:"motiv",def:"Welkom in de Rennersbriefing! Hier lees je hoe BEAT Every Day werkt, zodat je weet waar je voor fietst."},
     {id:"rb-klassement",grp:"Rennersbriefing",label:"De twee klassementen",mood:"strat",def:"Twee klassementen, twee manieren om te winnen. Lees even mee, dan weet je waar je staat."},
     {id:"rb-uitdagingen",grp:"Rennersbriefing",label:"Doorlopende uitdagingen",mood:"trots",def:"Meer dan één manier om een titel te pakken. Kies jouw uitdaging."},
