@@ -359,6 +359,9 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <!-- Omgeving: staging = adres bevat /staging/ -->
 <script>
   window.IS_STAGING=/\/staging(\/|$)/i.test(location.pathname);
+  /* Avatar: "m" (man) of "v" (vrouw). Standaard hieronder; met ?avatar=v of ?avatar=m in het adres kun je op staging proberen (blijft onthouden in dit tabblad). */
+  window.AV="m";
+  try{var qa=new URLSearchParams(location.search).get("avatar");if(window.IS_STAGING&&(qa==="v"||qa==="m"))sessionStorage.setItem("bedAv",qa);if(window.IS_STAGING){var sa=sessionStorage.getItem("bedAv");if(sa==="v"||sa==="m")window.AV=sa}}catch(e){}
   if(window.IS_STAGING){
     document.title="STAGING – "+document.title;
     var m=document.createElement("meta");m.name="robots";m.content="noindex,nofollow";document.head.appendChild(m);
@@ -373,7 +376,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 </head>
 <body data-view="bad">
 <script>if(window.IS_STAGING){var b=document.createElement("div");b.className="stg";b.textContent="STAGING – testomgeving";document.body.appendChild(b);document.addEventListener("DOMContentLoaded",function(){var bl=document.querySelector(".beta");if(bl)bl.textContent+=" · STAGING · SUPABASE"})}</script>
-<div id="gate"><div class="gc"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1><img class="lad" src="bot/ongeduld.webp" width="335" height="421" alt="De BED ploegleider kijkt op zijn horloge"><p>Even laden…</p></div></div>
+<div id="gate"><div class="gc"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1><img class="lad" src="bot/ongeduld.webp" width="335" height="421" alt="De BED ploegleider kijkt op zijn horloge" id="ladimg"><script>if(window.AV==="v"){var li=document.getElementById("ladimg");li.src="bot/v/ongeduld.webp";li.width=386;li.height=401}</script><p>Even laden…</p></div></div>
 <div class="app">
 <aside class="side">
   <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 1.17</div></div></div>
@@ -907,7 +910,8 @@ async function startSupabase(){
   const setNames=()=>{const v=(BT["bot.bed.name"]||"").trim();BOT.name=v||BOT.dn};
   const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const IMGD={strat:[345,440],motiv:[384,439],trots:[376,440],eigen:[281,440],straks:[281,423],zorg:[393,406],ongeduld:[335,421],zelfspot:[318,409]};
-  const bot=(sex,m,label)=>'<img class="bot" src="bot/'+m+'.webp" width="'+IMGD[m][0]+'" height="'+IMGD[m][1]+'" alt="'+esc(label+', '+MOODS[m].toLowerCase())+'">';
+  const IMGDV={"trots":[407,426],"strat":[379,442],"eigen":[399,410],"motiv":[399,422],"straks":[379,420],"zorg":[417,410],"zelfspot":[382,405],"ongeduld":[386,401]};
+  const bot=(sex,m,label)=>{const v=window.AV==="v";return '<img class="bot" src="bot/'+(v?"v/":"")+m+'.webp" width="'+(v?IMGDV:IMGD)[m][0]+'" height="'+(v?IMGDV:IMGD)[m][1]+'" alt="'+esc(label+', '+MOODS[m].toLowerCase())+'">'};
   const moodOf=pl=>{const v=BT[pl.id+".mood"];return MOODS[v]?v:pl.mood};
   const textOf=(pl,v)=>{let t=BT[pl.id+".text"];if(t==null||t==="")t=pl.def;Object.keys(v||{}).forEach(k=>{t=t.split("{"+k+"}").join(v[k])});return t};
   const botHtml=(id,v)=>{const pl=PL[id];return '<div class="botrow botv"><div class="bubble"><div class="who">'+esc(BT[pl.id+".name"]||BOT.name)+'</div><p class="say">'+esc(textOf(pl,v))+'</p></div>'+bot("m",moodOf(pl),BOT.name)+'</div>'};
