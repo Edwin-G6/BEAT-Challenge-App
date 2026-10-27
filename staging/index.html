@@ -29,8 +29,6 @@ body[data-view="hof"] .hd,body[data-view="zo"] .hd{display:none !important}
 .bt{font-weight:800;font-style:italic;font-size:19px;line-height:1.02;letter-spacing:-.03em;color:var(--dt);text-transform:uppercase}
 .beta{margin-top:5px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);font-style:normal}
 .nv,.ac{display:flex;flex-direction:column;gap:6px}
-/* Knop "Nieuwe export laden" is verborgen maar werkt nog: verwijder de volgende regel om hem weer te tonen */
-#load{display:none !important}
 #logout[hidden]{display:none}
 body:not(.in) .app{visibility:hidden}
 #gate{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px;background:var(--bg)}
@@ -390,8 +388,6 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   <div class="sg">Beheer</div>
   <div class="ac">
     <button class="ni acc" id="add"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Rit invoeren</button>
-    <button class="ni" id="load"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Nieuwe export laden</button>
-    <input type="file" id="file" accept=".csv,text/csv" hidden>
   </div>
 </aside>
 <main class="main">
@@ -578,18 +574,7 @@ const fz=v=>Math.round(v)===0?"–":f0(v);
 const nl=n=>{const [i,f]=String(n).split(".");return i.replace(/\B(?=(\d{3})+(?!\d))/g,".")+(f?","+f:"")};
 const f0=v=>nl(Math.round(v));
 const $=id=>document.getElementById(id), esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-let picked=false,ALL=RAW,bedRows=RAW,rows=RAW,days=[],sel="",sortK="sur",sortD=-1,exportDate="";
-function parseCSV(t){
-  const L=t.replace(/^\uFEFF/,"").split(/\r?\n/).filter(Boolean);
-  const h=L[0].split(";").map(s=>s.replace(/"/g,"").trim());
-  const li=h.indexOf("BEAT Lid");
-  const k=["Datum","Naam","KM Buiten","KM Binnen","KM Stadsfiets","KM Elektrisch","Totaal KM","Hoogtemeters"].map(n=>h.indexOf(n));
-  if(k.some(i=>i<0)||li<0)throw new Error("kolommen niet herkend");
-  const all=L.slice(1).map(l=>{const c=l.split(";").map(s=>s.replace(/^"|"$/g,"").trim());
-    return [c[k[0]],c[k[1]],...k.slice(2).map(i=>parseFloat((c[i]||"0").replace(",","."))||0),(c[li]||"").toUpperCase()==="JA"?1:0]});
-  const mem=new Set(all.filter(r=>r[8]).map(r=>r[1]));
-  return all.filter(r=>r[0]>=BSTART).map(r=>{r[8]=mem.has(r[1])?1:0;return r});
-}
+let picked=false,ALL=RAW,bedRows=RAW,rows=RAW,days=[],sel="",sortK="sur",sortD=-1;
 const ICONS={"users":"<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75\"/>","bike":"<circle cx=\"5.5\" cy=\"17.5\" r=\"3.5\"/><circle cx=\"18.5\" cy=\"17.5\" r=\"3.5\"/><path d=\"M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2\"/>","zap":"<path d=\"M13 2 3 14h9l-1 8 10-12h-9l1-8z\"/>","building":"<path d=\"M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9h.01M9 12h.01M9 15h.01M9 18h.01\"/>","gauge":"<path d=\"m12 14 4-4\"/><path d=\"M3.34 19a10 10 0 1 1 17.32 0\"/>","mountain":"<path d=\"m8 3 4 8 5-5 5 15H2L8 3z\"/>","trophy":"<path d=\"M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2z\"/>","crown":"<path d=\"m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zM5 20h14\"/>","flame":"<path d=\"M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z\"/>","grid":"<rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/>","plus":"<path d=\"M12 5v14M5 12h14\"/>","upload":"<path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12\"/>","search":"<circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m21 21-4.3-4.3\"/>","shield":"<path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><path d=\"m9 12 2 2 4-4\"/>"};
 ICONS.trophy="<path d=\"M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18\"/><path d=\"M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22\"/><path d=\"M18 2H6v7a6 6 0 0 0 12 0V2Z\"/>";
 const ic=(n,s=20)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
@@ -729,7 +714,6 @@ $("next").onclick=()=>{track("Dag gewijzigd",{via:"pijltjes"});picked=true;sel=d
 $("add").onclick=openAdd;$("e-today").onclick=()=>setDay(today());$("e-yest").onclick=()=>setDay(yest());$("e-name").onchange=byName;$("e-num").oninput=byNum;$("e-date").onchange=elist;$("e-cancel").onclick=()=>{track("Rit invoeren geannuleerd");$("dlg").close()};$("e-save").onclick=saveEntry;
 ["out","in","city","el"].forEach(k=>$("e-"+k).oninput=etot);
 $("m-bad").onclick=()=>setView("bad");$("m-bed").onclick=()=>setView("bed");$("m-hof").onclick=()=>setView("hof");$("m-zo").onclick=()=>setView("zo");for(const k in VIEWS){const t=$("t-"+k);if(t)t.onclick=()=>setView(k)}$("t-add").onclick=()=>$("add").click();$("burger").onclick=e=>{e.stopPropagation();toggleMenu()};document.addEventListener("click",e=>{if(document.body.classList.contains("mo")&&!e.target.closest(".nv"))toggleMenu(false)});document.addEventListener("keydown",e=>{if(e.key==="Escape")toggleMenu(false)});$("q").oninput=()=>{if(!_sq&&$("q").value){_sq=true;track("Zoeken gebruikt")}render()};$("lid").onchange=()=>{track("Filter alleen BEAT leden",{stand:$("lid").checked?"aan":"uit"});init(sel)};$("act").onchange=()=>{track("Filter alleen actief",{stand:$("act").checked?"aan":"uit"});render()};
-$("load").onclick=()=>$("file").click();
 try{if(/[?&]admin(=|&|$)/.test(location.search))document.documentElement.classList.add("adm")}catch(e){}
 /* Plausible-gebeurtenissen. Er gaan nooit namen, rugnummers of zoektermen mee. */
 const track=(n,pr)=>{try{if(window.plausible)window.plausible(n,pr?{props:pr}:undefined)}catch(e){}};
@@ -836,16 +820,6 @@ async function saveEntry(){
   $("msg").textContent=`Rit opgeslagen: ${name}, ${date}`+(DB?"":" (alleen in deze sessie)");
   setTimeout(()=>{$("msg").textContent=""},6000);
 }
-$("file").onchange=async e=>{const f=e.target.files[0];if(!f)return;
-  let parsed;
-  try{parsed=parseCSV(await f.text())}catch(err){$("msg").textContent="Kon bestand niet lezen: "+err.message;return}
-  $("msg").textContent="";
-  ALL=mergeDays(ALL,parsed);init(sel);
-  if(!DB){$("msg").textContent="Upload geldt alleen in deze sessie (opslag niet beschikbaar)";return}
-  try{for(const [d,v] of byDate(parsed))await DB.doc("days/"+d).set({rows:v})}
-  catch(err){$("msg").textContent="Opslaan niet gelukt: "+fbErr(err)+". Upload geldt alleen in deze sessie."}
-  e.target.value="";
-};
 init();loadDb();
 </script>
 <script type="module">
