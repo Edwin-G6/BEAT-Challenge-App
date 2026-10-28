@@ -544,13 +544,14 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   <div class="dh">Mijn profiel</div>
   <div class="db">
     <div id="p-who" class="pwho"></div>
+    <div class="en" id="p-priv">Je e-mailadres is alleen voor jezelf zichtbaar.</div>
     <div id="p-sec">
       <label class="pck"><input type="checkbox" id="p-pub"><span>Mijn rennerspagina is openbaar</span></label>
       <div class="en">Iedereen met de link kan dan je volledige naam en je dagtotalen van de lopende maand zien. Zet je dit uit, dan is je pagina niet meer te openen.</div>
       <div class="en" id="p-link"></div>
     </div>
     <div id="p-msg" class="em" role="alert"></div>
-    <div class="ba"><button class="dk" id="p-close">Sluiten</button><button id="p-out">Uitloggen</button></div>
+    <div class="ba"><button class="dk" id="p-out">Uitloggen</button><button id="p-close" autofocus>Sluiten</button></div>
   </div>
 </dialog>
 <dialog id="dlg">
@@ -1034,7 +1035,7 @@ async function startSupabase(){
       try{const r=await sb.from("riders").select("page_public").eq("email",(u.email||"").toLowerCase()).maybeSingle();P("p-pub").checked=r.data?r.data.page_public!==false:true}catch(e){P("p-pub").checked=true}
       P("p-pub").disabled=false;
     }
-    P("pdlg").showModal();
+    P("pdlg").showModal();P("p-close").focus();
   };
   P("p-pub").onchange=async()=>{
     const c=P("p-pub").checked,m=P("p-msg");P("p-pub").disabled=true;
