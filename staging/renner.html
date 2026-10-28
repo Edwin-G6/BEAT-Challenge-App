@@ -101,10 +101,10 @@ function render(d){
    '<div class="card"><h2>'+MAANDEN[m-1]+' dag voor dag</h2><div class="leg"><span class="lg">25 km of meer</span><span class="lo">minder dan 25 km</span><span class="lz">0 km</span></div><div class="grid">'+cells+'</div></div>';
 }
 (async()=>{
-  const nr=parseInt(new URLSearchParams(location.search).get("nr"),10);
-  if(!nr){msg("Geen rugnummer opgegeven. Gebruik een link als renner.html?nr=74");return}
+  const code=(new URLSearchParams(location.search).get("r")||"").toLowerCase();
+  if(!/^[a-z0-9]{6,32}$/.test(code)){nietGevonden();return}
   try{
-    const r=await fetch(SB.url+"/rest/v1/rpc/rider_public",{method:"POST",headers:{apikey:SB.key,"Content-Type":"application/json"},body:JSON.stringify({p_bib:nr})});
+    const r=await fetch(SB.url+"/rest/v1/rpc/rider_public",{method:"POST",headers:{apikey:SB.key,"Content-Type":"application/json"},body:JSON.stringify({p_code:code})});
     if(!r.ok)throw new Error(r.status);
     const d=await r.json();
     if(!d){nietGevonden();return}

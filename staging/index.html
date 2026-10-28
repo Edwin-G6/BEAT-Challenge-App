@@ -845,9 +845,9 @@ init();loadDb();
 /* Klik op een renner: naar zijn openbare pagina */
 (function(){const RX=/^\p{L}[\p{L}\p{M}'.\s]*-(\d{1,5})$/u,main=document.querySelector(".main");if(!main)return;let tm=0;
   const mark=()=>{main.querySelectorAll("td,span,b,strong,div,li,a").forEach(el=>{if(el.classList.contains("rl")||el.closest("button,label,select,th"))return;
-    let t="";for(const n of el.childNodes)if(n.nodeType===3)t+=n.nodeValue;t=t.trim();const m=t.length<50&&RX.exec(t);if(m){el.classList.add("rl");el.dataset.bib=m[1];el.title="Bekijk de pagina van "+t}})};
+    let t="";for(const n of el.childNodes)if(n.nodeType===3)t+=n.nodeValue;t=t.trim();const m=t.length<50&&RX.exec(t);if(m){el.classList.add("rl");el.dataset.bib=m[1];el.dataset.nm=t;el.title="Bekijk de pagina van "+t}})};
   new MutationObserver(()=>{clearTimeout(tm);tm=setTimeout(mark,60)}).observe(main,{childList:true,subtree:true});mark();
-  main.addEventListener("click",e=>{const r=e.target.closest(".rl");if(r&&r.dataset.bib)location.href="renner.html?nr="+r.dataset.bib})})();
+  main.addEventListener("click",e=>{const r=e.target.closest(".rl");if(r&&r.dataset.nm&&window.__pageCode){r.style.opacity=".6";window.__pageCode(r.dataset.nm).then(c=>{r.style.opacity="";if(c)location.href="renner.html?r="+encodeURIComponent(c)}).catch(()=>{r.style.opacity=""})}})})();
 </script>
 <script type="module">
 /* ====== Database: Supabase (staging en live hebben elk een eigen project) ====== */
@@ -1026,13 +1026,15 @@ async function startSupabase(){
   const lo=document.getElementById("logout");lo.hidden=false;
   const P=id=>document.getElementById(id);
   const myBib=rd&&rd.bib||null;
+  window.__pageCode=async name=>{const r=await sb.rpc("rider_page_code",{p_name:name});if(r.error)throw r.error;return r.data};
   lo.onclick=async()=>{
     P("p-who").innerHTML=rd?esc(rd.first_name+" "+rd.last_name)+"<small>Rugnummer "+rd.bib+" · "+esc((u.email||"").toLowerCase())+"</small>":"<small>"+esc((u.email||"").toLowerCase())+"</small>";
     P("p-sec").hidden=!myBib;P("p-msg").textContent="";P("p-msg").style.color="";
     if(myBib){
-      P("p-link").innerHTML='Jouw pagina: <a href="renner.html?nr='+myBib+'" target="_blank" rel="noopener">renner.html?nr='+myBib+'</a>';
-      P("p-pub").disabled=true;
-      try{const r=await sb.from("riders").select("page_public").eq("email",(u.email||"").toLowerCase()).maybeSingle();P("p-pub").checked=r.data?r.data.page_public!==false:true}catch(e){P("p-pub").checked=true}
+      P("p-link").textContent="";P("p-pub").disabled=true;
+      try{const r=await sb.from("riders").select("page_public,page_code").eq("email",(u.email||"").toLowerCase()).maybeSingle();P("p-pub").checked=r.data?r.data.page_public!==false:true;
+        if(r.data&&r.data.page_code){const url="renner.html?r="+encodeURIComponent(r.data.page_code);P("p-link").innerHTML='Jouw pagina: <a href="'+url+'" target="_blank" rel="noopener">openen</a> · <a href="#" id="p-copy">link kopiëren</a>';
+          P("p-copy").onclick=async ev=>{ev.preventDefault();try{await navigator.clipboard.writeText(new URL(url,location.href).href);P("p-copy").textContent="gekopieerd"}catch(e){P("p-copy").textContent=new URL(url,location.href).href}}}}catch(e){P("p-pub").checked=true}
       P("p-pub").disabled=false;
     }
     P("pdlg").showModal();P("p-close").focus();
