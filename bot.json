@@ -1,0 +1,66 @@
+{
+  "_uitleg": "Teksten van Eduardo. mood: strat, motiv, trots, eigen, straks, zorg, ongeduld, zelfspot. {email} wordt het e-mailadres van de deelnemer. Per plek kan ook een eigen name staan; zonder name geldt de naam bovenaan.",
+  "name": "De BED ploegleider",
+  "places": {
+    "login": {
+      "mood": "motiv",
+      "text": "Hee renner, vul je e-mailadres in, dan stuur ik je een code.\n\nNog niet eerder aangemeld? Check dan even hieronder"
+    },
+    "login-code": {
+      "mood": "strat",
+      "text": "Check je mail! Ik heb een code gestuurd naar {email}. Zie je niets, kijk dan ook in je spam."
+    },
+    "signup-start": {
+      "mood": "trots",
+      "text": "Yup, je kunt je hier aanmelden voor de BEAT Every Day. Vul je e-mailadres in, dan stuur ik je een code."
+    },
+    "signup-code": {
+      "mood": "strat",
+      "text": "Check je mail! Ik heb een code gestuurd naar {email}. Zie je niets, kijk dan ook in je spam."
+    },
+    "signup-naam": {
+      "mood": "eigen",
+      "text": "Hee, ik zie dat je nog niet op de startlijst staat, geef even je naam en achternaam door."
+    },
+    "wacht": {
+      "mood": "zorg",
+      "text": "Je aanmelding is ontvangen. Zodra je een rugnummer hebt gekregen, kun je hier inloggen."
+    },
+    "bad-pagina": {
+      "mood": "trots",
+      "text": "Klasse, je bent binnen, ik wist wel dat het je zou lukken 😁"
+    },
+    "hof-winnaars": {
+      "mood": "motiv",
+      "text": "Winnaars!"
+    },
+    "rb-intro": {
+      "mood": "motiv",
+      "text": "Welkom in de Rennersbriefing! Hier lees je hoe BEAT Every Day werkt, zodat je weet waar je voor fietst."
+    },
+    "rb-klassement": {
+      "mood": "strat",
+      "text": "Twee klassementen, twee manieren om te winnen. Lees even mee, dan weet je waar je staat."
+    },
+    "rb-uitdagingen": {
+      "mood": "trots",
+      "text": "Meer dan één manier om een titel te pakken. Kies jouw uitdaging."
+    },
+    "rb-spelregels": {
+      "mood": "zorg",
+      "text": "Meerdere ritten op één dag? Prima, ik tel ze netjes bij elkaar op."
+    },
+    "rb-jury": {
+      "mood": "straks",
+      "text": "Vertrouwen gaat voor alles, maar ik hou je in de gaten. Zorg dat je ritten kloppen."
+    },
+    "rb-privacy": {
+      "mood": "zorg",
+      "text": "Je gegevens blijven binnen de club. Wil je stoppen, dan haal ik je van de startlijst."
+    },
+    "rb-vragen": {
+      "mood": "zelfspot",
+      "text": "Iets niet duidelijk? Dan heb ík het slecht uitgelegd. Mail me gerust."
+    }
+  }
+}
