@@ -232,6 +232,7 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
 
 .stg{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:9999;background:#f59e0b;color:#1a1a1a;font:800 12px/1 Outfit,system-ui,sans-serif;letter-spacing:.04em;padding:9px 16px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none}
 
+.pwho{font-size:20px;font-weight:900;font-style:italic;letter-spacing:-.02em}.pwho small{display:block;font:700 11px/1.4 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-style:normal;margin-top:4px}label.pck{display:flex;flex-direction:row;align-items:center;gap:12px;font-weight:700;font-size:15px;letter-spacing:0;text-transform:none;color:var(--ink);min-height:44px}#p-link a{color:var(--dt);font-weight:700}.pck input{width:20px;height:20px;accent-color:var(--dt)}.rl{cursor:pointer}.rl:hover{text-decoration:underline;text-decoration-color:var(--dt);text-underline-offset:3px}
 .gr{color:var(--dt)}
 .so{opacity:.45;font-size:10px;letter-spacing:0}
 th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
@@ -388,7 +389,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
     <button class="ni" id="m-bed" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>STREAK</button>
     <button class="ni" id="m-hof" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>Hall of Fame</button>
     <button class="ni" id="m-zo" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Rennersbriefing</button>
-    <button class="ni" id="logout" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg><span id="lo-t">Uitloggen</span></button>
+    <button class="ni" id="logout" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg><span id="lo-t">Mijn profiel</span></button>
   </div>
   <div class="sg">Beheer</div>
   <div class="ac">
@@ -539,6 +540,19 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   <button class="ti" id="t-hof" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>Hall of Fame</button>
   <button class="ti" id="t-zo" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Rennersbriefing</button>
 </nav>
+<dialog id="pdlg">
+  <div class="dh">Mijn profiel</div>
+  <div class="db">
+    <div id="p-who" class="pwho"></div>
+    <div id="p-sec">
+      <label class="pck"><input type="checkbox" id="p-pub"><span>Mijn rennerspagina is openbaar</span></label>
+      <div class="en">Iedereen met de link kan dan je volledige naam en je dagtotalen van de lopende maand zien. Zet je dit uit, dan is je pagina niet meer te openen.</div>
+      <div class="en" id="p-link"></div>
+    </div>
+    <div id="p-msg" class="em" role="alert"></div>
+    <div class="ba"><button class="dk" id="p-close">Sluiten</button><button id="p-out">Uitloggen</button></div>
+  </div>
+</dialog>
 <dialog id="dlg">
   <div class="dh">Rit invoeren</div>
   <div class="db">
@@ -827,6 +841,12 @@ async function saveEntry(){
   setTimeout(()=>{$("msg").textContent=""},6000);
 }
 init();loadDb();
+/* Klik op een renner: naar zijn openbare pagina */
+(function(){const RX=/^\p{L}[\p{L}\p{M}'.\s]*-(\d{1,5})$/u,main=document.querySelector(".main");if(!main)return;let tm=0;
+  const mark=()=>{main.querySelectorAll("td,span,b,strong,div,li,a").forEach(el=>{if(el.classList.contains("rl")||el.closest("button,label,select,th"))return;
+    let t="";for(const n of el.childNodes)if(n.nodeType===3)t+=n.nodeValue;t=t.trim();const m=t.length<50&&RX.exec(t);if(m){el.classList.add("rl");el.dataset.bib=m[1];el.title="Bekijk de pagina van "+t}})};
+  new MutationObserver(()=>{clearTimeout(tm);tm=setTimeout(mark,60)}).observe(main,{childList:true,subtree:true});mark();
+  main.addEventListener("click",e=>{const r=e.target.closest(".rl");if(r&&r.dataset.bib)location.href="renner.html?nr="+r.dataset.bib})})();
 </script>
 <script type="module">
 /* ====== Database: Supabase (staging en live hebben elk een eigen project) ====== */
@@ -1002,7 +1022,28 @@ async function startSupabase(){
   window.__me=rd&&rd.display_name||null;
   try{const fl=await sb.rpc("rider_flags");if(!fl.error&&fl.data)window.__members=new Set(fl.data.filter(x=>x.is_member).map(x=>x.name))}catch(e){}
   if(isAdmin)document.documentElement.classList.add("adm");
-  const lo=document.getElementById("logout");lo.hidden=false;lo.onclick=logout;document.getElementById("lo-t").textContent="Uitloggen"+(window.__me?" ("+window.__me+")":"");
+  const lo=document.getElementById("logout");lo.hidden=false;
+  const P=id=>document.getElementById(id);
+  const myBib=rd&&rd.bib||null;
+  lo.onclick=async()=>{
+    P("p-who").innerHTML=rd?esc(rd.first_name+" "+rd.last_name)+"<small>Rugnummer "+rd.bib+" · "+esc((u.email||"").toLowerCase())+"</small>":"<small>"+esc((u.email||"").toLowerCase())+"</small>";
+    P("p-sec").hidden=!myBib;P("p-msg").textContent="";P("p-msg").style.color="";
+    if(myBib){
+      P("p-link").innerHTML='Jouw pagina: <a href="renner.html?nr='+myBib+'" target="_blank" rel="noopener">renner.html?nr='+myBib+'</a>';
+      P("p-pub").disabled=true;
+      try{const r=await sb.from("riders").select("page_public").eq("email",(u.email||"").toLowerCase()).maybeSingle();P("p-pub").checked=r.data?r.data.page_public!==false:true}catch(e){P("p-pub").checked=true}
+      P("p-pub").disabled=false;
+    }
+    P("pdlg").showModal();
+  };
+  P("p-pub").onchange=async()=>{
+    const c=P("p-pub").checked,m=P("p-msg");P("p-pub").disabled=true;
+    try{const r=await sb.rpc("set_my_page_public",{p_public:c});if(r.error)throw r.error;m.style.color="var(--dt)";m.textContent=c?"Je pagina is openbaar.":"Je pagina is niet meer openbaar."}
+    catch(e){P("p-pub").checked=!c;m.style.color="#c0392b";m.textContent="Opslaan is niet gelukt. Probeer het later opnieuw."}
+    P("p-pub").disabled=false;
+  };
+  P("p-close").onclick=()=>P("pdlg").close();
+  P("p-out").onclick=logout;
 
   document.body.classList.add("in");
   window.__fbRes({
