@@ -65,10 +65,12 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"
 const MAANDEN=["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
 const fmt=n=>(Math.round(n*10)/10).toLocaleString("nl-NL",{maximumFractionDigits:1});
 const todayNL=()=>new Date().toLocaleDateString("sv-SE",{timeZone:"Europe/Amsterdam"});
-function priv(){
-  document.title="Privé | BEAT Every Day";
-  $("app").innerHTML='<div class="botrow"><div class="bubble"><div class="who">De BED ploegleider</div><p class="say">Sssst… deze renner rijdt incognito. Zijn pagina staat op privé en ik verklap niks. Zelfs niet bij stevige tegenwind 🤫</p></div><img class="bot" src="bot/trots.webp" alt="De BED ploegleider, trots" height="150"></div>';
+function say(title,text,img,alt){
+  document.title=title+" | BEAT Every Day";
+  $("app").innerHTML='<div class="botrow"><div class="bubble"><div class="who">De BED ploegleider</div><p class="say">'+esc(text)+'</p></div><img class="bot" src="bot/'+img+'.webp" alt="'+esc(alt)+'" height="150"></div>';
 }
+const priv=()=>say("Privé","Sssst… deze renner rijdt incognito. Zijn pagina staat op privé en ik verklap niks 🤫","trots","De BED ploegleider, trots");
+const nietGevonden=()=>say("Niet gevonden","Deze renner is niet gevonden.","eigen","De BED ploegleider wijst");
 function msg(t){$("app").innerHTML='<div class="card msg">'+esc(t)+'</div>'}
 function cats(d,best,m){
   const t=d.tot;if(!t)return"";
@@ -105,7 +107,7 @@ function render(d){
     const r=await fetch(SB.url+"/rest/v1/rpc/rider_public",{method:"POST",headers:{apikey:SB.key,"Content-Type":"application/json"},body:JSON.stringify({p_bib:nr})});
     if(!r.ok)throw new Error(r.status);
     const d=await r.json();
-    if(!d){msg("Deze renner is niet gevonden.");return}
+    if(!d){nietGevonden();return}
     if(d.private){priv();return}
     render(d);
   }catch(e){msg("De pagina kon niet worden geladen. Probeer het later opnieuw.")}
