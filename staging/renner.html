@@ -19,6 +19,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:Outfit,system-ui
 .card{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--sh);padding:22px 20px;margin-bottom:16px}
 h1{margin:0;font-size:clamp(26px,6vw,36px);font-weight:900;font-style:italic;letter-spacing:-.03em;line-height:1.05}
 .sub{margin-top:6px;font:700 11px/1.4 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.ch{margin:22px 0 12px;font-size:13px;font-style:normal;font-weight:800;font-family:"JetBrains Mono",monospace;letter-spacing:.1em;color:var(--mute)}.cat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.cat .k .v{font-size:20px}.cat .k .x{margin-top:6px;font:700 10px/1 "JetBrains Mono",monospace;color:var(--mute);text-transform:uppercase}@media (max-width:420px){.cat{grid-template-columns:1fr 1fr}}
 .kpi{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
 .k{background:var(--hl);border-radius:18px;padding:14px 12px;text-align:center}
 .k .l{font:700 10px/1.2 "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
@@ -61,6 +62,14 @@ const MAANDEN=["januari","februari","maart","april","mei","juni","juli","augustu
 const fmt=n=>(Math.round(n*10)/10).toLocaleString("nl-NL",{maximumFractionDigits:1});
 const todayNL=()=>new Date().toLocaleDateString("sv-SE",{timeZone:"Europe/Amsterdam"});
 function msg(t){$("app").innerHTML='<div class="card msg">'+esc(t)+'</div>'}
+function cats(d,best,m){
+  const t=d.tot;if(!t)return"";
+  const c=(l,v,u,x)=>'<div class="k"><div class="l">'+l+'</div><div class="v">'+v+'<small>'+u+'</small></div>'+(x?'<div class="x">'+x+'</div>':'')+'</div>';
+  return '<h2 class="ch">Totaal per categorie</h2><div class="cat">'+
+    c("Road Warrior",fmt(t.out),"km")+c("Zwift Warrior",fmt(t.in),"km")+c("Stadsfietsbeuker",fmt(t.city),"km")+c("eBike",fmt(t.el),"km")+
+    c("Bergbaas",Math.round(t.hm).toLocaleString("nl-NL"),"m")+
+    c("Langste dag",fmt(best.km),"km",best.km>0?(+best.d.slice(8))+" "+MAANDEN[m-1]:"")+'</div>';
+}
 function render(d){
   const [y,m]=d.month.split("-").map(Number),today=todayNL();
   const days=d.days,total=days.reduce((s,x)=>s+x.km,0);
@@ -78,7 +87,7 @@ function render(d){
    '<div class="card"><h1>'+esc(d.name)+'</h1><div class="sub">Rugnummer '+d.bib+' · '+MAANDEN[m-1]+' '+y+'</div>'+
    '<div class="kpi"><div class="k"><div class="l">Totaal deze maand</div><div class="v">'+fmt(total)+'<small>km</small></div></div>'+
    '<div class="k"><div class="l">Dagen met 25 km of meer</div><div class="v">'+ok+'<small>/ '+gone.length+'</small></div></div></div>'+
-   (best.km>0?'<div class="sub" style="margin-top:14px">Langste dag: '+(+best.d.slice(8))+' '+MAANDEN[m-1]+' · '+fmt(best.km)+' km</div>':'')+'</div>'+
+   cats(d,best,m)+'</div>'+
    '<div class="card"><h2>'+MAANDEN[m-1]+' dag voor dag</h2><div class="leg"><span class="lg">25 km of meer</span><span class="lo">minder dan 25 km</span><span class="lz">0 km</span></div><div class="grid">'+cells+'</div></div>';
 }
 (async()=>{
