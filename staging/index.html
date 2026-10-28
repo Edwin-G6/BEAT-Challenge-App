@@ -847,7 +847,7 @@ init();loadDb();
   const mark=()=>{main.querySelectorAll("td,span,b,strong,div,li,a").forEach(el=>{if(el.classList.contains("rl")||el.closest("button,label,select,th"))return;
     let t="";for(const n of el.childNodes)if(n.nodeType===3)t+=n.nodeValue;t=t.trim();const m=t.length<50&&RX.exec(t);if(m){el.classList.add("rl");el.dataset.bib=m[1];el.dataset.nm=t;el.title="Bekijk de pagina van "+t}})};
   new MutationObserver(()=>{clearTimeout(tm);tm=setTimeout(mark,60)}).observe(main,{childList:true,subtree:true});mark();
-  main.addEventListener("click",e=>{const r=e.target.closest(".rl");if(r&&r.dataset.nm&&window.__pageCode){r.style.opacity=".6";window.__pageCode(r.dataset.nm).then(c=>{r.style.opacity="";if(c)location.href="renner.html?r="+encodeURIComponent(c)}).catch(()=>{r.style.opacity=""})}})})();
+  main.addEventListener("click",e=>{const r=e.target.closest(".rl");if(r&&r.dataset.nm&&window.__pageCode){r.style.opacity=".6";window.__pageCode(r.dataset.nm).then(c=>{r.style.opacity="";location.href="renner.html?r="+(c?encodeURIComponent(c):"nietgevonden")}).catch(()=>{r.style.opacity="";const t=document.createElement("div");t.className="stg";t.style.bottom="80px";t.textContent="De rennerspagina kon niet worden geopend. Probeer het later opnieuw.";document.body.appendChild(t);setTimeout(()=>t.remove(),4000)})}})})();
 </script>
 <script type="module">
 /* ====== Database: Supabase (staging en live hebben elk een eigen project) ====== */
