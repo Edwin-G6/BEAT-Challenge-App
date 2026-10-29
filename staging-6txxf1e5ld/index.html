@@ -1033,7 +1033,7 @@ async function startSupabase(){
   window.__pageCode=async name=>{const r=await sb.rpc("rider_page_code",{p_name:name});if(r.error)throw r.error;return r.data};
   lo.onclick=async()=>{
     P("p-who").innerHTML=rd?esc(rd.first_name+" "+rd.last_name)+"<small>Rugnummer "+rd.bib+" · "+esc((u.email||"").toLowerCase())+"</small>":"<small>"+esc((u.email||"").toLowerCase())+"</small>";
-    const isM=!!(window.__me&&window.__members&&window.__members.has(window.__me));P("p-mem").innerHTML=rd?(isM?'<b>BEAT</b> Je bent BEAT-lid.':'Je bent geen BEAT-lid.'):'';
+    const isM=!!(window.__me&&window.__members&&window.__members.has(window.__me));P("p-mem").innerHTML=rd?(isM?'<b>BEAT</b> Je bent BEAT-lid.':''):'';
     P("p-sec").hidden=!myBib;P("p-msg").textContent="";P("p-msg").style.color="";
     if(myBib){
       P("p-link").textContent="";P("p-pub").disabled=true;

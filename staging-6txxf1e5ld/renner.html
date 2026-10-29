@@ -99,7 +99,7 @@ function render(d){
   });
   $("app").innerHTML=
    (d.own_private?'<div class="own">🔒 <b>Je pagina staat op privé.</b> Anderen zien alleen een melding. Jij ziet hem nog wel, omdat je bent ingelogd.</div>':'')+
-   '<div class="card"><h1>'+esc(d.name)+'</h1><div class="sub">Rugnummer '+d.bib+' · '+MAANDEN[m-1]+' '+y+'</div>'+(d.is_member===true?'<div class="mem yes">BEAT-lid</div>':d.is_member===false?'<div class="mem">Geen BEAT-lid</div>':'')+
+   '<div class="card"><h1>'+esc(d.name)+'</h1><div class="sub">Rugnummer '+d.bib+' · '+MAANDEN[m-1]+' '+y+'</div>'+(d.is_member===true?'<div class="mem yes">BEAT-lid</div>':'')+
    '<div class="kpi"><div class="k"><div class="l">Totaal deze maand</div><div class="v">'+fmt(total)+'<small>km</small></div></div>'+
    '<div class="k"><div class="l">Dagen met 25 km of meer</div><div class="v">'+ok+'<small>/ '+gone.length+'</small></div></div></div>'+
    cats(d,best,m)+'</div>'+
