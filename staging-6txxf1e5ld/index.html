@@ -359,9 +359,10 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .botv{--head:#d5e8e6;--head-shade:#a9c9c5;--hair:#3a5068;--mint2:#17383a}}
 :root[data-theme="dark"] .botv{--head:#d5e8e6;--head-shade:#a9c9c5;--hair:#3a5068;--mint2:#17383a}
 </style>
-<!-- Omgeving: staging = adres bevat /staging/ -->
+<!-- Omgeving: staging = het mapadres begint met /staging (testomgeving, niet indexeren) -->
 <script>
-  window.IS_STAGING=/\/staging(\/|$)/i.test(location.pathname);
+  window.IS_STAGING=/\/staging[-a-z0-9]*(\/|$)/i.test(location.pathname);
+  if(window.IS_STAGING){var rm=document.createElement("meta");rm.name="robots";rm.content="noindex, nofollow, noarchive";(document.head||document.documentElement).appendChild(rm)}
   /* Avatar: "m" (man) of "v" (vrouw). Standaard hieronder; met ?avatar=v of ?avatar=m in het adres kun je op staging proberen (blijft onthouden in dit tabblad). */
   window.AV="m";
   try{var qa=new URLSearchParams(location.search).get("avatar");if(window.IS_STAGING&&(qa==="v"||qa==="m"))sessionStorage.setItem("bedAv",qa);if(window.IS_STAGING){var sa=sessionStorage.getItem("bedAv");if(sa==="v"||sa==="m")window.AV=sa}}catch(e){}

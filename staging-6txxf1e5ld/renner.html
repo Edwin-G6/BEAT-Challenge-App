@@ -56,7 +56,7 @@ h2{margin:0 0 14px;font-size:20px;font-weight:900;font-style:italic;letter-spaci
   <div class="foot"><a href="./">Naar BEAT Every Day</a></div>
 </div>
 <script>
-window.IS_STAGING=/\/staging(\/|$)/i.test(location.pathname);
+window.IS_STAGING=/\/staging[-a-z0-9]*(\/|$)/i.test(location.pathname);
 const SB_STAGING={url:"https://ijtsrhhovbakxhuvzupw.supabase.co",key:"sb_publishable_NCAyjCkD7syTVKXt9U57zg_x78_MuMw"};
 const SB_LIVE={url:"https://gqxkppyvlvssawhqzqhx.supabase.co",key:"sb_publishable_G_rFS8JvGwxBaFpuHcG1Dw_PC_M3ao5"};
 const SB=window.IS_STAGING?SB_STAGING:SB_LIVE;
