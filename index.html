@@ -232,7 +232,7 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
 
 .stg{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:9999;background:#f59e0b;color:#1a1a1a;font:800 12px/1 Outfit,system-ui,sans-serif;letter-spacing:.04em;padding:9px 16px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none}
 
-.pwho{font-size:20px;font-weight:900;font-style:italic;letter-spacing:-.02em}.pwho small{display:block;font:700 11px/1.4 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-style:normal;margin-top:4px}label.pck{display:flex;flex-direction:row;align-items:center;gap:12px;font-weight:700;font-size:15px;letter-spacing:0;text-transform:none;color:var(--ink);min-height:44px}#p-link a{color:var(--dt);font-weight:700}.pst{margin:6px 0 4px;padding:10px 12px;border-radius:14px;background:var(--o,#fff4d6);border:1px solid var(--ol,#f2d48a);color:var(--ot,#9a5b00);font-size:13px;font-weight:700;line-height:1.4}.pck input{width:20px;height:20px;accent-color:var(--dt)}.rl{cursor:pointer}.rl:hover{text-decoration:underline;text-decoration-color:var(--dt);text-underline-offset:3px}
+.pwho{font-size:20px;font-weight:900;font-style:italic;letter-spacing:-.02em}.pmem{font-size:14px;font-weight:700;margin:-4px 0 8px}.pmem b{display:inline-block;margin-right:6px;padding:3px 7px 2px;border-radius:7px;background:var(--mint);color:var(--dt);font:800 11px/1 "JetBrains Mono",monospace;letter-spacing:.08em}.pwho small{display:block;font:700 11px/1.4 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-style:normal;margin-top:4px}label.pck{display:flex;flex-direction:row;align-items:center;gap:12px;font-weight:700;font-size:15px;letter-spacing:0;text-transform:none;color:var(--ink);min-height:44px}#p-link a{color:var(--dt);font-weight:700}.pst{margin:6px 0 4px;padding:10px 12px;border-radius:14px;background:var(--o,#fff4d6);border:1px solid var(--ol,#f2d48a);color:var(--ot,#9a5b00);font-size:13px;font-weight:700;line-height:1.4}.pck input{width:20px;height:20px;accent-color:var(--dt)}.bm::after{content:"BEAT";display:inline-block;margin-left:7px;padding:3px 5px 2px;border-radius:6px;background:var(--mint);color:var(--dt);font:800 9px/1 "JetBrains Mono",monospace;letter-spacing:.08em;vertical-align:middle;text-decoration:none}@media (max-width:640px){.bm::after{content:"B";margin-left:5px;padding:3px 4px 2px}}.rl{cursor:pointer}.rl:hover{text-decoration:underline;text-decoration-color:var(--dt);text-underline-offset:3px}
 .gr{color:var(--dt)}
 .so{opacity:.45;font-size:10px;letter-spacing:0}
 th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
@@ -545,6 +545,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   <div class="dh">Mijn profiel</div>
   <div class="db">
     <div id="p-who" class="pwho"></div>
+    <div class="pmem" id="p-mem"></div>
     <div class="en" id="p-priv">Je e-mailadres is alleen voor jezelf zichtbaar.</div>
     <div id="p-sec">
       <label class="pck"><input type="checkbox" id="p-pub"><span>Mijn rennerspagina is openbaar</span></label>
@@ -846,8 +847,9 @@ async function saveEntry(){
 init();loadDb();
 /* Klik op een renner: naar zijn openbare pagina */
 (function(){const RX=/^\p{L}[\p{L}\p{M}'.\s]*-(\d{1,5})$/u,main=document.querySelector(".main");if(!main)return;let tm=0;
-  const mark=()=>{main.querySelectorAll("td,span,b,strong,div,li,a").forEach(el=>{if(el.classList.contains("rl")||el.closest("button,label,select,th"))return;
-    let t="";for(const n of el.childNodes)if(n.nodeType===3)t+=n.nodeValue;t=t.trim();const m=t.length<50&&RX.exec(t);if(m){el.classList.add("rl");el.dataset.bib=m[1];el.dataset.nm=t;el.title="Bekijk de pagina van "+t}})};
+  const mark=()=>{const mem=window.__members;main.querySelectorAll("td,span,b,strong,div,li,a").forEach(el=>{if(el.closest("button,label,select,th"))return;
+    if(el.classList.contains("rl")){if(mem&&el.dataset.nm&&mem.has(el.dataset.nm)&&el.closest("#ptable,#btable,.pc"))el.classList.add("bm");return}
+    let t="";for(const n of el.childNodes)if(n.nodeType===3)t+=n.nodeValue;t=t.trim();const m=t.length<50&&RX.exec(t);if(m){el.classList.add("rl");el.dataset.bib=m[1];el.dataset.nm=t;el.title="Bekijk de pagina van "+t;if(mem&&mem.has(t)&&el.closest("#ptable,#btable,.pc"))el.classList.add("bm")}})};
   new MutationObserver(()=>{clearTimeout(tm);tm=setTimeout(mark,60)}).observe(main,{childList:true,subtree:true});mark();
   main.addEventListener("click",e=>{const r=e.target.closest(".rl");if(r&&r.dataset.nm&&window.__pageCode){r.style.opacity=".6";window.__pageCode(r.dataset.nm).then(c=>{r.style.opacity="";location.href="renner.html?r="+(c?encodeURIComponent(c):"nietgevonden")}).catch(()=>{r.style.opacity="";const t=document.createElement("div");t.className="stg";t.style.bottom="80px";t.textContent="De rennerspagina kon niet worden geopend. Probeer het later opnieuw.";document.body.appendChild(t);setTimeout(()=>t.remove(),4000)})}})})();
 </script>
@@ -1031,6 +1033,7 @@ async function startSupabase(){
   window.__pageCode=async name=>{const r=await sb.rpc("rider_page_code",{p_name:name});if(r.error)throw r.error;return r.data};
   lo.onclick=async()=>{
     P("p-who").innerHTML=rd?esc(rd.first_name+" "+rd.last_name)+"<small>Rugnummer "+rd.bib+" · "+esc((u.email||"").toLowerCase())+"</small>":"<small>"+esc((u.email||"").toLowerCase())+"</small>";
+    const isM=!!(window.__me&&window.__members&&window.__members.has(window.__me));P("p-mem").innerHTML=rd?(isM?'<b>BEAT</b> Je bent BEAT-lid.':''):'';
     P("p-sec").hidden=!myBib;P("p-msg").textContent="";P("p-msg").style.color="";
     if(myBib){
       P("p-link").textContent="";P("p-pub").disabled=true;
