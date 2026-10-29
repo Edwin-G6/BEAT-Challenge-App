@@ -74,6 +74,8 @@ function say(title,text,img,alt){
 const priv=()=>say("Privé","Sssst… deze renner rijdt incognito. Zijn pagina staat op privé en ik verklap niks 🤫","trots","De BED ploegleider, trots");
 const nietGevonden=()=>say("Niet gevonden","Deze renner is niet gevonden.","eigen","De BED ploegleider wijst");
 function token(){try{const k="sb-"+new URL(SB.url).hostname.split(".")[0]+"-auth-token";const j=JSON.parse(localStorage.getItem(k)||"null");return j&&j.access_token||null}catch(e){return null}}
+function expired(t){try{const j=JSON.parse(atob(t.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));return !j.exp||j.exp*1000<Date.now()+5000}catch(e){return true}}
+const loginNodig=()=>say("Inloggen","Deze pagina is alleen voor ingelogde renners. Log in bij BEAT Every Day en klik daar op de naam van de renner.","zorg","De BED ploegleider");
 function msg(t){$("app").innerHTML='<div class="card msg">'+esc(t)+'</div>'}
 function cats(d,best,m){
   const t=d.tot;if(!t)return"";
@@ -109,11 +111,13 @@ function render(d){
   const code=(new URLSearchParams(location.search).get("r")||"").toLowerCase();
   if(!/^[a-z0-9]{6,32}$/.test(code)){nietGevonden();return}
   try{
-    const call=t=>fetch(SB.url+"/rest/v1/rpc/rider_public",{method:"POST",headers:Object.assign({apikey:SB.key,"Content-Type":"application/json"},t?{Authorization:"Bearer "+t}:{}),body:JSON.stringify({p_code:code})});
-    const tk=token();let r=await call(tk);if(tk&&r.status===401)r=await call(null);
+    const tk=token();if(!tk||expired(tk)){loginNodig();return}
+    const r=await fetch(SB.url+"/rest/v1/rpc/rider_public",{method:"POST",headers:{apikey:SB.key,Authorization:"Bearer "+tk,"Content-Type":"application/json"},body:JSON.stringify({p_code:code})});
+    if(r.status===401||r.status===403){loginNodig();return}
     if(!r.ok)throw new Error(r.status);
     const d=await r.json();
     if(!d){nietGevonden();return}
+    if(d.login){loginNodig();return}
     if(d.private){priv();return}
     render(d);
   }catch(e){msg("De pagina kon niet worden geladen. Probeer het later opnieuw.")}
