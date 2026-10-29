@@ -232,7 +232,7 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
 
 .stg{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:9999;background:#f59e0b;color:#1a1a1a;font:800 12px/1 Outfit,system-ui,sans-serif;letter-spacing:.04em;padding:9px 16px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none}
 
-.pwho{font-size:20px;font-weight:900;font-style:italic;letter-spacing:-.02em}.pwho small{display:block;font:700 11px/1.4 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-style:normal;margin-top:4px}label.pck{display:flex;flex-direction:row;align-items:center;gap:12px;font-weight:700;font-size:15px;letter-spacing:0;text-transform:none;color:var(--ink);min-height:44px}#p-link a{color:var(--dt);font-weight:700}.pck input{width:20px;height:20px;accent-color:var(--dt)}.rl{cursor:pointer}.rl:hover{text-decoration:underline;text-decoration-color:var(--dt);text-underline-offset:3px}
+.pwho{font-size:20px;font-weight:900;font-style:italic;letter-spacing:-.02em}.pwho small{display:block;font:700 11px/1.4 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-style:normal;margin-top:4px}label.pck{display:flex;flex-direction:row;align-items:center;gap:12px;font-weight:700;font-size:15px;letter-spacing:0;text-transform:none;color:var(--ink);min-height:44px}#p-link a{color:var(--dt);font-weight:700}.pst{margin:6px 0 4px;padding:10px 12px;border-radius:14px;background:var(--o,#fff4d6);border:1px solid var(--ol,#f2d48a);color:var(--ot,#9a5b00);font-size:13px;font-weight:700;line-height:1.4}.pck input{width:20px;height:20px;accent-color:var(--dt)}.rl{cursor:pointer}.rl:hover{text-decoration:underline;text-decoration-color:var(--dt);text-underline-offset:3px}
 .gr{color:var(--dt)}
 .so{opacity:.45;font-size:10px;letter-spacing:0}
 th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
@@ -548,7 +548,8 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
     <div class="en" id="p-priv">Je e-mailadres is alleen voor jezelf zichtbaar.</div>
     <div id="p-sec">
       <label class="pck"><input type="checkbox" id="p-pub"><span>Mijn rennerspagina is openbaar</span></label>
-      <div class="en">Iedereen met de link kan dan je volledige naam en je dagtotalen van de lopende maand zien. Zet je dit uit, dan is je pagina niet meer te openen.</div>
+      <div class="en">Iedereen met de link kan dan je volledige naam en je dagtotalen van de lopende maand zien. Zet je dit uit, dan zien anderen alleen een melding. Jij kunt je pagina dan zelf nog wel openen.</div>
+      <div class="pst" id="p-state" hidden></div>
       <div class="en" id="p-link"></div>
     </div>
     <div id="p-msg" class="em" role="alert"></div>
@@ -1033,18 +1034,19 @@ async function startSupabase(){
     P("p-sec").hidden=!myBib;P("p-msg").textContent="";P("p-msg").style.color="";
     if(myBib){
       P("p-link").textContent="";P("p-pub").disabled=true;
-      try{const r=await sb.from("riders").select("page_public,page_code").eq("email",(u.email||"").toLowerCase()).maybeSingle();P("p-pub").checked=r.data?r.data.page_public!==false:true;
-        if(r.data&&r.data.page_code){const url="renner.html?r="+encodeURIComponent(r.data.page_code);P("p-link").innerHTML='Jouw pagina: <a href="'+url+'" target="_blank" rel="noopener">openen</a> · <a href="#" id="p-copy">link kopiëren</a>';
+      try{const r=await sb.from("riders").select("page_public,page_code").eq("email",(u.email||"").toLowerCase()).maybeSingle();P("p-pub").checked=r.data?r.data.page_public!==false:true;ps();
+        if(r.data&&r.data.page_code){const url="renner.html?r="+encodeURIComponent(r.data.page_code);P("p-link").innerHTML='Mijn pagina: <a href="'+url+'" target="_blank" rel="noopener">Checken!</a> · <a href="#" id="p-copy">link kopiëren</a>';
           P("p-copy").onclick=async ev=>{ev.preventDefault();try{await navigator.clipboard.writeText(new URL(url,location.href).href);P("p-copy").textContent="gekopieerd"}catch(e){P("p-copy").textContent=new URL(url,location.href).href}}}}catch(e){P("p-pub").checked=true}
       P("p-pub").disabled=false;
     }
     P("pdlg").showModal();P("p-close").focus();
   };
+  const ps=()=>{const e=P("p-state"),c=P("p-pub").checked;e.hidden=c;e.textContent=c?"":"🔒 Je pagina staat op privé. Anderen zien alleen een melding. Jij kunt hem zelf nog wel bekijken, zolang je bent ingelogd."};
   P("p-pub").onchange=async()=>{
     const c=P("p-pub").checked,m=P("p-msg");P("p-pub").disabled=true;
     try{const r=await sb.rpc("set_my_page_public",{p_public:c});if(r.error)throw r.error;m.style.color="var(--dt)";m.textContent=c?"Je pagina is openbaar.":"Je pagina is niet meer openbaar."}
     catch(e){P("p-pub").checked=!c;m.style.color="#c0392b";m.textContent="Opslaan is niet gelukt. Probeer het later opnieuw."}
-    P("p-pub").disabled=false;
+    P("p-pub").disabled=false;ps();
   };
   P("p-close").onclick=()=>P("pdlg").close();
   P("p-out").onclick=logout;

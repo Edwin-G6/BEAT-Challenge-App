@@ -43,6 +43,7 @@ h2{margin:0 0 14px;font-size:20px;font-weight:900;font-style:italic;letter-spaci
 .bubble{position:relative;background:var(--mint);border:2px solid var(--dt);border-radius:22px;padding:14px 16px;box-shadow:0 4px 0 var(--lt,#cdeae7)}
 .bubble:before{content:"";position:absolute;left:-10px;top:50%;width:16px;height:16px;background:var(--mint);border-left:2px solid var(--dt);border-bottom:2px solid var(--dt);transform:translateY(-50%) rotate(45deg)}
 .who{font:700 10px/1 "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dt);margin-bottom:6px}.say{margin:0;font-weight:800;font-size:17px;line-height:1.3}
+.own{background:var(--o);border:1px solid var(--ol);color:var(--ot);border-radius:18px;padding:12px 14px;margin-bottom:16px;font-size:14px;line-height:1.4}
 .msg{text-align:center;padding:36px 12px;color:var(--mute)}
 .foot{margin:18px 4px;text-align:center;font-size:12px;color:var(--mute)}
 .foot a{color:var(--dt);font-weight:700}
@@ -71,6 +72,7 @@ function say(title,text,img,alt){
 }
 const priv=()=>say("Privé","Sssst… deze renner rijdt incognito. Zijn pagina staat op privé en ik verklap niks 🤫","trots","De BED ploegleider, trots");
 const nietGevonden=()=>say("Niet gevonden","Deze renner is niet gevonden.","eigen","De BED ploegleider wijst");
+function token(){try{const k="sb-"+new URL(SB.url).hostname.split(".")[0]+"-auth-token";const j=JSON.parse(localStorage.getItem(k)||"null");return j&&j.access_token||null}catch(e){return null}}
 function msg(t){$("app").innerHTML='<div class="card msg">'+esc(t)+'</div>'}
 function cats(d,best,m){
   const t=d.tot;if(!t)return"";
@@ -94,6 +96,7 @@ function render(d){
     cells+='<div class="d '+c+(x.d===today?" t":"")+'" aria-label="'+n+' '+MAANDEN[m-1]+': '+(fut?"nog niet gereden":fmt(x.km)+" km")+'"><b>'+n+'</b><i>'+(fut?"·":x.km>0?fmt(x.km)+"<small>km</small>":"–")+'</i></div>';
   });
   $("app").innerHTML=
+   (d.own_private?'<div class="own">🔒 <b>Je pagina staat op privé.</b> Anderen zien alleen een melding. Jij ziet hem nog wel, omdat je bent ingelogd.</div>':'')+
    '<div class="card"><h1>'+esc(d.name)+'</h1><div class="sub">Rugnummer '+d.bib+' · '+MAANDEN[m-1]+' '+y+'</div>'+
    '<div class="kpi"><div class="k"><div class="l">Totaal deze maand</div><div class="v">'+fmt(total)+'<small>km</small></div></div>'+
    '<div class="k"><div class="l">Dagen met 25 km of meer</div><div class="v">'+ok+'<small>/ '+gone.length+'</small></div></div></div>'+
@@ -104,7 +107,8 @@ function render(d){
   const code=(new URLSearchParams(location.search).get("r")||"").toLowerCase();
   if(!/^[a-z0-9]{6,32}$/.test(code)){nietGevonden();return}
   try{
-    const r=await fetch(SB.url+"/rest/v1/rpc/rider_public",{method:"POST",headers:{apikey:SB.key,"Content-Type":"application/json"},body:JSON.stringify({p_code:code})});
+    const call=t=>fetch(SB.url+"/rest/v1/rpc/rider_public",{method:"POST",headers:Object.assign({apikey:SB.key,"Content-Type":"application/json"},t?{Authorization:"Bearer "+t}:{}),body:JSON.stringify({p_code:code})});
+    const tk=token();let r=await call(tk);if(tk&&r.status===401)r=await call(null);
     if(!r.ok)throw new Error(r.status);
     const d=await r.json();
     if(!d){nietGevonden();return}
