@@ -117,6 +117,10 @@ function render(d){
     render(d);
   }catch(e){msg("De pagina kon niet worden geladen. Probeer het later opnieuw.")}
 })();
+document.querySelector(".btn").addEventListener("click",e=>{
+  /* Kom je uit de app, ga dan terug naar waar je was; anders gewoon naar de app */
+  try{const ref=document.referrer&&new URL(document.referrer);if(ref&&ref.origin===location.origin&&ref.pathname.replace(/index\.html$/,"")===new URL("./",location.href).pathname&&history.length>1){e.preventDefault();history.back()}}catch(x){}
+});
 </script>
 </body>
 </html>

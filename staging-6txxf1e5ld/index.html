@@ -1035,7 +1035,7 @@ async function startSupabase(){
     if(myBib){
       P("p-link").textContent="";P("p-pub").disabled=true;
       try{const r=await sb.from("riders").select("page_public,page_code").eq("email",(u.email||"").toLowerCase()).maybeSingle();P("p-pub").checked=r.data?r.data.page_public!==false:true;ps();
-        if(r.data&&r.data.page_code){const url="renner.html?r="+encodeURIComponent(r.data.page_code);P("p-link").innerHTML='Mijn pagina: <a href="'+url+'" target="_blank" rel="noopener">Checken!</a> · <a href="#" id="p-copy">link kopiëren</a>';
+        if(r.data&&r.data.page_code){const url="renner.html?r="+encodeURIComponent(r.data.page_code);P("p-link").innerHTML='Mijn pagina: <a href="'+url+'">Checken!</a> · <a href="#" id="p-copy">link kopiëren</a>';
           P("p-copy").onclick=async ev=>{ev.preventDefault();try{await navigator.clipboard.writeText(new URL(url,location.href).href);P("p-copy").textContent="gekopieerd"}catch(e){P("p-copy").textContent=new URL(url,location.href).href}}}}catch(e){P("p-pub").checked=true}
       P("p-pub").disabled=false;
     }
