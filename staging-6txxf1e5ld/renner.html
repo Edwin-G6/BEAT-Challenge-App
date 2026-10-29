@@ -43,6 +43,7 @@ h2{margin:0 0 14px;font-size:20px;font-weight:900;font-style:italic;letter-spaci
 .bubble{position:relative;background:var(--mint);border:2px solid var(--dt);border-radius:22px;padding:14px 16px;box-shadow:0 4px 0 var(--lt,#cdeae7)}
 .bubble:before{content:"";position:absolute;left:-10px;top:50%;width:16px;height:16px;background:var(--mint);border-left:2px solid var(--dt);border-bottom:2px solid var(--dt);transform:translateY(-50%) rotate(45deg)}
 .who{font:700 10px/1 "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dt);margin-bottom:6px}.say{margin:0;font-weight:800;font-size:17px;line-height:1.3}
+.mem{display:inline-block;margin-top:10px;padding:5px 10px 4px;border-radius:8px;background:var(--z);color:var(--mute);font:800 11px/1 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase}.mem.yes{background:var(--mint);color:var(--dt)}
 .own{background:var(--o);border:1px solid var(--ol);color:var(--ot);border-radius:18px;padding:12px 14px;margin-bottom:16px;font-size:14px;line-height:1.4}
 .msg{text-align:center;padding:36px 12px;color:var(--mute)}
 .foot{margin:18px 4px;text-align:center;font-size:12px;color:var(--mute)}
@@ -98,7 +99,7 @@ function render(d){
   });
   $("app").innerHTML=
    (d.own_private?'<div class="own">🔒 <b>Je pagina staat op privé.</b> Anderen zien alleen een melding. Jij ziet hem nog wel, omdat je bent ingelogd.</div>':'')+
-   '<div class="card"><h1>'+esc(d.name)+'</h1><div class="sub">Rugnummer '+d.bib+' · '+MAANDEN[m-1]+' '+y+'</div>'+
+   '<div class="card"><h1>'+esc(d.name)+'</h1><div class="sub">Rugnummer '+d.bib+' · '+MAANDEN[m-1]+' '+y+'</div>'+(d.is_member===true?'<div class="mem yes">BEAT-lid</div>':d.is_member===false?'<div class="mem">Geen BEAT-lid</div>':'')+
    '<div class="kpi"><div class="k"><div class="l">Totaal deze maand</div><div class="v">'+fmt(total)+'<small>km</small></div></div>'+
    '<div class="k"><div class="l">Dagen met 25 km of meer</div><div class="v">'+ok+'<small>/ '+gone.length+'</small></div></div></div>'+
    cats(d,best,m)+'</div>'+
