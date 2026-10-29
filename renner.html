@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://*.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; base-uri 'self'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Rennerspagina | BEAT Every Day</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%232a706a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,400;0,600;0,800;1,800;1,900&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>
+:root{--bg:#f6f8fa;--card:#fff;--ink:#0e1b2c;--mute:#8794a6;--line:#e7ecf1;--dt:#2a7a74;--tq:#4fbdb7;--hl:#f1faf9;--mint:#e3f4f2;--g:#e4f6ec;--gl:#9bdcb5;--gt:#17743f;--o:#fff4d6;--ol:#f2d48a;--ot:#9a5b00;--z:#eef1f5;--sh:0 10px 30px rgba(18,40,60,.06)}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1517;--card:#122022;--ink:#e8f1f1;--mute:#8aa0a3;--line:#22373a;--dt:#5cc7bf;--hl:#16292b;--mint:#17302f;--g:#12301f;--gl:#2f7a4c;--gt:#7fe0a5;--o:#33290f;--ol:#6b5418;--ot:#f0c35a;--z:#1a2c2f;--sh:none}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Outfit,system-ui,sans-serif;padding:max(16px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom))}
+.w{max-width:760px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;margin:4px 2px 16px;font-weight:900;font-style:italic;text-transform:uppercase;letter-spacing:-.03em;font-size:18px}
+.brand em{color:var(--dt);font-style:inherit}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--sh);padding:22px 20px;margin-bottom:16px}
+h1{margin:0;font-size:clamp(26px,6vw,36px);font-weight:900;font-style:italic;letter-spacing:-.03em;line-height:1.05}
+.sub{margin-top:6px;font:700 11px/1.4 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.ch{margin:22px 0 12px;font-size:13px;font-style:normal;font-weight:800;font-family:"JetBrains Mono",monospace;letter-spacing:.1em;color:var(--mute)}.cat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.cat .k .v{font-size:20px}.cat .k .x{margin-top:6px;font:700 10px/1 "JetBrains Mono",monospace;color:var(--mute);text-transform:uppercase}@media (max-width:420px){.cat{grid-template-columns:1fr 1fr}}
+.kpi{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.k{background:var(--hl);border-radius:18px;padding:14px 12px;text-align:center}
+.k .l{font:700 10px/1.2 "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.k .v{margin-top:6px;font:700 26px/1 "JetBrains Mono",monospace}
+.k .v small{font-size:12px;color:var(--mute);margin-left:3px}
+h2{margin:0 0 14px;font-size:20px;font-weight:900;font-style:italic;letter-spacing:-.02em;text-transform:uppercase}
+.leg{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.leg span{font:700 11px/1 "JetBrains Mono",monospace;padding:6px 9px;border-radius:999px;border:1px solid}
+.lg{background:var(--g);border-color:var(--gl);color:var(--gt)}.lo{background:var(--o);border-color:var(--ol);color:var(--ot)}.ll{background:var(--card);border-color:var(--ink) !important;color:var(--ink);box-shadow:0 0 0 1px var(--ink)}.lz{background:var(--z);border-color:var(--line);color:var(--mute)}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.wd{font:700 10px/1 "JetBrains Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);text-align:center;padding-bottom:2px}
+.d{border:1px solid var(--line);border-radius:12px;padding:7px 2px 8px;text-align:center;min-height:62px;display:flex;flex-direction:column;justify-content:space-between}
+.d b{font:700 11px/1 "JetBrains Mono",monospace;color:var(--mute)}
+.d i{font:700 14px/1.1 "JetBrains Mono",monospace;font-style:normal}
+.d i small{display:block;font-size:9px;color:var(--mute);margin-top:2px}
+.d.g{background:var(--g);border-color:var(--gl);color:var(--gt)}.d.o{background:var(--o);border-color:var(--ol);color:var(--ot)}.d.z{background:var(--z)}
+.d.l{border-color:var(--ink);box-shadow:0 0 0 1.5px var(--ink)}.d.f{opacity:.45;background:transparent}.d.t{outline:2px solid var(--dt);outline-offset:1px}
+.d.e{border:0;background:transparent;min-height:0}
+.bar{height:10px;border-radius:99px;background:var(--z);overflow:hidden;margin-top:6px}.bar div{height:100%;background:var(--tq)}
+.botrow{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:16px;margin:8px 0 16px}.botrow .bot{order:-1;height:130px;width:auto}
+.bubble{position:relative;background:var(--mint);border:2px solid var(--dt);border-radius:22px;padding:14px 16px;box-shadow:0 4px 0 var(--lt,#cdeae7)}
+.bubble:before{content:"";position:absolute;left:-10px;top:50%;width:16px;height:16px;background:var(--mint);border-left:2px solid var(--dt);border-bottom:2px solid var(--dt);transform:translateY(-50%) rotate(45deg)}
+.who{font:700 10px/1 "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dt);margin-bottom:6px}.say{margin:0;font-weight:800;font-size:17px;line-height:1.3}
+.own{background:var(--o);border:1px solid var(--ol);color:var(--ot);border-radius:18px;padding:12px 14px;margin-bottom:16px;font-size:14px;line-height:1.4}
+.msg{text-align:center;padding:36px 12px;color:var(--mute)}
+.foot{margin:18px 4px;text-align:center;font-size:12px;color:var(--mute)}
+.foot{margin:22px 0 8px}.btn{display:block;max-width:420px;margin:0 auto;padding:15px 22px;border-radius:16px;background:var(--dt);color:#fff;font-weight:800;font-size:15px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;box-shadow:0 6px 14px rgba(42,122,116,.25)}.btn:hover{filter:brightness(1.08)}.btn:focus-visible{outline:3px solid var(--tq);outline-offset:2px}@media (prefers-color-scheme:dark){.btn{color:#06201e}}
+@media (max-width:420px){.grid{gap:5px}.d{min-height:54px;border-radius:10px}.d i{font-size:12px}.card{padding:18px 14px}}
+</style>
+</head>
+<body>
+<div class="w">
+  <div class="brand">BEAT <em>Every Day</em></div>
+  <div id="app"><div class="card msg">Even laden…</div></div>
+  <div class="foot"><a class="btn" href="./">Naar BEAT Every Day</a></div>
+</div>
+<script>
+window.IS_STAGING=/\/staging[-a-z0-9]*(\/|$)/i.test(location.pathname);
+const SB_STAGING={url:"https://ijtsrhhovbakxhuvzupw.supabase.co",key:"sb_publishable_NCAyjCkD7syTVKXt9U57zg_x78_MuMw"};
+const SB_LIVE={url:"https://gqxkppyvlvssawhqzqhx.supabase.co",key:"sb_publishable_G_rFS8JvGwxBaFpuHcG1Dw_PC_M3ao5"};
+const SB=window.IS_STAGING?SB_STAGING:SB_LIVE;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const MAANDEN=["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
+const fmt=n=>(Math.round(n*10)/10).toLocaleString("nl-NL",{maximumFractionDigits:1});
+const todayNL=()=>new Date().toLocaleDateString("sv-SE",{timeZone:"Europe/Amsterdam"});
+function say(title,text,img,alt){
+  document.title=title+" | BEAT Every Day";
+  $("app").innerHTML='<div class="botrow"><div class="bubble"><div class="who">De BED ploegleider</div><p class="say">'+esc(text)+'</p></div><img class="bot" src="bot/'+img+'.webp" alt="'+esc(alt)+'" height="150"></div>';
+}
+const priv=()=>say("Privé","Sssst… deze renner rijdt incognito. Zijn pagina staat op privé en ik verklap niks 🤫","trots","De BED ploegleider, trots");
+const nietGevonden=()=>say("Niet gevonden","Deze renner is niet gevonden.","eigen","De BED ploegleider wijst");
+function token(){try{const k="sb-"+new URL(SB.url).hostname.split(".")[0]+"-auth-token";const j=JSON.parse(localStorage.getItem(k)||"null");return j&&j.access_token||null}catch(e){return null}}
+function msg(t){$("app").innerHTML='<div class="card msg">'+esc(t)+'</div>'}
+function cats(d,best,m){
+  const t=d.tot;if(!t)return"";
+  const c=(l,v,u,x)=>'<div class="k"><div class="l">'+l+'</div><div class="v">'+v+'<small>'+u+'</small></div>'+(x?'<div class="x">'+x+'</div>':'')+'</div>';
+  return '<h2 class="ch">Totaal per categorie</h2><div class="cat">'+
+    c("Road Warrior",fmt(t.out),"km")+c("Zwift Warrior",fmt(t.in),"km")+c("Stadsfietsbeuker",fmt(t.city),"km")+c("eBike",fmt(t.el),"km")+
+    c("Bergbaas",Math.round(t.hm).toLocaleString("nl-NL"),"m")+
+    c("Langste dag",fmt(best.km),"km",best.km>0?(+best.d.slice(8))+" "+MAANDEN[m-1]:"")+'</div>';
+}
+function render(d){
+  const [y,m]=d.month.split("-").map(Number),today=todayNL();
+  const days=d.days,total=days.reduce((s,x)=>s+x.km,0);
+  const gone=days.filter(x=>x.d<=today),ok=gone.filter(x=>x.km>=25).length;
+  const best=gone.reduce((b,x)=>x.km>b.km?x:b,{km:0,d:""});
+  const first=(new Date(y,m-1,1).getDay()+6)%7;
+  document.title=d.name+" | BEAT Every Day";
+  let cells=["ma","di","wo","do","vr","za","zo"].map(w=>'<div class="wd">'+w+'</div>').join("")+'<div class="d e"></div>'.repeat(first);
+  days.forEach(x=>{
+    const n=+x.d.slice(8),fut=x.d>today;
+    const c=fut?"f":x.km>=25?"g":x.km>0?"o":"z";
+    const lg=best.km>0&&x.d===best.d;
+    cells+='<div class="d '+c+(x.d===today?" t":"")+(lg?" l":"")+'" aria-label="'+n+' '+MAANDEN[m-1]+': '+(fut?"nog niet gereden":fmt(x.km)+" km")+(lg?" (langste dag)":"")+'"><b>'+n+'</b><i>'+(fut?"·":x.km>0?fmt(x.km)+"<small>km</small>":"–")+'</i></div>';
+  });
+  $("app").innerHTML=
+   (d.own_private?'<div class="own">🔒 <b>Je pagina staat op privé.</b> Anderen zien alleen een melding. Jij ziet hem nog wel, omdat je bent ingelogd.</div>':'')+
+   '<div class="card"><h1>'+esc(d.name)+'</h1><div class="sub">Rugnummer '+d.bib+' · '+MAANDEN[m-1]+' '+y+'</div>'+
+   '<div class="kpi"><div class="k"><div class="l">Totaal deze maand</div><div class="v">'+fmt(total)+'<small>km</small></div></div>'+
+   '<div class="k"><div class="l">Dagen met 25 km of meer</div><div class="v">'+ok+'<small>/ '+gone.length+'</small></div></div></div>'+
+   cats(d,best,m)+'</div>'+
+   '<div class="card"><h2>'+MAANDEN[m-1]+' dag voor dag</h2><div class="leg"><span class="lg">25 km of meer</span><span class="lo">minder dan 25 km</span><span class="lz">0 km</span><span class="ll">langste dag</span></div><div class="grid">'+cells+'</div></div>';
+}
+(async()=>{
+  const code=(new URLSearchParams(location.search).get("r")||"").toLowerCase();
+  if(!/^[a-z0-9]{6,32}$/.test(code)){nietGevonden();return}
+  try{
+    const call=t=>fetch(SB.url+"/rest/v1/rpc/rider_public",{method:"POST",headers:Object.assign({apikey:SB.key,"Content-Type":"application/json"},t?{Authorization:"Bearer "+t}:{}),body:JSON.stringify({p_code:code})});
+    const tk=token();let r=await call(tk);if(tk&&r.status===401)r=await call(null);
+    if(!r.ok)throw new Error(r.status);
+    const d=await r.json();
+    if(!d){nietGevonden();return}
+    if(d.private){priv();return}
+    render(d);
+  }catch(e){msg("De pagina kon niet worden geladen. Probeer het later opnieuw.")}
+})();
+document.querySelector(".btn").addEventListener("click",e=>{
+  /* Kom je uit de app, ga dan terug naar waar je was; anders gewoon naar de app */
+  try{const ref=document.referrer&&new URL(document.referrer);if(ref&&ref.origin===location.origin&&ref.pathname.replace(/index\.html$/,"")===new URL("./",location.href).pathname&&history.length>1){e.preventDefault();history.back()}}catch(x){}
+});
+</script>
+</body>
+</html>
