@@ -658,7 +658,6 @@ function init(keep){
   render();
 }
 let feedN=15;
-function feedMs(m){return [7,14,21,30,50,75].includes(m)||(m>=100&&m%100===0)}
 function feedItems(){
   const E=eff(),per=new Map(),rideTs=new Map(),items=[];
   ENT.forEach(r=>{const k=r[1]+"|"+r[0];if((r[10]||0)>(rideTs.get(k)||0))rideTs.set(k,r[10])});
@@ -666,14 +665,13 @@ function feedItems(){
   const last=E.reduce((a,r)=>r[0]>a?r[0]:a,"");if(!last)return {items,per};
   const ds=[];for(let d=new Date(BSTART+"T12:00:00Z");;d.setUTCDate(d.getUTCDate()+1)){const s=d.toISOString().slice(0,10);if(s>last)break;ds.push(s)}
   const evT=(name,s)=>{const t=rideTs.get(name+"|"+s);return t?{ts:t+1,tm:true}:{ts:new Date(s+"T23:59:00").getTime(),tm:false}};
-  const sx=n=>[...n].reduce((a,c)=>a+c.charCodeAt(0),0)%2?"v":"m";
+  const AVS=[["m","trots"],["v","motiv"],["v","trots"],["v","eigen"],["m","zorg"],["v","zorg"]],pk=k=>{let h=0;for(const c of k)h=(h*31+c.charCodeAt(0))>>>0;const a=AVS[h%AVS.length];return {sex:a[0],mood:a[1]}};
   const dp=[];
-  per.forEach((m,name)=>{let run=CARRY[name]||0,mon="",cum=0;for(const s of ds){const v=m.get(s)||0;if(s.slice(0,7)!==mon){mon=s.slice(0,7);cum=0}
+  per.forEach((m,name)=>{let mon="",cum=0;for(const s of ds){const v=m.get(s)||0;if(s.slice(0,7)!==mon){mon=s.slice(0,7);cum=0}
     const before=cum;cum+=v;
     if(v>0&&s>=START)dp.push({s,name,v});
-    if(Math.round(v*100)/100>=25){run++;if(feedMs(run)&&s>=START)items.push({k:"ev",...evT(name,s),sex:sx(name),mood:"motiv",h:`<b>${esc(name)}</b> heeft ${nl(run)} dagen streak.${run>=100?" Welkom bij de 100 dagen plus club! 🎉":" 🔥"}`})}else run=0;
-    if(s>=START)for(const k of [500,750,1000,1500,2000])if(before<k&&cum>=k)items.push({k:"ev",...evT(name,s),sex:sx(name),mood:"trots",h:`<b>${esc(name)}</b> rijdt voorbij de ${nl(k)} km deze maand. 🚴`})}});
-  const rec={};dp.map(o=>({...o,...evT(o.name,o.s)})).sort((a,b)=>a.ts-b.ts).forEach(o=>{const mo=o.s.slice(0,7),p=rec[mo];if(p&&p.v>=50&&o.v>p.v&&o.v>=50)items.push({k:"ev",ts:o.ts,tm:o.tm,sex:sx(o.name),mood:"trots",h:`Nieuw dagrecord! <b>${esc(o.name)}</b> verbreekt de langste dag van ${mNaam(o.s)} met ${nl(Math.round(o.v*10)/10)} km. Het oude record was ${nl(Math.round(p.v*10)/10)} km${p.name===o.name?", ook van "+esc(p.name):" van "+esc(p.name)} 🔥`});if(!p||o.v>p.v)rec[mo]={v:o.v,name:o.name}});
+    if(s>=START){const need=new Date(+s.slice(0,4),+s.slice(5,7),0).getDate()*25;if(before<need&&cum>=need)items.push({k:"ev",...evT(name,s),...pk(name+s),h:`<b>${esc(name)}</b> is finisher van ${mNaam(s)}! ${nl(need)} km gehaald. 🏁`})}}});
+  const rec={};dp.map(o=>({...o,...evT(o.name,o.s)})).sort((a,b)=>a.ts-b.ts).forEach(o=>{const mo=o.s.slice(0,7),p=rec[mo];if(p&&o.v>p.v)items.push({k:"ev",ts:o.ts,tm:o.tm,...pk(o.name+o.s),h:`Nieuw dagrecord! <b>${esc(o.name)}</b> verbreekt de langste dag van ${mNaam(o.s)} met ${nl(Math.round(o.v*10)/10)} km. Het oude record was ${nl(Math.round(p.v*10)/10)} km${p.name===o.name?", ook van "+esc(p.name):" van "+esc(p.name)} 🔥`});if(!p||o.v>p.v)rec[mo]={v:o.v,name:o.name}});
   ENT.forEach(r=>{if(r[12]!==false&&r[10]&&r[0]>=START)items.push({k:"ride",ts:r[10],tm:true,r})});
   items.sort((a,b)=>b.ts-a.ts);return {items,per};
 }
