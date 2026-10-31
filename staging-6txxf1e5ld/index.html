@@ -412,7 +412,6 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
     <button class="cb" id="next" aria-label="Volgende dag">›</button>
     <input id="q" type="search" placeholder="Zoek renner…" aria-label="Zoek naam">
     <label><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><input type="checkbox" id="lid"> Alleen BEAT leden</label>
-    <label class="bad"><input type="checkbox" id="act"> Alleen actief op deze dag</label>
   </div>
 </section>
 <div class="bad">
@@ -702,7 +701,6 @@ function render(){
   const z={name:"",out:0,in:0,city:0,el:0,tot:0,hm:0};
   const nd=+sel.slice(8);
   let data=[...cm.values()].map(c=>({name:c.name,d:dm.get(c.name)||z,c,s:c.tot-nd*25,on:dm.has(c.name)}));
-  if($("act").checked)data=data.filter(o=>dm.has(o.name));
   const q=$("q").value.trim().toLowerCase();
   if(q)data=data.filter(o=>o.name.toLowerCase().includes(q));
   data.sort((a,b)=>sortK==="name"?a.name.localeCompare(b.name):sortK==="sur"?sortD*(a.s-b.s):sortD*((a.c[sortK]-b.c[sortK])||(a.d[sortK]-b.d[sortK])));
@@ -720,7 +718,7 @@ function render(){
   $("tdesc").textContent=`Totaal t/m ${dl(sel)} · groen = erbij op ${dl(sel)} · stip = reed op ${dl(sel)} · klik op een kolomtitel om te sorteren`;
   const ar=k=>k===sortK?(sortD<0?" ↓":" ↑"):' <span class="so">⇅</span>';
   $("thead").innerHTML=`<tr><th>#</th><th data-k="name" class="${sortK==="name"?"on":""}">Naam${ar("name")}</th>`+`<th data-k="sur" class="sur ${sortK==="sur"?"on":""}">Surplus${ar("sur")}</th>`+COLS.map(([k,l])=>`<th data-k="${k}" class="${sortK===k?"on":""}">${l}${ar(k)}</th>`).join("")+`</tr>`;
-  $("tbody").innerHTML=data.length?`<tr class="tot"><td></td><td>${q||$("act").checked?"Selectie":"Totaal"}</td>`+sc(data.reduce((s,o)=>s+o.s,0))+COLS.map(([k])=>cell({[k]:sum("d",k)},{[k]:sum("c",k)},k)).join("")+`</tr>`+
+  $("tbody").innerHTML=data.length?`<tr class="tot"><td></td><td>${q?"Selectie":"Totaal"}</td>`+sc(data.reduce((s,o)=>s+o.s,0))+COLS.map(([k])=>cell({[k]:sum("d",k)},{[k]:sum("c",k)},k)).join("")+`</tr>`+
     data.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${o.on?`<span class="ad" title="Reed op deze dag"></span>`:""}${esc(o.name)}</td>`+sc(o.s)+COLS.map(([k])=>cell(o.d,o.c,k)).join("")+`</tr>`).join("")
     :`<tr><td colspan="9" class="empty">Geen resultaten.</td></tr>`;
   document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;track("Tabel gesorteerd",{tabel:"BAD",kolom:k});if(k===sortK)sortD*=-1;else{sortK=k;sortD=k==="name"?1:-1}render()});
@@ -782,7 +780,7 @@ $("prev").onclick=()=>{track("Dag gewijzigd",{via:"pijltjes"});picked=true;sel=d
 $("next").onclick=()=>{track("Dag gewijzigd",{via:"pijltjes"});picked=true;sel=days[days.indexOf(sel)+1];render()};
 $("add").onclick=openAdd;$("e-today").onclick=()=>setDay(today());$("e-yest").onclick=()=>setDay(yest());$("e-name").onchange=byName;$("e-num").oninput=byNum;$("e-date").onchange=elist;$("e-cancel").onclick=()=>{track("Rit invoeren geannuleerd");$("dlg").close()};$("e-save").onclick=saveEntry;
 ["out","in","city","el"].forEach(k=>$("e-"+k).oninput=etot);
-$("feedmore").onclick=()=>{feedN+=15;renderFeed()};$("m-bad").onclick=()=>setView("bad");$("m-bed").onclick=()=>setView("bed");$("m-hof").onclick=()=>setView("hof");$("m-zo").onclick=()=>setView("zo");$("m-feed").onclick=()=>setView("feed");for(const k in VIEWS){const t=$("t-"+k);if(t)t.onclick=()=>setView(k)}$("t-add").onclick=()=>$("add").click();$("burger").onclick=e=>{e.stopPropagation();toggleMenu()};document.addEventListener("click",e=>{if(document.body.classList.contains("mo")&&!e.target.closest(".nv"))toggleMenu(false)});document.addEventListener("keydown",e=>{if(e.key==="Escape")toggleMenu(false)});$("q").oninput=()=>{if(!_sq&&$("q").value){_sq=true;track("Zoeken gebruikt")}render()};$("lid").onchange=()=>{track("Filter alleen BEAT leden",{stand:$("lid").checked?"aan":"uit"});init(sel)};$("act").onchange=()=>{track("Filter alleen actief",{stand:$("act").checked?"aan":"uit"});render()};
+$("feedmore").onclick=()=>{feedN+=15;renderFeed()};$("m-bad").onclick=()=>setView("bad");$("m-bed").onclick=()=>setView("bed");$("m-hof").onclick=()=>setView("hof");$("m-zo").onclick=()=>setView("zo");$("m-feed").onclick=()=>setView("feed");for(const k in VIEWS){const t=$("t-"+k);if(t)t.onclick=()=>setView(k)}$("t-add").onclick=()=>$("add").click();$("burger").onclick=e=>{e.stopPropagation();toggleMenu()};document.addEventListener("click",e=>{if(document.body.classList.contains("mo")&&!e.target.closest(".nv"))toggleMenu(false)});document.addEventListener("keydown",e=>{if(e.key==="Escape")toggleMenu(false)});$("q").oninput=()=>{if(!_sq&&$("q").value){_sq=true;track("Zoeken gebruikt")}render()};$("lid").onchange=()=>{track("Filter alleen BEAT leden",{stand:$("lid").checked?"aan":"uit"});init(sel)};
 try{if(/[?&]admin(=|&|$)/.test(location.search))document.documentElement.classList.add("adm")}catch(e){}
 /* Plausible-gebeurtenissen. Er gaan nooit namen, rugnummers of zoektermen mee. */
 const track=(n,pr)=>{try{if(window.plausible)window.plausible(n,pr?{props:pr}:undefined)}catch(e){}};
