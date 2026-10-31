@@ -620,12 +620,12 @@ function streaks(){
   bedRows.forEach(r=>{if(r[0]>sel)return;let m=per.get(r[1]);if(!m){m=new Map();per.set(r[1],m)}m.set(r[0],(m.get(r[0])||0)+r[6])});
   for(const nm in CARRY)if(!per.has(nm))per.set(nm,new Map());
   const ds=[];for(let d=new Date(BSTART+"T12:00:00Z");;d.setUTCDate(d.getUTCDate()+1)){const s=d.toISOString().slice(0,10);if(s>sel)break;ds.push(s)}
-  return [...per].map(([name,m])=>{let run=CARRY[name]||0,max=run,rk=CARRYKM[name]?Math.max(0,CARRYKM[name]-[...m].filter(([s,v])=>s<="2026-09-30"&&Math.round(v*100)/100>=25).reduce((a,[s,v])=>a+v,0)):0,mk=rk,pr=0;for(const s of ds){if(s===sel)pr=run;const v=m.get(s)||0;if(Math.round(v*100)/100>=25){run++;rk+=v;if(run>max||(run===max&&rk>mk)){max=run;mk=rk}}else{run=0;rk=0}}return{name,cur:run,max,ck:run?rk:0,mk,pend:run===0?pr:0}});
+  return [...per].map(([name,m])=>{let tp=0,run=CARRY[name]||0,max=run,rk=CARRYKM[name]?Math.max(0,CARRYKM[name]-[...m].filter(([s,v])=>s<="2026-09-30"&&Math.round(v*100)/100>=25).reduce((a,[s,v])=>a+v,0)):0,mk=rk,pr=0;for(const s of ds){if(s===sel)pr=run;const v=m.get(s)||0;if(Math.round(v*100)/100>=25){run++;rk+=v;if(run>max||(run===max&&rk>mk)){max=run;mk=rk}}else if(s===sel&&sel===today()&&run>0){tp=1}else{run=0;rk=0}}return{tp,name,cur:run,max,ck:run?rk:0,mk,pend:run===0?pr:0}});
 }
 function renderBed(){
   const act=new Set(rows.filter(r=>r[0]>=sel.slice(0,8)+"01"&&r[0]<=sel).map(r=>r[1])),S=streaks(),A=S;let L=A;
   const gr=sel>=today();
-  const club=S.filter(o=>o.cur>100||(gr&&o.pend>100)).map(o=>({...o,n:o.cur>0?o.cur:o.pend,wait:o.cur===0})).sort((a,b)=>b.n-a.n||b.max-a.max);
+  const club=S.filter(o=>o.cur>100||(gr&&o.pend>100)).map(o=>({...o,n:o.cur>0?o.cur:o.pend,wait:!!o.tp})).sort((a,b)=>b.n-a.n||b.max-a.max);
   $("club").innerHTML=club.length?club.map(o=>`<span class="chip"><span class="cs">${ic("crown",22)}</span><span class="ct"><b>${esc(o.name)}</b><span class="dg">${nl(o.n)} dagen op rij</span>${o.wait?`<span class="dw">rit van vandaag nog niet binnen</span>`:""}</span></span>`).join(""):`<span class="sub">Nog niemand met een huidige streak van meer dan 100 dagen.</span>`;
   const w=club.filter(o=>o.wait).length;
   $("clubcap").textContent=`${club.length} ${club.length===1?"renner":"renners"} met een huidige streak van meer dan 100 dagen, t/m ${dl(sel)}`+(w?` · ${w} nog zonder rit van vandaag`:"");
@@ -648,11 +648,14 @@ function dl(d){return new Date(d+"T12:00:00").toLocaleDateString("nl-NL",{weekda
 function init(keep){
   const E=eff();bedRows=$("lid").checked?E.filter(r=>r[8]):E;rows=bedRows.filter(r=>r[0]>=START);
   days=[...new Set(rows.map(r=>r[0]))].sort();
+  const td=today(),tdRides=days.includes(td);
   if(!days.length){$("meta").textContent="Geen ritten vanaf 1 oktober";$("tbody").innerHTML="";return}
   const cnt={};rows.forEach(r=>cnt[r[0]]=(cnt[r[0]]||0)+1);
   const mx=Math.max(...Object.values(cnt));
   const yd=yest();
-  sel=(picked&&days.includes(keep))?keep:([...days].reverse().find(d=>d<=yd)||days[0]);
+  const showToday=td>=START&&!tdRides&&td.slice(8)!=="01";
+  if(td>=START&&!tdRides)days.push(td);
+  sel=(picked&&days.includes(keep))?keep:((tdRides||showToday)?td:([...days].reverse().find(d=>d<=yd)||days[0]));
   $("day").innerHTML=[...days].reverse().map(d=>`<option value="${d}">${dl(d)}</option>`).join("");
   $("meta").textContent=`${dl(days[0])} t/m ${dl(days[days.length-1])} · ${new Set(rows.map(r=>r[1])).size} renners · ${nl(rows.length)} ritten`;
   render();
