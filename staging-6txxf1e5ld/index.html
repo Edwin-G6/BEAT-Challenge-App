@@ -83,6 +83,7 @@ h2{font-size:24px}
 .pc ol{list-style:none;margin:0;padding:0}
 .pc li{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
 .pc li:first-child{border-top:0}
+.fin{display:block;margin-top:3px;font:800 10.5px/1.2 "JetBrains Mono",monospace;letter-spacing:.08em;color:var(--dt)}
 .pc .nm{flex:1;min-width:0;font-weight:800;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pc .v{font:700 17px "JetBrains Mono",ui-monospace,monospace;white-space:nowrap}
 .pc li:first-child .v{color:var(--dt)}
@@ -703,7 +704,9 @@ function render(){
   $("meta").textContent=`${mnd} · ${dl(ms)} t/m ${dl(sel)} · ${cm.size} renners · ${nl(rows.filter(r=>r[0]>=ms&&r[0]<=sel).length)} ritten`;
   const z={name:"",out:0,in:0,city:0,el:0,tot:0,hm:0};
   const nd=+sel.slice(8);
-  let data=[...cm.values()].map(c=>({name:c.name,d:dm.get(c.name)||z,c,s:c.tot-nd*25,on:dm.has(c.name)}));
+  const tgt=new Date(+sel.slice(0,4),+sel.slice(5,7),0).getDate()*25,fin=new Map();
+  {const cu=new Map();rows.filter(r=>r[0]>=ms&&r[0]<=sel).sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0).forEach(r=>{const v=(cu.get(r[1])||0)+r[6];cu.set(r[1],v);if(Math.round(v*100)/100>=tgt&&!fin.has(r[1]))fin.set(r[1],+r[0].slice(8))})}
+  let data=[...cm.values()].map(c=>({name:c.name,d:dm.get(c.name)||z,c,s:c.tot-nd*25,on:dm.has(c.name),fd:fin.get(c.name)}));
   const q=$("q").value.trim().toLowerCase();
   if(q)data=data.filter(o=>o.name.toLowerCase().includes(q));
   data.sort((a,b)=>sortK==="name"?a.name.localeCompare(b.name):sortK==="sur"?sortD*(a.s-b.s):sortD*((a.c[sortK]-b.c[sortK])||(a.d[sortK]-b.d[sortK])));
@@ -722,7 +725,7 @@ function render(){
   const ar=k=>k===sortK?(sortD<0?" ↓":" ↑"):' <span class="so">⇅</span>';
   $("thead").innerHTML=`<tr><th>#</th><th data-k="name" class="${sortK==="name"?"on":""}">Naam${ar("name")}</th>`+`<th data-k="sur" class="sur ${sortK==="sur"?"on":""}">Surplus${ar("sur")}</th>`+COLS.map(([k,l])=>`<th data-k="${k}" class="${sortK===k?"on":""}">${l}${ar(k)}</th>`).join("")+`</tr>`;
   $("tbody").innerHTML=data.length?`<tr class="tot"><td></td><td>${q?"Selectie":"Totaal"}</td>`+sc(data.reduce((s,o)=>s+o.s,0))+COLS.map(([k])=>cell({[k]:sum("d",k)},{[k]:sum("c",k)},k)).join("")+`</tr>`+
-    data.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${o.on?`<span class="ad" title="Reed op deze dag"></span>`:""}${esc(o.name)}</td>`+sc(o.s)+COLS.map(([k])=>cell(o.d,o.c,k)).join("")+`</tr>`).join("")
+    data.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${o.on?`<span class="ad" title="Reed op deze dag"></span>`:""}${esc(o.name)}${o.fd?`<span class="fin">FINISHER dag ${o.fd}</span>`:""}</td>`+sc(o.s)+COLS.map(([k])=>cell(o.d,o.c,k)).join("")+`</tr>`).join("")
     :`<tr><td colspan="9" class="empty">Geen resultaten.</td></tr>`;
   document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;track("Tabel gesorteerd",{tabel:"BAD",kolom:k});if(k===sortK)sortD*=-1;else{sortK=k;sortD=k==="name"?1:-1}render()});
   chart();renderBed();renderHof();renderLangste(sel.slice(0,7));renderFeed();
