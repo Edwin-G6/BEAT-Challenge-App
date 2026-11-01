@@ -66,9 +66,6 @@ h2{font-size:24px}
 .ctrl input[type=search]{min-width:170px}
 .ctrl label{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:10px 16px;font-weight:800;font-size:12px;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;background:var(--card)}
 .ctrl label input{accent-color:var(--dt);width:16px;height:16px;margin:0}
-.hofc .tiles{margin-bottom:0}
-#clubt{grid-template-columns:repeat(4,minmax(0,1fr))}
-@media (max-width:760px){#clubt{grid-template-columns:1fr 1fr}}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:18px}
 .kpi{background:var(--card);border:1px solid var(--line);border-radius:28px;box-shadow:var(--sh);padding:20px 12px;text-align:center}
 .ki{width:52px;height:52px;border-radius:16px;background:var(--mint);color:var(--dt);display:grid;place-items:center;margin:0 auto 12px}
@@ -265,12 +262,13 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .hofl .ld{display:block;margin-top:4px;font-size:13px;font-weight:700;color:var(--sl)}
 .hofl .lm{color:var(--mute);font-weight:600}
 @media (max-width:700px){.hofl{gap:14px}.hofl .lnm{order:3;flex:none;width:100%;align-items:flex-start;text-align:left;padding:0}.hofl .lnm .ln{font-size:30px}.hofl .lk{order:4;text-align:left;width:100%}.hofl h2{font-size:22px}}
-#mwt{min-width:0;table-layout:fixed}#mwt thead th:first-child,#mwt tbody td:first-child{display:table-cell}#mwt th{font-size:11px;white-space:normal}#mwt .hth{display:inline-flex;align-items:center;gap:5px}#mwt th{cursor:default;text-align:left}#mwt td{text-align:left;font-size:15px;font-weight:600;padding:10px 12px;vertical-align:top}
-#mwt td:first-child{font-weight:800;color:var(--sl);width:140px;text-transform:capitalize}#mwt .mws{display:block;font-weight:600;text-transform:none;font-size:12px}
-#mwt .w{display:flex;flex-direction:column;gap:2px}#mwt .w b{font-weight:800}#mwt .w i{font:700 13px "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-style:normal;color:var(--dt)}
-#mwt tr.fu td{color:var(--mute)}#mwt tr.fu .w i{color:var(--mute)}#mwt #mwb td.empty{text-align:center}
-@media (max-width:700px){#mwt .hth svg{display:none}#mwt td:first-child .hm{display:none !important}#mwt th{font-size:9.5px;letter-spacing:.04em}#mwt th,#mwt td{padding:9px 3px;font-size:11.5px}#mwt th:first-child,#mwt td:first-child{width:72px}#mwt .w i{font-size:11px}}
-@media (max-width:420px){#mwt th{font-size:8px;letter-spacing:0;padding:9px 4px}#mwt td{padding:9px 4px}#mwt th:first-child,#mwt td:first-child{width:58px;padding-left:0}#mwt{table-layout:auto}}
+#mwt,#cpt{min-width:0;table-layout:fixed}#mwt thead th:first-child,#cpt thead th:first-child,#mwt tbody td:first-child,#cpt tbody td:first-child{display:table-cell}#mwt th,#cpt th{font-size:11px;white-space:normal}#mwt .hth,#cpt .hth{display:inline-flex;align-items:center;gap:5px}#mwt th,#cpt th{cursor:default;text-align:left}#mwt td,#cpt td{text-align:left;font-size:15px;font-weight:600;padding:10px 12px;vertical-align:top}
+#mwt td:first-child,#cpt td:first-child{font-weight:800;color:var(--sl);width:140px;text-transform:capitalize}#mwt .mws,#cpt .mws{display:block;font-weight:600;text-transform:none;font-size:12px}
+#mwt .w,#cpt .w{display:flex;flex-direction:column;gap:2px}#mwt .w b,#cpt .w b{font-weight:800}#mwt .w i,#cpt .w i{font:700 13px "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-style:normal;color:var(--dt)}
+#mwt tr.fu td,#cpt tr.fu td{color:var(--mute)}#mwt tr.fu .w i,#cpt tr.fu .w i{color:var(--mute)}#mwt #mwb td.empty,#cpt #mwb td.empty{text-align:center}
+#cpt .w{flex-direction:row;align-items:baseline;gap:5px;flex-wrap:wrap}
+@media (max-width:700px){#mwt .hth svg,#cpt .hth svg{display:none}#mwt td:first-child .hm,#cpt td:first-child .hm{display:none !important}#mwt th,#cpt th{font-size:9.5px;letter-spacing:.04em}#mwt th,#cpt th,#mwt td,#cpt td{padding:9px 3px;font-size:11.5px}#mwt th:first-child,#cpt th:first-child,#mwt td:first-child,#cpt td:first-child{width:72px}#mwt .w i,#cpt .w i{font-size:11px}}
+@media (max-width:420px){#mwt th,#cpt th{font-size:8px;letter-spacing:0;padding:9px 4px}#mwt td,#cpt td{padding:9px 4px}#mwt th:first-child,#cpt th:first-child,#mwt td:first-child,#cpt td:first-child{width:58px;padding-left:0}#mwt,#cpt{table-layout:auto}}
 .gr{color:var(--dt)}
 .hofh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
 .hofh h2{font-size:26px;margin:2px 0 4px}
@@ -457,7 +455,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
     <div class="hofh"><div><h2>De diepe buiging <span class="gr">dagwinnaars</span></h2><div class="sub" id="hofmt"></div></div><div class="hofn"><button class="cb" id="hprev" aria-label="Vorige maand">‹</button><button class="cb" id="hnext" aria-label="Volgende maand">›</button></div></div>
     <div class="tw"><table id="hoft"><thead><tr><th>Dag</th><th>Road<span class="hm"> Warrior</span></th><th>Zwift<span class="hm"> Warrior</span></th><th>Berg<span class="hm">baas</span></th></tr></thead><tbody id="hofb"></tbody></table></div>
   </section>
-  <section class="card hofc"><div class="hofh"><div><h2>De diepe buiging <span class="gr">clubprestaties</span></h2><div class="sub" id="clubm"></div></div></div><div class="tiles" id="clubt"></div></section>
+  <section class="card hofc"><div class="hofh"><div><h2>De diepe buiging <span class="gr">clubprestaties</span></h2></div></div><div class="tw"><table id="cpt"><thead></thead><tbody id="cpb"></tbody></table></div></section>
 </div>
 <div class="feed">
   <section class="card tb"><h1>BED <em>BEATS Feed <svg class="hb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="hb0" d="M22 12h-4l-3 9L9 3l-3 9H2" pathLength="100"/><path class="hb1" d="M22 12h-4l-3 9L9 3l-3 9H2" pathLength="100"/></svg></em></h1><div class="fsub">Jouw ritten zijn jouw BEATS. Onderdeel van het kloppend hart van de club. De nieuwste BEATS staan bovenaan, zonder verslavend algoritme 😝</div></section>
@@ -757,9 +755,10 @@ function renderHof(){
     h+=`<tr class="${fu?"fu":key===t?"td":""}"><td>${dl(key).replace(/ ([^ ]+)$/,"<span class=\"hm\"> $1</span>")}</td>`+[["out","KM"],["in","KM"],["hm","HM"]].map(([k,u])=>`<td>${fu?"·":wc(win(dm,k),k,u)}</td>`).join("")+`</tr>`;
   }
   tb.innerHTML=h;
-  {const T=eff().filter(r=>r[0].slice(0,7)===hofM),sm=k=>T.reduce((a,r)=>a+r[k],0);
-   $("clubm").textContent=new Date(hofM+"-01T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"})+" · "+nl(new Set(T.map(r=>r[1])).size)+" renners";
-   $("clubt").innerHTML=[["bike","Road Warrior",2,"KM"],["zap","Zwift Warrior",3,"KM"],["building","Stadsfietsbeuker",4,"KM"],["mountain","Bergbaas",7,"HM"]].map(([i,l,k,u])=>`<div class="kpi"><div class="ki">${ic(i,24)}</div><div class="kl">${l}</div><div class="kv">${f0(sm(k))}<small>${u}</small></div></div>`).join("")}
+  {const E2=eff(),sm=(ym,k)=>E2.reduce((a,r)=>r[0].startsWith(ym)?a+r[k]:a,0),tt=today(),ic2=(i,w,h)=>`<th><span class="hth">${ic(i,16)}<span>${w}<span class="hm">${h}</span></span></span></th>`;
+   $("cpt").tHead.innerHTML=`<tr><th>Maand</th>${ic2("bike","Road"," Warrior")}${ic2("zap","Zwift"," Warrior")}${ic2("building","Stads"," fietsbeuker")}${ic2("mountain","Berg","baas")}</tr>`;
+   $("cpb").innerHTML=ms.filter(x=>x>=START.slice(0,7)).reverse().map(x=>{const yy=+x.slice(0,4),mm=+x.slice(5,7),nn=new Date(yy,mm,0).getDate(),end=`${x}-${String(nn).padStart(2,"0")}`,nf=new Date(yy,mm,1,12).toLocaleDateString("sv"),st=tt<=end?0:tt===nf?1:2;
+     return `<tr class="${st===0?"fu":""}"><td>${new Date(x+"-01T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"}).replace(/ ([^ ]+)$/,"<span class=\"hm\"> $1</span>")}${st===0?`<span class="sub mws">tussenstand</span>`:st===1?`<span class="sub mws">voorlopig</span>`:""}</td>`+[[2,"KM"],[3,"KM"],[4,"KM"],[7,"HM"]].map(([k,u])=>`<td><div class="w"><b>${f0(sm(x,k))}</b><i>${u}</i></div></td>`).join("")+`</tr>`}).join("")||`<tr><td colspan="5" class="empty">Nog geen maanden.</td></tr>`}
   const mnm=ym=>new Date(ym+"-01T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"});
   const mw=ym=>{const yy=+ym.slice(0,4),mm=+ym.slice(5,7),nn=new Date(yy,mm,0).getDate(),end=`${ym}-${String(nn).padStart(2,"0")}`,nf=new Date(yy,mm,1,12).toLocaleDateString("sv");
     const top=(l,k)=>{let b=null;for(const o of agg(rows.filter(r=>r[0].startsWith(ym))).values())if(Math.round(o[k])>0&&(!b||o[k]>b.v))b={name:o.name,v:o[k]};return b};
