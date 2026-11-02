@@ -681,7 +681,7 @@ function feedItems(){
     const before=cum;cum+=v;
     if(v>0&&s>=START)dp.push({s,name,v});
     if(s>=START){const need=new Date(+s.slice(0,4),+s.slice(5,7),0).getDate()*25;if(before<need&&cum>=need)items.push({k:"ev",...evT(name,s),d:s,...pk(name+s),h:`<b>${esc(name)}</b> is finisher van ${mNaam(s)}! ${nl(need)} km gehaald. 🏁`})}}});
-  const rec={};dp.map(o=>({...o,...evT(o.name,o.s)})).sort((a,b)=>a.ts-b.ts).forEach(o=>{const mo=o.s.slice(0,7),p=rec[mo];if(p&&o.v>p.v)items.push({k:"ev",d:o.s,ts:o.ts,tm:o.tm,...pk(o.name+o.s),h:`Nieuw dagrecord! <b>${esc(o.name)}</b> verbreekt de langste dag van ${mNaam(o.s)} met ${nl(Math.round(o.v*10)/10)} km. Het oude record was ${nl(Math.round(p.v*10)/10)} km${p.name===o.name?", ook van "+esc(p.name):" van "+esc(p.name)} 🔥`});if(!p||o.v>p.v)rec[mo]={v:o.v,name:o.name}});
+  const rec={};dp.map(o=>({...o,...evT(o.name,o.s)})).sort((a,b)=>a.ts-b.ts).forEach(o=>{const mo=o.s.slice(0,7),p=rec[mo];if(p&&o.v>p.v)items.push({k:"ev",d:o.s,ts:o.ts,tm:o.tm,...pk(o.name+o.s),h:`Nieuw maandrecord! <b>${esc(o.name)}</b> verbreekt het record langste dag van ${mNaam(o.s)} met ${nl(Math.round(o.v*10)/10)} km. Het oude maandrecord was ${nl(Math.round(p.v*10)/10)} km${p.name===o.name?", ook van "+esc(p.name):" van "+esc(p.name)} 🔥`});if(!p||o.v>p.v)rec[mo]={v:o.v,name:o.name}});
   ENT.forEach(r=>{if(r[12]!==false&&r[10]&&r[0]>=START)items.push({k:"ride",ts:r[10],tm:true,r})});
   items.sort((a,b)=>b.ts-a.ts);return {items:items.filter(o=>(o.k==="ev"?o.d:o.r[0])>=FEEDSTART),per};
 }
