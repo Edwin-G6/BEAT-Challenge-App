@@ -161,7 +161,7 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
 .tt b{font:700 17px "JetBrains Mono",monospace;letter-spacing:0}
 .em{min-height:18px;font-size:13px;font-weight:600}
 .ba{display:flex;gap:8px;justify-content:flex-end}
-.qd{display:flex;gap:8px;margin-top:-4px}
+.qd{display:flex;gap:8px;margin-top:-4px}.bsw{margin:0 0 14px}.bsw button[aria-pressed="true"]{background:var(--dt);color:#fff}
 .qd button{padding:7px 16px;font-size:13px}
 .er{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--line);font-size:14px}
 .er button{padding:5px 12px;font-size:12px}
@@ -431,6 +431,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   </section>
   <section class="card">
     <div class="hofh"><div><h2>De BAD <span class="gr">live stand</span></h2></div></div>
+    <div class="qd bsw" role="group" aria-label="Kies dag"><button class="dk" id="b-today" aria-pressed="false">Vandaag</button><button class="dk" id="b-yest" aria-pressed="false">Gisteren</button></div>
     <div class="sub" style="margin-bottom:10px" id="tdesc"></div>
     <div class="tw"><table id="ptable"><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
     <div class="note">Per cel: het grote getal is het cumulatief sinds het begin van de maand; het groene getal eronder is wat er op de gekozen dag bij kwam. Een stip bij de naam betekent dat die renner op de gekozen dag heeft gereden. De stand geldt voor de maand van de gekozen dag en begint op de eerste dag van de volgende maand weer bij nul. Meerdere ritten op één dag zijn opgeteld; totaal km is inclusief elektrisch. Surplus = cumulatief totaal km − (dagnummer in de maand × 25) (bijvoorbeeld 25 km op dag 1 = 0, 60 km op dag 2 = +10).</div>
@@ -662,6 +663,7 @@ function init(keep){
   const yd=yest();
   const showToday=td>=START&&!tdRides&&td.slice(8)!=="01";
   if(td>=START&&!tdRides)days.push(td);
+  {const yy=yest();if(yy>=START&&!days.includes(yy)){days.push(yy);days.sort()}}
   sel=(picked&&days.includes(keep))?keep:((tdRides||showToday)?td:([...days].reverse().find(d=>d<=yd)||days[0]));
   $("day").innerHTML=[...days].reverse().map(d=>`<option value="${d}">${dl(d)}</option>`).join("");
   $("meta").textContent=`${dl(days[0])} t/m ${dl(days[days.length-1])} · ${new Set(rows.map(r=>r[1])).size} renners · ${nl(rows.length)} ritten`;
@@ -704,6 +706,7 @@ function renderFeed(){
 function render(){
   if(!days.length)return;
   $("day").value=sel;
+  $("b-today").setAttribute("aria-pressed",sel===today());$("b-yest").setAttribute("aria-pressed",sel===yest());
   const dm=agg(rows.filter(r=>r[0]===sel)), ms=sel.slice(0,8)+"01",cm=agg(rows.filter(r=>r[0]>=ms&&r[0]<=sel));
   const mnd=new Date(sel+"T12:00:00").toLocaleDateString("nl-NL",{month:"long",year:"numeric"});
   $("mt").textContent="· "+mnd;
@@ -792,6 +795,7 @@ function chart(){
   document.querySelectorAll("#chart rect[data-d]").forEach(r=>r.onclick=()=>{track("Dag gewijzigd",{via:"grafiek"});picked=true;sel=r.dataset.d;render()});
 }
 $("day").onchange=e=>{track("Dag gewijzigd",{via:"keuzelijst"});picked=true;sel=e.target.value;render()};
+$("b-today").onclick=()=>{track("Dag gewijzigd",{via:"knop vandaag"});picked=true;sel=today();render()};$("b-yest").onclick=()=>{track("Dag gewijzigd",{via:"knop gisteren"});picked=true;sel=yest();render()};
 $("prev").onclick=()=>{track("Dag gewijzigd",{via:"pijltjes"});picked=true;sel=days[days.indexOf(sel)-1];render()};
 $("next").onclick=()=>{track("Dag gewijzigd",{via:"pijltjes"});picked=true;sel=days[days.indexOf(sel)+1];render()};
 $("add").onclick=openAdd;$("e-today").onclick=()=>setDay(today());$("e-yest").onclick=()=>setDay(yest());$("e-name").onchange=byName;$("e-num").oninput=byNum;$("e-date").onchange=elist;$("e-cancel").onclick=()=>{track("Rit invoeren geannuleerd");$("dlg").close()};$("e-save").onclick=saveEntry;
