@@ -679,7 +679,8 @@ function feedItems(){
   const evT=(name,s)=>{const t=rideTs.get(name+"|"+s);return t?{ts:t+1,tm:true}:{ts:new Date(s+"T23:59:00").getTime(),tm:false}};
   const AVS=[["m","trots"],["v","motiv"],["v","trots"],["v","eigen"],["m","zorg"],["v","zorg"]],pk=k=>{let h=0;for(const c of k)h=(h*31+c.charCodeAt(0))>>>0;const a=AVS[h%AVS.length];return {sex:a[0],mood:a[1]}};
   const dp=[];
-  per.forEach((m,name)=>{let mon="",cum=0;for(const s of ds){const v=m.get(s)||0;if(s.slice(0,7)!==mon){mon=s.slice(0,7);cum=0}
+  per.forEach((m,name)=>{let mon="",cum=0,run=CARRY[name]||0,mx0=0,ann=false;for(const s of ds){const v=m.get(s)||0;if(s.slice(0,7)!==mon){mon=s.slice(0,7);cum=0}
+    if(Math.round(v*100)/100>=25){run++;if(!ann&&mx0>0&&run>mx0){ann=true;if(s>=START)items.push({k:"ev",d:s,...evT(name,s),sex:"m",mood:"trots",h:`Wow <b>${esc(name)}</b> zet een nieuwe maximale streak neer 😤`})}}else if(s!==today()){if(run>mx0)mx0=run;run=0;ann=false}
     const before=cum;cum+=v;
     if(v>0&&s>=START)dp.push({s,name,v});
     if(s>=START){const need=new Date(+s.slice(0,4),+s.slice(5,7),0).getDate()*25;if(before<need&&cum>=need)items.push({k:"ev",...evT(name,s),d:s,...pk(name+s),h:`<b>${esc(name)}</b> is finisher van ${mNaam(s)}! ${nl(need)} km gehaald. 🏁`})}}});
