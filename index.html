@@ -592,7 +592,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
     <div class="en" style="margin-top:-4px">Kilometers mag je met tot 2 decimalen invoeren (bijvoorbeeld 42,35). Dit is niet verplicht.</div>
     <div class="tt">Totaal KM <b id="e-tot">0</b></div>
     <label>Bergbaas (hoogtemeters)<input id="e-hm" inputmode="numeric" placeholder="0"></label>
-    <label>Naam van je rit (optioneel)<input id="e-rn" maxlength="60" placeholder="bijv. De Lek rond bij zonsondergang" autocomplete="off"></label>
+    <label>Naam van je rit (optioneel)<input id="e-rn" maxlength="160" autocomplete="off"></label>
     <label class="pck"><input type="checkbox" id="e-feed" checked><span>Toon deze rit in de BEATS Feed</span></label>
     <div class="en" style="margin-top:-4px">Andere ingelogde renners zien dan je naam, de naam van je rit en je kilometers in de Feed. Haal het vinkje weg om de rit niet te tonen; hij telt gewoon mee in de ranglijsten.</div>
     <div id="e-msg" class="em" role="alert"></div>
@@ -896,7 +896,7 @@ async function saveEntry(){
   if(v.out+v.in+v.city+v.el<=0){m.textContent="Vul minstens één kilometerstand in.";return}
   if(ALL.some(r=>r[0]===date&&r[1]===name)){m.textContent="Voor deze dag is al een stand van jou vastgelegd, daar kun je geen rit meer aan toevoegen.";return}
   for(const k of ["out","in","city","el"])v[k]=Math.round(v[k]*100)/100;v.hm=Math.round(v.hm);
-  const doc={name,date,...v,rn:$("e-rn").value.trim().slice(0,60),feed:$("e-feed").checked,ts:Date.now()},id=date+"_"+name.replace(/[^\w-]/g,"")+"_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  const doc={name,date,...v,rn:$("e-rn").value.trim().slice(0,160),feed:$("e-feed").checked,ts:Date.now()},id=date+"_"+name.replace(/[^\w-]/g,"")+"_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
   $("e-save").disabled=true;
   try{
     if(DB)await DB.doc("entries/"+id).set(doc);
