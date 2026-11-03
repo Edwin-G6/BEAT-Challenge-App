@@ -687,6 +687,7 @@ function feedItems(){
   const rec={};dp.map(o=>({...o,...evT(o.name,o.s)})).sort((a,b)=>a.ts-b.ts).forEach(o=>{const mo=o.s.slice(0,7),p=rec[mo];if(p&&o.v>p.v)items.push({k:"ev",d:o.s,ts:o.ts,tm:o.tm,...pk(o.name+o.s),h:`Nieuw maandrecord! <b>${esc(o.name)}</b> verbreekt het record langste dag van ${mNaam(o.s)} met ${nl(Math.round(o.v*10)/10)} km. Het oude maandrecord was ${nl(Math.round(p.v*10)/10)} km${p.name===o.name?", ook van "+esc(p.name):" van "+esc(p.name)} 🔥`});if(!p||o.v>p.v)rec[mo]={v:o.v,name:o.name}});
   ENT.forEach(r=>{if(r[12]!==false&&r[10]&&r[0]>=START)items.push({k:"ride",ts:r[10],tm:true,r})});
   items.push({k:"ev",d:"2026-11-03",ts:new Date("2026-11-03T09:00:00").getTime(),tm:false,sex:"m",mood:"strat",h:"November. Inmiddels 14 renners in koers. Ik reken het goed 😁"});
+  items.push({k:"ev",d:"2026-11-03",ts:new Date("2026-11-03T18:33:00").getTime(),tm:false,sex:"m",mood:"motiv",h:"Raceday! Be BAD in de ITT, succes 👊"});
   items.sort((a,b)=>b.ts-a.ts);return {items:items.filter(o=>(o.k==="ev"?o.d:o.r[0])>=FEEDSTART),per};
 }
 function fDate(ds){const t=new Date(ds+"T12:00:00").toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});return t.charAt(0).toUpperCase()+t.slice(1)}
