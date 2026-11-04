@@ -880,7 +880,7 @@ async function loadDb(){
   loadHist();
 }
 async function loadHist(){
-  try{if(!window.__histLoad)return;const h=await window.__histLoad();HIST=h.filter(isHist).map((x,i)=>entRow(x,"h"+i));if(HIST.length)init(sel)}catch(e){}
+  try{if(!window.__histLoad)return;const h=await window.__histLoad();HIST=h.filter(isHist).map((x,i)=>entRow(x,"h"+i));if(HIST.length)init(sel)}catch(e){console.warn("Jaartotalen: entries_hist niet te lezen",e)}
 }
 async function loadEntriesOnce(){
   try{

@@ -98,7 +98,7 @@ async function streakInfo(tk,bib){
 /* Ritten van vóór BSTART (tabel entries_hist). Klein en pas na de eerste weergave opgehaald. */
 async function histInfo(tk,bib){
   const r=await fetch(SB.url+"/rest/v1/entries_hist?select=date,km_out,km_in,km_city,km_el,hm&name=like."+encodeURIComponent("*-"+bib),{headers:{apikey:SB.key,Authorization:"Bearer "+tk}});
-  if(!r.ok)return;
+  if(!r.ok){console.warn("Rennerspagina: entries_hist niet te lezen, status "+r.status);return}
   (await r.json()).forEach(x=>{if(x.date<BSTART)addRit(x.date,+x.km_out||0,+x.km_in||0,+x.km_city||0,+x.km_el||0,+x.hm||0)});
 }
 /* Maanden: de huidige maand komt uit rider_public, eerdere maanden worden hier uit RIT opgebouwd */
