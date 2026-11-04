@@ -705,6 +705,7 @@ function feedItems(){
   items.push({k:"ev",d:"2026-11-03",ts:new Date("2026-11-03T09:00:00").getTime(),tm:false,sex:"m",mood:"strat",h:"November. Inmiddels 14 renners in koers. Ik reken het goed 😁"});
   items.push({k:"ev",d:"2026-11-03",ts:new Date("2026-11-03T18:33:00").getTime(),tm:false,sex:"m",mood:"motiv",h:"Raceday! Be BAD in de ITT, succes 👊"});
   items.push({k:"ev",d:"2026-11-04",ts:new Date("2026-11-04T09:45:00").getTime(),tm:false,sex:"m",mood:"eigen",h:"Falen is niet vallen, maar weigeren weer op te staan 🤔"});
+  items.push({k:"ev",d:"2026-11-04",ts:new Date("2026-11-04T19:50:00").getTime(),tm:false,sex:"m",mood:"zorg",h:"U vraagt, wij draaien. De jaartotalen staan nu ook in de BAD pagina. Je kunt ze zelf checken op je persoonlijke rennerspagina per maand, per dag 👍"});
   items.sort((a,b)=>b.ts-a.ts);return {items:items.filter(o=>(o.k==="ev"?o.d:o.r[0])>=FEEDSTART),per};
 }
 function fDate(ds){const t=new Date(ds+"T12:00:00").toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});return t.charAt(0).toUpperCase()+t.slice(1)}
