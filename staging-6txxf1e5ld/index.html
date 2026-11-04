@@ -136,6 +136,14 @@ td.pos .d{color:var(--dt)}
 td.neg .d{color:#c0463a}
 tr.tot td{font-weight:800;background:var(--mint) !important}
 tbody tr:hover td{background:var(--hl)}
+:root{--yg:#eef8e8;--ygt:#dcf0cf;--ygl:#cfe8bf;--ygx:#3b7a2a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--yg:#16271a;--ygt:#1d3522;--ygl:#2c4a31;--ygx:#93d47e}}
+th.yc,td.yc{background:var(--yg)}
+th.yc.y0,td.yc.y0{border-left:2px solid var(--ygl)}
+th.yc .yl{display:block;font-size:9.5px;letter-spacing:.1em;color:var(--ygx);margin-bottom:2px}
+tr.tot td.yc{background:var(--ygt) !important}
+td.yc .cv{display:block;font:700 17px "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
+td.yc.z .cv{color:var(--line);font-weight:400}
 .rb{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--bg);color:var(--sl);font-size:14px;font-weight:700}
 .rb.r1{background:var(--tq);color:#fff}
 .rb.r3{background:#fdf0c4;color:#c77d0a}
@@ -730,13 +738,15 @@ function render(){
   const nd=+sel.slice(8);
   const tgt=new Date(+sel.slice(0,4),+sel.slice(5,7),0).getDate()*25,fin=new Map();
   {const cu=new Map();rows.filter(r=>r[0]>=ms&&r[0]<=sel).sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0).forEach(r=>{const v=(cu.get(r[1])||0)+r[6];cu.set(r[1],v);if(Math.round(v*100)/100>=tgt&&!fin.has(r[1]))fin.set(r[1],+r[0].slice(8))})}
-  let data=[...cm.values()].map(c=>({name:c.name,d:dm.get(c.name)||z,c,s:c.tot-nd*25,on:dm.has(c.name),fd:fin.get(c.name)}));
+  const td0=today(),yr=td0.slice(0,4),ym=agg(bedRows.filter(r=>r[0]>=yr+"-01-01"&&r[0]<=td0));
+  let data=[...cm.values()].map(c=>({name:c.name,d:dm.get(c.name)||z,c,y:ym.get(c.name)||z,s:c.tot-nd*25,on:dm.has(c.name),fd:fin.get(c.name)}));
   const q=$("q").value.trim().toLowerCase();
   if(q)data=data.filter(o=>o.name.toLowerCase().includes(q));
-  data.sort((a,b)=>sortK==="name"?a.name.localeCompare(b.name):sortK==="sur"?sortD*(a.s-b.s):sortD*((a.c[sortK]-b.c[sortK])||(a.d[sortK]-b.d[sortK])));
+  data.sort((a,b)=>sortK==="name"?a.name.localeCompare(b.name):sortK==="sur"?sortD*(a.s-b.s):sortK.startsWith("y:")?sortD*(a.y[sortK.slice(2)]-b.y[sortK.slice(2)]):sortD*((a.c[sortK]-b.c[sortK])||(a.d[sortK]-b.d[sortK])));
   if(sortK==="name"&&sortD<0)data.reverse();
   const sum=(g,k)=>data.reduce((s,o)=>s+o[g][k],0);
   const cell=(d,c,k)=>{const cz=Math.round(c[k])===0,dz=Math.round(d[k])===0;return `<td class="mc${cz?" z":""}"><span class="cv">${cz?"·":f0(c[k])}</span>${dz?"":`<span class="dv">+${f0(d[k])}</span>`}</td>`};
+  const ycell=(v,i)=>{const yz=Math.round(v)===0;return `<td class="mc yc${i?"":" y0"}${yz?" z":""}"><span class="cv">${yz?"·":f0(v)}</span></td>`};
   const sumC=k=>[...cm.values()].reduce((s,o)=>s+o[k],0);
   $("tiles").innerHTML=[["users","Renners",nl(cm.size),""],["bike","Road Warrior",f0(sumC("out")),"KM"],["zap","Zwift Warrior",f0(sumC("in")),"KM"],["building","Stadsfietsbeuker",f0(sumC("city")),"KM"],["gauge","Totaal KM",f0(sumC("tot")),"KM"],["mountain","Bergbaas",f0(sumC("hm")),"HM"]]
     .map(([i,l,v,u])=>`<div class="kpi"><div class="ki">${ic(i,24)}</div><div class="kl">${l}</div><div class="kv">${v}${u?`<small>${u}</small>`:""}</div></div>`).join("");
@@ -745,12 +755,12 @@ function render(){
   $("podium").innerHTML=[["out","Road Warrior","KM","bike"],["in","Zwift Warrior","KM","zap"],["hm","Bergbaas (hoogtemeters)","HM","mountain"]].map(([k,l,u,i])=>{
     const top=[...cm.values()].filter(o=>Math.round(o[k])>0).sort((a,b)=>b[k]-a[k]).slice(0,3);
     return `<div class="pc"><h3><span class="pi2">${ic(i,22)}</span>${l}</h3>`+(top.length?`<ol>`+top.map((o,j)=>`<li>${rb(j)}<span class="nm">${esc(o.name)}</span><span class="v">${f0(o[k])}<small>${u}</small></span></li>`).join("")+`</ol>`:`<div class="sub" style="padding:10px 0">Nog geen ritten</div>`)+(()=>{const w=dwin(k);return `<div class="dw"><span class="rb dwi" title="Dagwinnaar ${dl(sel)}">${ic("trophy",22)}</span>`+(w?`<span class="nm">${esc(w.name)}</span><span class="v">+${f0(w[k])}<small>${u}</small></span>`:`<span class="nm mu">Geen rit</span>`)+`</div>`})()+`</div>`}).join("");
-  $("tdesc").textContent=`Totaal t/m ${dl(sel)} · groen = erbij op ${dl(sel)} · stip = reed op ${dl(sel)} · klik op een kolomtitel om te sorteren`;
+  $("tdesc").textContent=`Totaal t/m ${dl(sel)} · groen = erbij op ${dl(sel)} · stip = reed op ${dl(sel)} · lichtgroen = jaartotaal 1 jan t/m vandaag · klik op een kolomtitel om te sorteren`;
   const ar=k=>k===sortK?(sortD<0?" ↓":" ↑"):' <span class="so">⇅</span>';
-  $("thead").innerHTML=`<tr><th>#</th><th data-k="name" class="${sortK==="name"?"on":""}">Naam${ar("name")}</th>`+`<th data-k="sur" class="sur ${sortK==="sur"?"on":""}">Surplus${ar("sur")}</th>`+COLS.map(([k,l])=>`<th data-k="${k}" class="${sortK===k?"on":""}">${l}${ar(k)}</th>`).join("")+`</tr>`;
-  $("tbody").innerHTML=data.length?`<tr class="tot"><td></td><td>${q?"Selectie":"Totaal"}</td>`+sc(data.reduce((s,o)=>s+o.s,0))+COLS.map(([k])=>cell({[k]:sum("d",k)},{[k]:sum("c",k)},k)).join("")+`</tr>`+
-    data.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${o.on?`<span class="ad" title="Reed op deze dag"></span>`:""}${esc(o.name)}${o.fd?`<span class="fin">FINISHER dag ${o.fd}</span>`:""}</td>`+sc(o.s)+COLS.map(([k])=>cell(o.d,o.c,k)).join("")+`</tr>`).join("")
-    :`<tr><td colspan="9" class="empty">Geen resultaten.</td></tr>`;
+  $("thead").innerHTML=`<tr><th>#</th><th data-k="name" class="${sortK==="name"?"on":""}">Naam${ar("name")}</th>`+`<th data-k="sur" class="sur ${sortK==="sur"?"on":""}">Surplus${ar("sur")}</th>`+COLS.map(([k,l])=>`<th data-k="${k}" class="${sortK===k?"on":""}">${l}${ar(k)}</th>`).join("")+COLS.map(([k,l],i)=>`<th data-k="y:${k}" class="yc${i?"":" y0"}${sortK==="y:"+k?" on":""}" title="1 januari t/m vandaag"><span class="yl">Jaar ${yr}</span>${l}${ar("y:"+k)}</th>`).join("")+`</tr>`;
+  $("tbody").innerHTML=data.length?`<tr class="tot"><td></td><td>${q?"Selectie":"Totaal"}</td>`+sc(data.reduce((s,o)=>s+o.s,0))+COLS.map(([k])=>cell({[k]:sum("d",k)},{[k]:sum("c",k)},k)).join("")+COLS.map(([k],i)=>ycell(sum("y",k),i)).join("")+`</tr>`+
+    data.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${o.on?`<span class="ad" title="Reed op deze dag"></span>`:""}${esc(o.name)}${o.fd?`<span class="fin">FINISHER dag ${o.fd}</span>`:""}</td>`+sc(o.s)+COLS.map(([k])=>cell(o.d,o.c,k)).join("")+COLS.map(([k],i)=>ycell(o.y[k],i)).join("")+`</tr>`).join("")
+    :`<tr><td colspan="15" class="empty">Geen resultaten.</td></tr>`;
   document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;track("Tabel gesorteerd",{tabel:"BAD",kolom:k});if(k===sortK)sortD*=-1;else{sortK=k;sortD=k==="name"?1:-1}render()});
   chart();renderBed();renderHof();renderLangste(sel.slice(0,7));renderFeed();
   const i=days.indexOf(sel);$("prev").disabled=i<=0;$("next").disabled=i>=days.length-1;
