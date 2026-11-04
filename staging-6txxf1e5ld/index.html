@@ -851,7 +851,7 @@ const fbErr=e=>{const c=(e&&e.code)||"",m=(e&&e.message)||String(e);
   if(/Failed to fetch|NetworkError/i.test(m))return"geen verbinding met de database";
   return c||m};
 let DB=null,ENT=[],HIST=[];
-/* HIST: ritten van vóór BSTART in het lopende jaar; tellen alleen mee voor de jaartotalen */
+/* HIST: ritten van vóór BSTART in het lopende jaar (tabel entries_hist); tellen alleen mee voor de jaartotalen */
 const isHist=x=>x&&x.name&&x.date<BSTART&&x.date>=new Date().getFullYear()+"-01-01";
 function eff(){
   const mm=window.__members,A=mm&&mm.size?ALL.map(r=>{if(!r[8]&&mm.has(r[1])){const x=r.slice();x[8]=1;return x}return r}):ALL;
@@ -872,18 +872,21 @@ async function loadDb(){
   }catch(e){}
   if(window.__fbListen){
     try{await window.__fbListen("entries",docs=>{
-      const got=[],hist=[];docs.forEach(d=>{const x=d.data();if(x&&x.date>=BSTART&&x.name)got.push(entRow(x,d.id));else if(isHist(x))hist.push(entRow(x,d.id))});
-      ENT=got;HIST=hist;init(sel);
+      const got=[];docs.forEach(d=>{const x=d.data();if(x&&x.date>=BSTART&&x.name)got.push(entRow(x,d.id))});
+      ENT=got;init(sel);
       if($("dlg").open)elist();
     },()=>loadEntriesOnce())}catch(e){loadEntriesOnce()}
   }else loadEntriesOnce();
+  loadHist();
+}
+async function loadHist(){
+  try{if(!window.__histLoad)return;const h=await window.__histLoad();HIST=h.filter(isHist).map((x,i)=>entRow(x,"h"+i));if(HIST.length)init(sel)}catch(e){}
 }
 async function loadEntriesOnce(){
   try{
     const es=await DB.collection("entries").limit(2000).get(),got=[];
-    const hist=[];es.docs.forEach(d=>{const x=d.data();if(x&&x.date>=BSTART&&x.name)got.push(entRow(x,d.id));else if(isHist(x))hist.push(entRow(x,d.id))});
-    if(hist.length)HIST=hist;
-    if(got.length||hist.length){const k=new Set(ENT.map(r=>r[9]));ENT=ENT.concat(got.filter(r=>!k.has(r[9])));init(sel)}
+    es.docs.forEach(d=>{const x=d.data();if(x&&x.date>=BSTART&&x.name)got.push(entRow(x,d.id))});
+    if(got.length){const k=new Set(ENT.map(r=>r[9]));ENT=ENT.concat(got.filter(r=>!k.has(r[9])));init(sel)}
   }catch(e){}
 }
 /* Maandslot: een maand kan nog worden aangevuld tot en met de 1e van de volgende maand */
@@ -988,6 +991,7 @@ async function startSupabase(){
   };
   const eData=r=>({name:r.name,date:r.date,out:+r.km_out,in:+r.km_in,city:+r.km_city,el:+r.km_el,hm:+r.hm,ts:+r.ts,rn:r.ride_name||"",feed:r.in_feed!==false});
   const wrap=(c,r)=>c==="days"?{id:r.day,data:()=>({rows:r.rows})}:{id:r.id,data:()=>eData(r)};
+  window.__histLoad=async()=>{await ensureAuth();return (await fetchAll("entries_hist","id")).map(eData)};
   window.__fbListen=async(name,cb,err)=>{
     if(name!=="entries")throw new Error("alleen entries");
     await ensureAuth();
