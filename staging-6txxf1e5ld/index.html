@@ -746,8 +746,9 @@ function render(){
   const nd=+sel.slice(8);
   const tgt=new Date(+sel.slice(0,4),+sel.slice(5,7),0).getDate()*25,fin=new Map();
   {const cu=new Map();rows.filter(r=>r[0]>=ms&&r[0]<=sel).sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0).forEach(r=>{const v=(cu.get(r[1])||0)+r[6];cu.set(r[1],v);if(Math.round(v*100)/100>=tgt&&!fin.has(r[1]))fin.set(r[1],+r[0].slice(8))})}
-  const td0=today(),yr=td0.slice(0,4),ym=agg(bedRows.filter(r=>r[0]>=yr+"-01-01"&&r[0]<=td0));
-  let data=[...cm.values()].map(c=>({name:c.name,d:dm.get(c.name)||z,c,y:ym.get(c.name)||z,s:c.tot-nd*25,on:dm.has(c.name),fd:fin.get(c.name)}));
+  const td0=today(),yr=td0.slice(0,4),bibOf=n=>{const m=/-(\d{1,5})$/.exec(n||"");return m?m[1]:n},inY=r=>r[0]>=yr+"-01-01"&&r[0]<=td0;
+  const ym=agg(HIST.filter(inY).concat(bedRows.filter(inY)).map(r=>{const x=r.slice();x[1]=bibOf(r[1]);return x}));
+  let data=[...cm.values()].map(c=>({name:c.name,d:dm.get(c.name)||z,c,y:ym.get(bibOf(c.name))||z,s:c.tot-nd*25,on:dm.has(c.name),fd:fin.get(c.name)}));
   const q=$("q").value.trim().toLowerCase();
   if(q)data=data.filter(o=>o.name.toLowerCase().includes(q));
   data.sort((a,b)=>sortK==="name"?a.name.localeCompare(b.name):sortK==="sur"?sortD*(a.s-b.s):sortK.startsWith("y:")?sortD*(a.y[sortK.slice(2)]-b.y[sortK.slice(2)]):sortD*((a.c[sortK]-b.c[sortK])||(a.d[sortK]-b.d[sortK])));
@@ -849,7 +850,9 @@ const fbErr=e=>{const c=(e&&e.code)||"",m=(e&&e.message)||String(e);
   if(/anonymous_provider_disabled|Anonymous sign-ins are disabled/i.test(c+" "+m))return"anoniem inloggen staat uit in Supabase";
   if(/Failed to fetch|NetworkError/i.test(m))return"geen verbinding met de database";
   return c||m};
-let DB=null,ENT=[];
+let DB=null,ENT=[],HIST=[];
+/* HIST: ritten van vóór BSTART in het lopende jaar; tellen alleen mee voor de jaartotalen */
+const isHist=x=>x&&x.name&&x.date<BSTART&&x.date>=new Date().getFullYear()+"-01-01";
 function eff(){
   const mm=window.__members,A=mm&&mm.size?ALL.map(r=>{if(!r[8]&&mm.has(r[1])){const x=r.slice();x[8]=1;return x}return r}):ALL;
   const have=new Set(A.map(r=>r[0]+"|"+r[1])),M=new Set(A.filter(r=>r[8]).map(r=>r[1]));
@@ -869,8 +872,8 @@ async function loadDb(){
   }catch(e){}
   if(window.__fbListen){
     try{await window.__fbListen("entries",docs=>{
-      const got=[];docs.forEach(d=>{const x=d.data();if(x&&x.date>=BSTART&&x.name)got.push(entRow(x,d.id))});
-      ENT=got;init(sel);
+      const got=[],hist=[];docs.forEach(d=>{const x=d.data();if(x&&x.date>=BSTART&&x.name)got.push(entRow(x,d.id));else if(isHist(x))hist.push(entRow(x,d.id))});
+      ENT=got;HIST=hist;init(sel);
       if($("dlg").open)elist();
     },()=>loadEntriesOnce())}catch(e){loadEntriesOnce()}
   }else loadEntriesOnce();
@@ -878,8 +881,9 @@ async function loadDb(){
 async function loadEntriesOnce(){
   try{
     const es=await DB.collection("entries").limit(2000).get(),got=[];
-    es.docs.forEach(d=>{const x=d.data();if(x&&x.date>=BSTART&&x.name)got.push(entRow(x,d.id))});
-    if(got.length){const k=new Set(ENT.map(r=>r[9]));ENT=ENT.concat(got.filter(r=>!k.has(r[9])));init(sel)}
+    const hist=[];es.docs.forEach(d=>{const x=d.data();if(x&&x.date>=BSTART&&x.name)got.push(entRow(x,d.id));else if(isHist(x))hist.push(entRow(x,d.id))});
+    if(hist.length)HIST=hist;
+    if(got.length||hist.length){const k=new Set(ENT.map(r=>r[9]));ENT=ENT.concat(got.filter(r=>!k.has(r[9])));init(sel)}
   }catch(e){}
 }
 /* Maandslot: een maand kan nog worden aangevuld tot en met de 1e van de volgende maand */
