@@ -260,6 +260,9 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
 .so{opacity:.45;font-size:10px;letter-spacing:0}
 th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .tb{padding:24px 28px}
+.mbadge{display:inline-block;margin:0 0 10px;padding:4px 10px;border-radius:99px;background:var(--dt);color:#fff;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.kaartlock{display:none}.nobeat .kaart .tb,.nobeat .kaart .mapc{display:none}.nobeat .kaart .kaartlock{display:block}
+.pmap.lock input,.pmap.lock select,.pmap.lock button{opacity:.5}.pmap .only{margin-top:8px;font-weight:700;color:var(--dt)}
 .tb h1 em{font-style:inherit;color:var(--dt)}
 .tb.hoft{display:flex;align-items:center;gap:16px}
 .tb.hoft .ki{margin:0;flex:none}
@@ -481,7 +484,8 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   <section class="card hofc"><div class="hofh"><div><h2>De diepe buiging <span class="gr">clubprestaties</span></h2></div></div><div class="tw"><table id="cpt"><thead></thead><tbody id="cpb"></tbody></table></div></section>
 </div>
 <div class="kaart">
-  <section class="card tb"><h1>BED <em>Bike Messenger</em></h1><p class="sub" style="margin:6px 0 0">Waar fietsen we vandaan? Zet je postcode in Mijn profiel en jij staat op de kaart.</p></section>
+  <section class="card tb"><div class="mbadge">★ Members only · BEAT-leden</div><h1>BED <em>Bike Messenger</em></h1><p class="sub" style="margin:6px 0 0">Waar fietsen we vandaan? Zet je postcode in Mijn profiel en jij staat op de kaart.</p></section>
+  <section class="kaartlock" id="klock"></section>
   <section class="card mapc"><div id="mapw"></div><div class="mapcap" id="mapcap"></div><div class="meting" id="meta"></div></section>
 </div>
 <div class="kaartb">
@@ -595,7 +599,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
       <div class="en">Ingelogde renners kunnen dan je volledige naam en je dagtotalen van de lopende maand zien. Zet je dit uit, dan zien anderen alleen een melding. Jij kunt je pagina dan zelf nog wel openen.</div>
       <div class="pst" id="p-state" hidden></div>
       <div class="en" id="p-link"></div>
-      <div class="pmap"><b>Mijn plek op de kaart</b>
+      <div class="pmap" id="p-pmap"><b>Mijn plek op de kaart</b><div class="only" id="p-only" hidden>De Bike Messenger is alleen voor BEAT-leden. Je kunt je postcode pas invullen als je BEAT-lid bent.</div>
         <div class="en">Vul je postcode in en je staat met een stip op de kaart. We bewaren alleen de vier cijfers en de plaats, geen adres. Andere ingelogde renners zien je rennersnaam met die plaats.</div>
         <div class="prow"><select id="p-land" aria-label="Land"><option value="NL">Nederland</option><option value="BE">België</option><option value="LU">Luxemburg</option></select><input id="p-pc" inputmode="numeric" autocomplete="postal-code" maxlength="8" placeholder="Postcode" aria-label="Postcode"><button type="button" id="p-pcs">Opslaan</button></div>
         <div class="en" id="p-pcm"></div><button type="button" class="dk" id="p-pcd" hidden>Haal mij van de kaart</button>
@@ -1184,6 +1188,9 @@ async function startSupabase(){
   if(rd&&(rd.status!=="actief"||!rd.bib)&&!isAdmin)await stop('','wacht');
   window.__me=rd&&rd.display_name||null;
   try{const fl=await sb.rpc("rider_flags");if(!fl.error&&fl.data)window.__members=new Set(fl.data.filter(x=>x.is_member).map(x=>x.name))}catch(e){}
+  const isBeat=!!(isAdmin||(window.__me&&window.__members&&window.__members.has(window.__me)));
+  document.documentElement.classList.toggle("nobeat",!isBeat);
+  try{$("klock").innerHTML=window.__botCard("m","straks","De Bike Messenger Challenge is members only.")}catch(e){}
   if(isAdmin)document.documentElement.classList.add("adm");
   const lo=document.getElementById("logout");lo.hidden=false;
   const P=id=>document.getElementById(id);
@@ -1192,7 +1199,7 @@ async function startSupabase(){
   lo.onclick=async()=>{
     P("p-who").innerHTML=rd?esc(rd.first_name+" "+rd.last_name)+"<small>Rugnummer "+rd.bib+" · "+esc((u.email||"").toLowerCase())+"</small>":"<small>"+esc((u.email||"").toLowerCase())+"</small>";
     const isM=!!(window.__me&&window.__members&&window.__members.has(window.__me));P("p-mem").innerHTML=rd?(isM?'<b>BEAT</b> Je bent BEAT-lid.':''):'';
-    P("p-sec").hidden=!myBib;P("p-msg").textContent="";P("p-msg").style.color="";
+    P("p-sec").hidden=!myBib;P("p-only").hidden=isBeat;P("p-pmap").classList.toggle("lock",!isBeat);["p-land","p-pc","p-pcs","p-pcd"].forEach(i=>P(i).disabled=!isBeat);P("p-msg").textContent="";P("p-msg").style.color="";
     if(myBib){
       P("p-link").textContent="";P("p-pub").disabled=true;
       try{const r=await sb.from("riders").select("page_public,page_code,postcode,plaats,land").eq("email",(u.email||"").toLowerCase()).maybeSingle();P("p-pub").checked=r.data?r.data.page_public!==false:true;ps();pcShow(r.data);
@@ -1203,7 +1210,7 @@ async function startSupabase(){
     P("pdlg").showModal();P("p-close").focus();
   };
   const pcShow=d=>{P("p-pc").value=d&&d.postcode||"";P("p-land").value=d&&d.land||"NL";P("p-pcd").hidden=!(d&&d.postcode);P("p-pcm").style.color="";P("p-pcm").textContent=d&&d.postcode?"Op de kaart: "+d.postcode+" "+d.plaats:""};
-  const pcSave=async(clear)=>{const m=P("p-pcm"),bad=t=>{m.style.color="#c0392b";m.textContent=t};
+  const pcSave=async(clear)=>{if(!isBeat)return;const m=P("p-pcm"),bad=t=>{m.style.color="#c0392b";m.textContent=t};
     let args={p_land:null,p_postcode:null,p_plaats:null,p_lat:null,p_lon:null};
     if(!clear){const land=P("p-land").value,pc=(P("p-pc").value.match(/\d{4}/)||[])[0];if(!pc)return bad("Vul vier cijfers in, bijvoorbeeld 3022.");
       P("p-pcs").disabled=true;m.style.color="";m.textContent="Even opzoeken...";
