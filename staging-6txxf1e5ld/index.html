@@ -692,8 +692,8 @@ const BEATS={m:new Map(),t:0,ok:false,busy:false};
 const FIST="👊";
 async function beatsLoad(force){if(!window.__beatLoad)return;if(!force&&BEATS.busy)return;if(!force&&Date.now()-BEATS.t<20000)return;BEATS.busy=true;
   try{const rows=await window.__beatLoad(),m=new Map();rows.forEach(r=>{let a=m.get(r.item_key);if(!a){a=[];m.set(r.item_key,a)}a.push(r.rider_name)});const ch=!BEATS.ok||JSON.stringify([...m])!==JSON.stringify([...BEATS.m]);BEATS.m=m;BEATS.ok=true;BEATS.t=Date.now();if(ch)renderFeed()}
-  catch(e){BEATS.ok=false;BEATS.t=Date.now()}finally{BEATS.busy=false}}
-function beatRow(key){if(!BEATS.ok||!key)return"";const a=BEATS.m.get(key)||[],me=window.__me,on=!!me&&a.includes(me),n=a.length;
+  catch(e){BEATS.ok=false;BEATS.err=String(e&&(e.message||e));BEATS.t=Date.now();renderFeed();try{console.warn("BEATS laden mislukt:",e&&(e.message||e))}catch(_){}}finally{BEATS.busy=false}}
+function beatRow(key){if(!key)return"";if(!BEATS.ok)return BEATS.err?`<div class="bt"><span class="bcnt">BEAT-knop niet beschikbaar: ${esc(BEATS.err)}</span></div>`:"";const a=BEATS.m.get(key)||[],me=window.__me,on=!!me&&a.includes(me),n=a.length;
   const nm=a.slice(0,3).map(esc).join(", ")+(n>3?" en "+(n-3)+" "+(n-3===1?"andere":"anderen"):""),
   tx=n?`<span class="bcnt"><b>${n}</b> ${n===1?"BEAT":"BEATS"} · ${nm}</span>`:"";
   return `<div class="bt"><button type="button" class="bbtn${on?" on":""}" data-bk="${esc(key)}" aria-pressed="${on}"${me?"":' disabled title="Alleen renners kunnen een BEAT geven"'}>${FIST}<span>Geef een BEAT</span></button>${tx}</div>`}
@@ -1141,7 +1141,7 @@ async function startSupabase(){
   const lo=document.getElementById("logout");lo.hidden=false;
   const P=id=>document.getElementById(id);
   const myBib=rd&&rd.bib||null;
-  window.__beatLoad=async()=>{const r=await sb.from("beats").select("item_key,rider_name");if(r.error)throw r.error;return r.data};window.__beatSet=async(k,on)=>{const r=await sb.rpc("toggle_beat",{p_key:k,p_on:on});if(r.error)throw r.error};
+  window.__beatLoad=async()=>{const r=await sb.from("beats").select("item_key,rider_name");if(r.error)throw r.error;return r.data};window.__beatSet=async(k,on)=>{const r=await sb.rpc("toggle_beat",{p_key:k,p_on:on});if(r.error)throw r.error};try{beatsLoad(true)}catch(e){}
   window.__pageCode=async name=>{const r=await sb.rpc("rider_page_code",{p_name:name});if(r.error)throw r.error;return r.data};
   lo.onclick=async()=>{
     P("p-who").innerHTML=rd?esc(rd.first_name+" "+rd.last_name)+"<small>Rugnummer "+rd.bib+" · "+esc((u.email||"").toLowerCase())+"</small>":"<small>"+esc((u.email||"").toLowerCase())+"</small>";
