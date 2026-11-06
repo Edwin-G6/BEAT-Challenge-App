@@ -734,11 +734,11 @@ function renderFeed(){
   const cnt=new Map();ENT.forEach(r=>{const k=r[1]+"|"+r[0];cnt.set(k,(cnt.get(k)||0)+1)});
   const sh=F.items.slice(0,feedN);
   el.innerHTML=sh.length?sh.map(o=>{
-    if(o.k==="ev")return `<div class="fb">${window.__botCard?window.__botCard(o.sex,o.mood,o.h):""}<div class="fct">${fDate(o.d)}</div>${beatRow(o.key)}</div>`;
+    if(o.k==="ev")return `<div class="fb">${window.__botCard?window.__botCard(o.sex,o.mood,o.h):""}<div class="fct">${fDate(o.d)}</div>${beatRow(o.key||"auto|"+o.d+"|"+[...String(o.h)].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7))}</div>`;
     const r=o.r,rd=new Date(o.ts).toLocaleDateString("sv");
     const ch=[["Road Warrior",r[2]],["Zwift Warrior",r[3]],["Stadsfietsbeuker",r[4]],["eBike",r[5]]].filter(x=>x[1]>0).map(x=>mk(x[0],fn(x[1])+" km")).join("")+(r[7]>0?mk("Bergbaas",nl(Math.round(r[7]))+" hm"):"");
     const tot=(F.per.get(r[1])||new Map()).get(r[0])||r[6],n=cnt.get(r[1]+"|"+r[0])||1;
-    return `<article class="fc t${r[6]>=100?3:r[6]>=50?2:1}"><div class="fch"><div class="fbib" title="Rugnummer"><div class="tp">${BEATLOGO}</div><b style="font-size:${(rugnr(r[1])||"").length>4?15:(rugnr(r[1])||"").length>3?18:22}px">${esc(rugnr(r[1])||r[1].charAt(0))}</b></div><div><div><span class="fcn">${esc(r[1])}</span></div><div class="fct">${fDate(r[0])}</div></div></div>${r[11]?`<div class="fcr">${esc(r[11])}</div>`:''}<div class="fcc">${ch}${r[6]>=100?'<div class="fcx">Century Crack!</div>':""}</div><div class="fcd">Dagtotaal ${fn(tot)} km · ${n} ${n===1?"rit":"ritten"}</div></article>`}).join(""):'<section class="card"><div class="fz">Nog geen BEATS. Voeg een rit toe en jij staat bovenaan!</div></section>';
+    return `<article class="fc t${r[6]>=100?3:r[6]>=50?2:1}"><div class="fch"><div class="fbib" title="Rugnummer"><div class="tp">${BEATLOGO}</div><b style="font-size:${(rugnr(r[1])||"").length>4?15:(rugnr(r[1])||"").length>3?18:22}px">${esc(rugnr(r[1])||r[1].charAt(0))}</b></div><div><div><span class="fcn">${esc(r[1])}</span></div><div class="fct">${fDate(r[0])}</div></div></div>${r[11]?`<div class="fcr">${esc(r[11])}</div>`:''}<div class="fcc">${ch}${r[6]>=100?'<div class="fcx">Century Crack!</div>':""}</div><div class="fcd">Dagtotaal ${fn(tot)} km · ${n} ${n===1?"rit":"ritten"}</div>${r[6]>=100?beatRow("cc|"+r[1]+"|"+r[0]+"|"+r[10]):""}</article>`}).join(""):'<section class="card"><div class="fz">Nog geen BEATS. Voeg een rit toe en jij staat bovenaan!</div></section>';
   $("feedmore").hidden=F.items.length<=feedN;
 }
 function render(){
