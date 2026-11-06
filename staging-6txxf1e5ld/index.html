@@ -695,7 +695,7 @@ async function beatsLoad(force){if(!window.__beatLoad)return;if(!force&&BEATS.bu
   catch(e){BEATS.ok=false;BEATS.err=String(e&&(e.message||e));BEATS.t=Date.now();renderFeed();try{console.warn("BEATS laden mislukt:",e&&(e.message||e))}catch(_){}}finally{BEATS.busy=false}}
 function beatRow(key){if(!key)return"";if(!BEATS.ok)return BEATS.err?`<div class="bt"><span class="bcnt">BEAT-knop niet beschikbaar: ${esc(BEATS.err)}</span></div>`:"";const a=BEATS.m.get(key)||[],me=window.__me,on=!!me&&a.includes(me),n=a.length;
   const nm=a.slice(0,3).map(esc).join(", ")+(n>3?" en "+(n-3)+" "+(n-3===1?"andere":"anderen"):""),
-  tx=n?`<span class="bcnt"><b>${n}</b> ${n===1?"BEAT":"BEATS"} · ${nm}</span>`:"";
+  tx=n?`<span class="bcnt"><b>${n}</b> ${n===1?"BEAT":"BEATS"}</span>`:"";
   return `<div class="bt"><button type="button" class="bbtn${on?" on":""}" data-bk="${esc(key)}" aria-pressed="${on}"${me?"":' disabled title="Alleen renners kunnen een BEAT geven"'}>${FIST}<span>Geef een BEAT</span></button>${tx}</div>`}
 async function beatToggle(key){const me=window.__me;if(!me||!window.__beatSet)return;const a=(BEATS.m.get(key)||[]).slice(),on=!a.includes(me),old=a.slice();
   if(on)a.push(me);else a.splice(a.indexOf(me),1);BEATS.m.set(key,a);renderFeed();
