@@ -721,6 +721,7 @@ function feedItems(){
   items.push({k:"ev",key:"man|20261104a",d:"2026-11-04",ts:new Date("2026-11-04T09:45:00").getTime(),tm:false,sex:"m",mood:"eigen",h:"Falen is niet vallen, maar weigeren weer op te staan 🤔"});
   items.push({k:"ev",key:"man|20261104b",d:"2026-11-04",ts:new Date("2026-11-04T19:50:00").getTime(),tm:false,sex:"m",mood:"zorg",h:"U vraagt, wij draaien. De jaartotalen staan nu ook in de BAD pagina. Je kunt ze zelf checken op je persoonlijke rennerspagina per maand, per dag 👍"});
 items.push({k:"ev",key:"man|20261105a",d:"2026-11-05",ts:new Date("2026-11-05T11:20:00").getTime(),tm:false,sex:"v",mood:"zelfspot",h:"Raceday! Ik zie dat renner nummer 6 ook meedoet, tssss....mijn tip, laten we rustig starten 😝"});
+  items.push({k:"ev",key:"man|20261106t",d:"2026-11-06",ts:new Date("2026-11-06T12:00:00").getTime(),tm:false,sex:"m",mood:"zelfspot",h:"test, deze gaan we niet in live zetten"});
   items.sort((a,b)=>b.ts-a.ts);return {items:items.filter(o=>(o.k==="ev"?o.d:o.r[0])>=FEEDSTART),per};
 }
 function fDate(ds){const t=new Date(ds+"T12:00:00").toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});return t.charAt(0).toUpperCase()+t.slice(1)}
