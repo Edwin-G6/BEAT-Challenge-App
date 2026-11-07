@@ -983,7 +983,7 @@ function cheer(){try{let i=-1;try{i=(parseInt(localStorage.getItem("bedCheer"),1
   if(!(i>=0))i=Math.floor(Math.random()*CHEER.length);try{localStorage.setItem("bedCheer",String(i))}catch(e){}
   const c=CHEER[i];if(!window.__botCard||!$("cdlg").showModal)return;
   $("cbot").innerHTML=window.__botCard(c[0],c[1],"Lekker gewerkt. Op naar de volgende rit!");$("cdlg").showModal();$("chi").focus()}catch(e){}}
-$("chi").onclick=()=>$("cdlg").close();$("cdlg").addEventListener("close",()=>setView("bed"));
+$("chi").onclick=()=>$("cdlg").close();$("cdlg").addEventListener("close",()=>setView("feed"));
 async function saveEntry(){
   const name=$("e-name").value,date=$("e-date").value,m=$("e-msg");m.style.color="#b8402f";
   const v={};for(const k of ["out","in","city","el","hm"])v[k]=num("e-"+k);
