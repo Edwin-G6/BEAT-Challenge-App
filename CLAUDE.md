@@ -26,6 +26,14 @@ Repo: Edwin-G6/BEAT-Challenge-App, branch main. Live: https://bed.beatcyclingclu
 - Nooit geheimen in de chat of in de repo (Resend-sleutel, Turnstile-secret, databasewachtwoorden, service_role-sleutels).
 - Staging en live hebben elk een eigen Supabase-project. SQL moet op beide gedraaid worden voordat de bijbehorende code live gaat.
 
+## Gherkin-verhalen zijn leidend
+- De map `features/` bevat de user stories in Gherkin (Nederlands, `# language: nl`). Dit is de enige bron voor wat de app moet doen en geldt als toets.
+- Elk bestand heeft bovenaan een `# Status:`-regel: concept (door Claude opgeschreven, nog niet goedgekeurd) of goedgekeurd.
+- Voor een nieuwe functie of een wijziging in gedrag: eerst het scenario schrijven of aanpassen en door Edwin laten bevestigen, daarna pas bouwen en testen. Wat niet in een scenario staat, bouw je niet zonder eerst te vragen.
+- Strijdt de code met een scenario, dan is de code fout. Alleen Edwin wijzigt of keurt scenario's goed.
+- Uitgezonderd zijn botberichten, kleine tekstwijzigingen en pure opmaak, zoals bij het versienummer.
+- Controleer vóór elke doorzetting naar staging of live welke scenario's geraakt worden en meld per scenario of het is gecontroleerd. Scenario's die de echte database nodig hebben worden met een nagebootste database getest. Zeg dat erbij, en zeg welke Edwin zelf nog moet nakijken.
+
 ## Communicatie en commits
 - Praat Nederlands met Edwin.
 - Commitberichten eindigen met:
