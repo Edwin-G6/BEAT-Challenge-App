@@ -261,6 +261,7 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
 th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .tb{padding:24px 28px}
 .mbadge{display:inline-block;margin:0 0 10px;padding:4px 10px;border-radius:99px;background:var(--dt);color:#fff;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.asbar{display:none}.asnon .asbar{display:flex;position:sticky;top:0;z-index:60;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin:0 0 12px;padding:10px 14px;border-radius:12px;background:var(--dt);color:#fff;font-weight:800;font-size:13px}.asbar button{background:#fff;color:var(--dt);border:0;border-radius:99px;padding:6px 12px;font:inherit;cursor:pointer}
 .kaartlock{display:none}.nobeat .kaart .tb{display:none}.nobeat .kaart .dot{pointer-events:none}.nobeat .kaart #mapcap,.nobeat .kaart #meta{display:none}.nobeat .kaart .kaartlock{display:block}
 .pmap.lock input,.pmap.lock select,.pmap.lock button{opacity:.5}.pmap .only{margin-top:8px;font-weight:700;color:var(--dt)}
 .tb h1 em{font-style:inherit;color:var(--dt)}
@@ -420,6 +421,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
     <button class="ni" id="m-map" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>BIKE MESSENGER</button>
     <button class="ni" id="m-hof" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>Hall of Fame</button>
     <button class="ni" id="m-zo" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Rennersbriefing</button>
+    <button class="ni" id="asnon" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.600 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Bekijk als niet-BEAT-lid</button>
     <button class="ni" id="logout" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg><span id="lo-t">Mijn profiel</span></button>
   </div>
   <div class="sg">Beheer</div>
@@ -428,6 +430,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   </div>
 </aside>
 <main class="main">
+<div class="asbar" id="asbar" role="status">Je bekijkt de app als niet-BEAT-lid. <button type="button" id="asnonbk">Terug naar beheerder</button></div>
 <section class="card hd">
   <div>
     <h1><span class="bad">BEAT Average Day Ranking <span class="mon" id="mt"></span></span><span class="bed">Wat is jouw <span class="gr">epic streak</span>?</span></h1>
@@ -1180,9 +1183,14 @@ async function startSupabase(){
   if(rd&&(rd.status!=="actief"||!rd.bib)&&!isAdmin)await stop('','wacht');
   window.__me=rd&&rd.display_name||null;
   try{const fl=await sb.rpc("rider_flags");if(!fl.error&&fl.data)window.__members=new Set(fl.data.filter(x=>x.is_member).map(x=>x.name))}catch(e){}
-  const isBeat=!!(isAdmin||(window.__me&&window.__members&&window.__members.has(window.__me)));
-  document.documentElement.classList.toggle("nobeat",!isBeat);
-  try{$("klock").innerHTML=window.__botCard("v","trots","De Bike Messenger Challenge is members only.")}catch(e){}
+  let asNon=false;
+  const isBeat=()=>!asNon&&!!(isAdmin||(window.__me&&window.__members&&window.__members.has(window.__me)));
+  const applyBeat=()=>{const h=document.documentElement;h.classList.toggle("nobeat",!isBeat());h.classList.toggle("asnon",asNon);
+    try{$("klock").innerHTML=window.__botCard("v","trots","De Bike Messenger Challenge is members only.")}catch(e){}
+    const b=$("asnon");if(b)b.lastChild.textContent=asNon?"Terug naar beheerder":"Bekijk als niet-BEAT-lid";
+    try{if(document.body.dataset.view==="map"&&window.renderMap)window.renderMap(true)}catch(e){}};
+  applyBeat();
+  if(isAdmin){const b=$("asnon");if(b){b.hidden=false;b.onclick=()=>{asNon=!asNon;applyBeat();try{const g=$("burger");if(g&&g.getAttribute("aria-expanded")==="true")g.click()}catch(e){}}}const t=$("asnonbk");if(t)t.onclick=()=>{asNon=false;applyBeat()}}
   if(isAdmin)document.documentElement.classList.add("adm");
   const lo=document.getElementById("logout");lo.hidden=false;
   const P=id=>document.getElementById(id);
@@ -1192,7 +1200,7 @@ async function startSupabase(){
   lo.onclick=async()=>{
     P("p-who").innerHTML=rd?esc(rd.first_name+" "+rd.last_name)+"<small>Rugnummer "+rd.bib+" · "+esc((u.email||"").toLowerCase())+"</small>":"<small>"+esc((u.email||"").toLowerCase())+"</small>";
     const isM=!!(window.__me&&window.__members&&window.__members.has(window.__me));P("p-mem").innerHTML=rd?(isM?'<b>BEAT</b> Je bent BEAT-lid.':''):'';
-    P("p-sec").hidden=!myBib;P("p-only").hidden=isBeat;P("p-pmap").classList.toggle("lock",!isBeat);["p-land","p-pc","p-pcs","p-pcd"].forEach(i=>P(i).disabled=!isBeat);P("p-msg").textContent="";P("p-msg").style.color="";
+    P("p-sec").hidden=!myBib;P("p-only").hidden=isBeat();P("p-pmap").classList.toggle("lock",!isBeat());["p-land","p-pc","p-pcs","p-pcd"].forEach(i=>P(i).disabled=!isBeat());P("p-msg").textContent="";P("p-msg").style.color="";
     if(myBib){
       P("p-link").textContent="";P("p-pub").disabled=true;
       try{const r=await sb.from("riders").select("page_public,page_code,postcode,plaats,land").eq("email",(u.email||"").toLowerCase()).maybeSingle();P("p-pub").checked=r.data?r.data.page_public!==false:true;ps();pcShow(r.data);
@@ -1203,7 +1211,7 @@ async function startSupabase(){
     P("pdlg").showModal();P("p-close").focus();
   };
   const pcShow=d=>{P("p-pc").value=d&&d.postcode||"";P("p-land").value=d&&d.land||"NL";P("p-pcd").hidden=!(d&&d.postcode);P("p-pcm").style.color="";P("p-pcm").textContent=d&&d.postcode?"Op de kaart: "+d.postcode+" "+d.plaats:""};
-  const pcSave=async(clear)=>{if(!isBeat)return;const m=P("p-pcm"),bad=t=>{m.style.color="#c0392b";m.textContent=t};
+  const pcSave=async(clear)=>{if(!isBeat())return;const m=P("p-pcm"),bad=t=>{m.style.color="#c0392b";m.textContent=t};
     let args={p_land:null,p_postcode:null,p_plaats:null,p_lat:null,p_lon:null};
     if(!clear){const land=P("p-land").value,pc=(P("p-pc").value.match(/\d{4}/)||[])[0];if(!pc)return bad("Vul vier cijfers in, bijvoorbeeld 3022.");
       P("p-pcs").disabled=true;m.style.color="";m.textContent="Even opzoeken...";
