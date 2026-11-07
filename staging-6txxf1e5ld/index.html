@@ -168,6 +168,7 @@ td.yc.z .cv{color:var(--line);font-weight:400}
 .chip .dg{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dt)}
 .sec{margin:6px 2px 14px}
 dialog{border:0;border-radius:28px;padding:0;width:calc(100% - 24px);max-width:480px;background:var(--card);color:var(--ink);box-shadow:0 30px 80px rgba(10,30,40,.35)}
+#cdlg .cheerbox{padding:22px 18px 18px}#cdlg .botrow{margin:0 0 14px}#cdlg .cheerbtn{display:block;width:100%;padding:15px;border:0;border-radius:99px;background:var(--dt);color:#fff;font:800 17px/1 inherit;font-family:inherit;cursor:pointer}#cdlg .cheerbtn:focus-visible{outline:3px solid var(--tq);outline-offset:2px}
 dialog::backdrop{background:rgba(10,30,34,.55)}
 .dh{font-size:26px;font-weight:800;font-style:italic;text-transform:uppercase;letter-spacing:-.04em;padding:22px 24px 0}
 .db{padding:14px 24px 24px;display:grid;gap:12px}
@@ -607,6 +608,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
     <div class="ba"><button class="dk" id="p-out">Uitloggen</button><button id="p-close" autofocus>Sluiten</button></div>
   </div>
 </dialog>
+<dialog id="cdlg" aria-label="Rit opgeslagen"><div class="cheerbox"><div id="cbot"></div><button type="button" class="cheerbtn" id="chi">High five ✋</button></div></dialog>
 <dialog id="dlg">
   <div class="dh">Rit invoeren</div>
   <div class="db">
@@ -976,6 +978,12 @@ function elist(){
     ENT=ENT.filter(r=>r[9]!==x.dataset.id);init(sel);elist();
   });
 }
+const CHEER=[["v","motiv"],["v","trots"],["v","eigen"],["v","straks"],["v","zorg"],["m","zorg"],["m","trots"]];
+function cheer(){try{let i=-1;try{i=(parseInt(localStorage.getItem("bedCheer"),10)+1)%CHEER.length}catch(e){}
+  if(!(i>=0))i=Math.floor(Math.random()*CHEER.length);try{localStorage.setItem("bedCheer",String(i))}catch(e){}
+  const c=CHEER[i];if(!window.__botCard||!$("cdlg").showModal)return;
+  $("cbot").innerHTML=window.__botCard(c[0],c[1],"Lekker gewerkt. Op naar de volgende rit!");$("cdlg").showModal();$("chi").focus()}catch(e){}}
+$("chi").onclick=()=>$("cdlg").close();$("cdlg").addEventListener("close",()=>setView("bed"));
 async function saveEntry(){
   const name=$("e-name").value,date=$("e-date").value,m=$("e-msg");m.style.color="#b8402f";
   const v={};for(const k of ["out","in","city","el","hm"])v[k]=num("e-"+k);
@@ -995,7 +1003,7 @@ async function saveEntry(){
   $("e-save").disabled=false;
   ENT=ENT.filter(r=>r[9]!==id).concat([entRow(doc,id)]);
   track("Rit opgeslagen",{dag:date===today()?"vandaag":date===yest()?"gisteren":"eerder"});
-  $("dlg").close();init(sel);
+  $("dlg").close();init(sel);cheer();
   $("msg").textContent=`Rit opgeslagen: ${name}, ${date}`+(DB?"":" (alleen in deze sessie)");
   setTimeout(()=>{$("msg").textContent=""},6000);
 }
