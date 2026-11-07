@@ -261,7 +261,7 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
 th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .tb{padding:24px 28px}
 .mbadge{display:inline-block;margin:0 0 10px;padding:4px 10px;border-radius:99px;background:var(--dt);color:#fff;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
-.kaartlock{display:none}.nobeat .kaart .tb,.nobeat .kaart .mapc{display:none}.nobeat .kaart .kaartlock{display:block}
+.kaartlock{display:none}.nobeat .kaart .tb{display:none}.nobeat .kaart .dot{pointer-events:none}.nobeat .kaart #mapcap,.nobeat .kaart #meta{display:none}.nobeat .kaart .kaartlock{display:block}
 .pmap.lock input,.pmap.lock select,.pmap.lock button{opacity:.5}.pmap .only{margin-top:8px;font-weight:700;color:var(--dt)}
 .tb h1 em{font-style:inherit;color:var(--dt)}
 .tb.hoft{display:flex;align-items:center;gap:16px}
@@ -755,11 +755,13 @@ const mapPts=()=>{const me=window.__me,seen=new Map();return MAPS.rows.slice().s
 const mx=(lat,lon)=>[Math.round((lon-2.4)*150*.616*10)/10,Math.round((53.7-lat)*150*10)/10];
 async function renderMap(load){
   const w=$("mapw");if(!w)return;const tA=performance.now();
-  if(load&&window.__mapLoad&&Date.now()-MAPS.t>15000){try{MAPS.rows=await window.__mapLoad();MAPS.ok=true}catch(e){MAPS.ok=false}MAPS.t=Date.now()}
+  const demo=document.documentElement.classList.contains("nobeat");
+  if(!demo&&load&&window.__mapLoad&&Date.now()-MAPS.t>15000){try{MAPS.rows=await window.__mapLoad();MAPS.ok=true}catch(e){MAPS.ok=false}MAPS.t=Date.now()}
   const pts=a=>a.map(([la,lo])=>mx(la,lo).join(",")).join(" "),me=window.__me;
-  const dots=mapPts().map(o=>{const [x,y]=mx(o.lat,o.lon);return {r:o.r,x,y,me:o.me}}).sort((a,b)=>a.me-b.me);
-  const tips=dots.map(d=>{const t=d.r.name,wd=t.length*7.4+16,x=Math.min(Math.max(d.x-wd/2,4),456-wd),y=d.y-34<4?d.y+14:d.y-34;return `<g class="tipg" data-n="${esc(d.r.name)}" pointer-events="none"><rect class="tipbg" x="${x}" y="${y}" width="${wd}" height="24" rx="12"/><text class="tip" x="${x+8}" y="${y+16}">${esc(t)}</text></g>`}).join("");
-  w.innerHTML=`<svg viewBox="0 0 460 650" role="img" aria-label="Kaart van Nederland, België en Luxemburg met de renners van de club"><polygon class="lu" points="${pts(LUP)}"/>${BEP.map(q=>`<polygon class="be" points="${pts(q)}"/>`).join("")}${BEP.map(q=>`<polygon class="be2" points="${pts(q)}"/>`).join("")}${NLP.map(q=>`<polygon class="nl" points="${pts(q)}"/>`).join("")}${WATP.map(q=>`<polygon class="wt" points="${pts(q)}"/>`).join("")}`+dots.map(d=>`<circle class="dot${d.me?" me":""}" cx="${d.x}" cy="${d.y}" r="7" tabindex="0" role="button" aria-label="${esc(d.r.name)}" data-n="${esc(d.r.name)}"/>`).join("")+tips+`</svg>`;
+  const DEMO=[[53.22,6.57],[53.2,5.8],[52.51,6.09],[52.38,4.9],[52.1,5.12],[52.07,4.3],[51.92,4.48],[51.84,5.86],[51.44,5.47],[50.85,5.69],[51.5,3.61],[52.22,6.89],[51.22,4.4],[50.85,4.35],[51.05,3.72],[50.63,5.57],[49.61,6.13],[52.78,5.1],[51.69,5.3],[50.45,4.45]];
+  const dots=(demo?DEMO.map(([la,lo])=>{const [x,y]=mx(la,lo);return {r:{name:""},x,y,me:false}}):mapPts().map(o=>{const [x,y]=mx(o.lat,o.lon);return {r:o.r,x,y,me:o.me}})).sort((a,b)=>a.me-b.me);
+  const tips=demo?"":dots.map(d=>{const t=d.r.name,wd=t.length*7.4+16,x=Math.min(Math.max(d.x-wd/2,4),456-wd),y=d.y-34<4?d.y+14:d.y-34;return `<g class="tipg" data-n="${esc(d.r.name)}" pointer-events="none"><rect class="tipbg" x="${x}" y="${y}" width="${wd}" height="24" rx="12"/><text class="tip" x="${x+8}" y="${y+16}">${esc(t)}</text></g>`}).join("");
+  w.innerHTML=`<svg viewBox="0 0 460 650" role="img" aria-label="Kaart van Nederland, België en Luxemburg met de renners van de club"><polygon class="lu" points="${pts(LUP)}"/>${BEP.map(q=>`<polygon class="be" points="${pts(q)}"/>`).join("")}${BEP.map(q=>`<polygon class="be2" points="${pts(q)}"/>`).join("")}${NLP.map(q=>`<polygon class="nl" points="${pts(q)}"/>`).join("")}${WATP.map(q=>`<polygon class="wt" points="${pts(q)}"/>`).join("")}`+dots.map(d=>demo?`<circle class="dot" cx="${d.x}" cy="${d.y}" r="7" aria-hidden="true"/>`:`<circle class="dot${d.me?" me":""}" cx="${d.x}" cy="${d.y}" r="7" tabindex="0" role="button" aria-label="${esc(d.r.name)}" data-n="${esc(d.r.name)}"/>`).join("")+tips+`</svg>`;
   MAPS.ms=Math.round((performance.now()-tA)*10)/10;MAPS.kb=Math.round(JSON.stringify([NLP,BEP,LUP,WATP]).length/102.4)/10;const mA=$("meta");if(mA)mA.textContent="Bike Messenger · tekenen "+MAPS.ms+" ms · 0 externe aanvragen · kaartdata "+MAPS.kb+" KB (zit in de pagina)";
   const n=MAPS.rows.length,has=me&&MAPS.rows.some(r=>r.name===me);
   $("mapcap").innerHTML=!MAPS.ok&&load!==undefined&&window.__mapLoad&&MAPS.t?"De kaart kon niet worden geladen. Probeer het later opnieuw.":(n?`${n} ${n===1?"renner staat":"renners staan"} op de kaart. Beweeg over een stip voor de naam.`:"Nog niemand op de kaart.")+(me&&!has?` <button type="button" id="mapgo">Zet jouw postcode in Mijn profiel</button>`:"")}
@@ -881,7 +883,7 @@ $("prev").onclick=()=>{track("Dag gewijzigd",{via:"pijltjes"});picked=true;sel=d
 $("next").onclick=()=>{track("Dag gewijzigd",{via:"pijltjes"});picked=true;sel=days[days.indexOf(sel)+1];render()};
 $("add").onclick=openAdd;$("e-today").onclick=()=>setDay(today());$("e-yest").onclick=()=>setDay(yest());$("e-name").onchange=byName;$("e-num").oninput=byNum;$("e-date").onchange=elist;$("e-cancel").onclick=()=>{track("Rit invoeren geannuleerd");$("dlg").close()};$("e-save").onclick=saveEntry;
 ["out","in","city","el"].forEach(k=>$("e-"+k).oninput=etot);
-$("feedl").addEventListener("click",e=>{const b=e.target.closest(".bbtn");if(b&&!b.disabled)beatToggle(b.dataset.bk)});$("feedmore").onclick=()=>{feedN+=15;renderFeed()};$("m-bad").onclick=()=>setView("bad");$("m-map").onclick=()=>{setView("map");renderMap(true)};$("m-bed").onclick=()=>setView("bed");$("m-hof").onclick=()=>setView("hof");$("m-zo").onclick=()=>setView("zo");$("m-feed").onclick=()=>setView("feed");for(const k in VIEWS){const t=$("t-"+k);if(t)t.onclick=()=>setView(k)}$("t-add").onclick=()=>$("add").click();$("burger").onclick=e=>{e.stopPropagation();toggleMenu()};document.addEventListener("click",e=>{if(document.body.classList.contains("mo")&&!e.target.closest(".nv"))toggleMenu(false)});document.addEventListener("keydown",e=>{if(e.key==="Escape")toggleMenu(false)});$("q").oninput=()=>{if(!_sq&&$("q").value){_sq=true;track("Zoeken gebruikt")}render()};$("lid").onchange=()=>{track("Filter alleen BEAT leden",{stand:$("lid").checked?"aan":"uit"});init(sel)};
+$("feedl").addEventListener("click",e=>{const b=e.target.closest(".bbtn");if(b&&!b.disabled)beatToggle(b.dataset.bk)});$("feedmore").onclick=()=>{feedN+=15;renderFeed()};$("m-bad").onclick=()=>setView("bad");$("m-map").onclick=()=>{setView("map");renderMap(true)};$("m-bed").onclick=()=>setView("bed");$("m-hof").onclick=()=>setView("hof");$("m-zo").onclick=()=>setView("zo");$("m-feed").onclick=()=>setView("feed");for(const k in VIEWS){const t=$("t-"+k);if(t)t.onclick=()=>{setView(k);if(k==="map")renderMap(true)}}$("t-add").onclick=()=>$("add").click();$("burger").onclick=e=>{e.stopPropagation();toggleMenu()};document.addEventListener("click",e=>{if(document.body.classList.contains("mo")&&!e.target.closest(".nv"))toggleMenu(false)});document.addEventListener("keydown",e=>{if(e.key==="Escape")toggleMenu(false)});$("q").oninput=()=>{if(!_sq&&$("q").value){_sq=true;track("Zoeken gebruikt")}render()};$("lid").onchange=()=>{track("Filter alleen BEAT leden",{stand:$("lid").checked?"aan":"uit"});init(sel)};
 try{if(/[?&]admin(=|&|$)/.test(location.search))document.documentElement.classList.add("adm")}catch(e){}
 /* Plausible-gebeurtenissen. Er gaan nooit namen, rugnummers of zoektermen mee. */
 const track=(n,pr)=>{try{if(window.plausible)window.plausible(n,pr?{props:pr}:undefined)}catch(e){}};
@@ -1180,7 +1182,7 @@ async function startSupabase(){
   try{const fl=await sb.rpc("rider_flags");if(!fl.error&&fl.data)window.__members=new Set(fl.data.filter(x=>x.is_member).map(x=>x.name))}catch(e){}
   const isBeat=!!(isAdmin||(window.__me&&window.__members&&window.__members.has(window.__me)));
   document.documentElement.classList.toggle("nobeat",!isBeat);
-  try{$("klock").innerHTML=window.__botCard("m","straks","De Bike Messenger Challenge is members only.")}catch(e){}
+  try{$("klock").innerHTML=window.__botCard("v","trots","De Bike Messenger Challenge is members only.")}catch(e){}
   if(isAdmin)document.documentElement.classList.add("adm");
   const lo=document.getElementById("logout");lo.hidden=false;
   const P=id=>document.getElementById(id);
