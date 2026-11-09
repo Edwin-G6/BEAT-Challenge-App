@@ -131,7 +131,7 @@ td.sur .d{font-weight:700}
 th.sur{color:var(--dt)}
 th.sur,td.sur,#btable th:nth-child(3),#btable td:nth-child(3){border-left:2px solid var(--dt);border-right:2px solid var(--dt)}
 #btable td:nth-child(3){background:var(--hl)}
-#ptable th.sur,#ptable td.sur{border-right:0}th.av,td.av{border-right:2px solid var(--dt);background:var(--hl);color:var(--dt)}td.av{font-size:17px;text-align:right}td.av .d{font-weight:700}th.av{color:var(--dt)}tbody tr:last-child td.av{border-bottom:2px solid var(--dt)}
+#ptable th.sur,#ptable td.sur,#ptableh th.sur{border-right:0}th.av,td.av{border-right:2px solid var(--dt);background:var(--hl);color:var(--dt)}td.av{font-size:17px;text-align:right}td.av .d{font-weight:700}th.av{color:var(--dt)}tbody tr:last-child td.av{border-bottom:2px solid var(--dt)}
 tbody tr:last-child td.sur,#btable tbody tr:last-child td:nth-child(3){border-bottom:2px solid var(--dt)}
 #btable th:nth-child(3){color:var(--dt)}
 td.pos .d{color:var(--dt)}
@@ -145,15 +145,16 @@ th.yc .yl{display:block;font-size:9.5px;letter-spacing:.1em;color:var(--ygx);mar
 tr.tot td.yc{background:var(--ygt) !important}
 td.yc .cv{display:block;font:700 17px "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
 td.yc.z .cv{color:var(--line);font-weight:400}
-.tws{overflow:auto;max-height:calc(100vh - 40px);overscroll-behavior-x:contain}
-#ptable thead th{position:sticky;top:0;z-index:2;box-shadow:inset 0 -1px 0 var(--line)}
-#ptable th:first-child,#ptable td:first-child{position:sticky;left:0;z-index:1;background:var(--card);width:56px;min-width:56px}
-#ptable th:nth-child(2),#ptable td:nth-child(2){position:sticky;left:56px;z-index:1;background:var(--card);box-shadow:2px 0 0 var(--line)}
+.tws{overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain}
+.tbx{position:relative}.tbh{position:sticky;top:var(--stk,0px);z-index:6;overflow:hidden;background:var(--card)}#ptableh{table-layout:fixed;min-width:0;width:auto;border-collapse:collapse}
+#ptable thead th{z-index:2;box-shadow:inset 0 -1px 0 var(--line)}
+#ptable th:first-child,#ptable td:first-child,#ptableh th:first-child{position:sticky;left:0;z-index:1;background:var(--card);width:56px;min-width:56px}
+#ptable th:nth-child(2),#ptable td:nth-child(2),#ptableh th:nth-child(2){position:sticky;left:56px;z-index:1;background:var(--card);box-shadow:2px 0 0 var(--line)}
 #ptable thead th:first-child{z-index:3;box-shadow:inset 0 -1px 0 var(--line)}
 #ptable thead th:nth-child(2){z-index:3;box-shadow:inset 0 -1px 0 var(--line),2px 0 0 var(--line)}
 #ptable thead th.yc{background:var(--yg)}
 #ptable tbody tr:hover td:nth-child(-n+2){background:var(--hl)}
-@media (max-width:640px){.tws{max-height:calc(100dvh - 150px)}}
+
 .rb{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--bg);color:var(--sl);font-size:14px;font-weight:700}
 .rb.r1{background:var(--tq);color:#fff}
 .rb.r3{background:#fdf0c4;color:#c77d0a}
@@ -226,10 +227,10 @@ dialog::backdrop{background:rgba(10,30,34,.55)}
   th:first-child,td:first-child{display:none}
   th:nth-child(2),td:nth-child(2){position:sticky;left:0;z-index:1;background:var(--card);box-shadow:2px 0 0 var(--line)}
   th:nth-child(2){z-index:2}
-  #ptable th:first-child,#ptable td:first-child{display:table-cell;position:sticky;left:0;z-index:1;background:var(--card);width:44px;min-width:44px;padding-left:10px;padding-right:2px;box-shadow:none}
-  #ptable th:first-child{z-index:3}
-  #ptable th:nth-child(2),#ptable td:nth-child(2){left:44px}
-  #ptable tr.tot td:first-child{background:var(--mint) !important}
+#ptable th:first-child,#ptable td:first-child,#ptableh th:first-child{display:table-cell;position:sticky;left:0;z-index:1;background:var(--card);width:44px;min-width:44px;padding-left:10px;padding-right:2px;box-shadow:none}
+#ptable th:first-child,#ptableh th:first-child{z-index:3}
+#ptable th:nth-child(2),#ptable td:nth-child(2),#ptableh th:nth-child(2){left:44px}
+#ptable tr.tot td:first-child{background:var(--mint) !important}
   tr.tot td:nth-child(2){background:var(--mint) !important}
   tbody tr:hover td:nth-child(2){background:var(--hl)}
   td.sur,td.av{font-size:15px}
@@ -389,6 +390,16 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .botv{--head:#e8f2f1;--head-shade:#c3d9d5;--visor:#0e1b2c;--led:#7ef0e6;--hair:#1b2b3d;--mint2:#e3f4f2}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .botv{--head:#d5e8e6;--head-shade:#a9c9c5;--hair:#3a5068;--mint2:#17383a}}
 :root[data-theme="dark"] .botv{--head:#d5e8e6;--head-shade:#a9c9c5;--hair:#3a5068;--mint2:#17383a}
+/* BAD-tabel mobiel: smalle vaste kolommen (rang + naam over 2 regels), rustiger scrollen */
+@media (max-width:700px){
+  .tws{-webkit-overflow-scrolling:touch}
+#ptable th:first-child,#ptable td:first-child,#ptableh th:first-child{width:38px;min-width:38px;padding-left:6px;padding-right:0}
+#ptable th:nth-child(2),#ptable td:nth-child(2),#ptableh th:nth-child(2){left:38px;width:108px;min-width:108px;max-width:108px;padding-left:4px;padding-right:4px;white-space:normal;overflow-wrap:anywhere;font-size:13.5px;line-height:1.2}
+#ptable td.rk .rb{width:28px;height:28px;font-size:12.5px;border-radius:9px}
+#ptable td:nth-child(2) .ad{width:7px;height:7px;margin-right:5px;box-shadow:0 0 0 2px var(--mint);vertical-align:1px}
+#ptable td:nth-child(2) .fin{font-size:9px}
+#ptable th.sur,#ptable td.sur,#ptableh th.sur{padding-left:10px}
+}
 </style>
 <!-- Omgeving: staging = het mapadres begint met /staging (testomgeving, niet indexeren) -->
 <script>
@@ -460,7 +471,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
     <div class="hofh"><div><h2>De BAD <span class="gr">live stand</span></h2></div></div>
     <div class="qd bsw" role="group" aria-label="Kies dag"><button class="dk" id="b-today" aria-pressed="false">Vandaag</button><button class="dk" id="b-yest" aria-pressed="false">Gisteren</button></div>
     <div class="sub" style="margin-bottom:10px" id="tdesc"></div>
-    <div class="tw tws"><table id="ptable"><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+    <div class="tbx"><div class="tbh" id="tbh" aria-hidden="true"><table id="ptableh"><thead id="theadh"></thead></table></div><div class="tw tws" id="tws"><table id="ptable"><thead id="thead"></thead><tbody id="tbody"></tbody></table></div></div>
     <div class="note">Per cel: het grote getal is het cumulatief sinds het begin van de maand; het groene getal eronder is wat er op de gekozen dag bij kwam. Een stip bij de naam betekent dat die renner op de gekozen dag heeft gereden. De stand geldt voor de maand van de gekozen dag en begint op de eerste dag van de volgende maand weer bij nul. Meerdere ritten op één dag zijn opgeteld; totaal km is inclusief elektrisch. Surplus = cumulatief totaal km − (dagnummer in de maand × 25) (bijvoorbeeld 25 km op dag 1 = 0, 60 km op dag 2 = +10).</div>
   </section>
 </div>
@@ -789,6 +800,18 @@ function renderFeed(){
     return `<article class="fc t${r[6]>=100?3:r[6]>=50?2:1}"><div class="fch"><div class="fbib" title="Rugnummer"><div class="tp">${BEATLOGO}</div><b style="font-size:${(rugnr(r[1])||"").length>4?15:(rugnr(r[1])||"").length>3?18:22}px">${esc(rugnr(r[1])||r[1].charAt(0))}</b></div><div><div><span class="fcn">${esc(r[1])}</span></div><div class="fct">${fDate(r[0])}</div></div></div>${r[11]?`<div class="fcr">${esc(r[11])}</div>`:''}<div class="fcc">${ch}${r[6]>=100?'<div class="fcx">Century Crack!</div>':""}</div><div class="fcd">Dagtotaal ${fn(tot)} km · ${n} ${n===1?"rit":"ritten"}</div>${r[6]>=100?beatRow("cc|"+r[1]+"|"+r[0]+"|"+r[10]):""}</article>`}).join(""):'<section class="card"><div class="fz">Nog geen BEATS. Voeg een rit toe en jij staat bovenaan!</div></section>';
   $("feedmore").hidden=F.items.length<=feedN;
 }
+let syncOn=false;
+function syncH(){
+  const t=$("ptable"),h=$("ptableh"),bx=$("tbh"),w=$("tws");if(!t||!h||!bx||!t.tHead||!t.tHead.rows.length)return;
+  if(!syncOn){syncOn=true;w.addEventListener("scroll",()=>{bx.scrollLeft=w.scrollLeft},{passive:true});addEventListener("resize",syncH);try{new ResizeObserver(syncH).observe(t)}catch(e){}}
+  const ths=t.tHead.rows[0].cells,hc=h.tHead.rows[0].cells,tw=t.getBoundingClientRect().width;
+  if(!tw||ths.length!==hc.length)return;
+  const sd=document.querySelector(".side"),stk=sd&&getComputedStyle(sd).position==="sticky"&&sd.getBoundingClientRect().width>=innerWidth-2?Math.round(sd.getBoundingClientRect().height):0;
+  bx.style.setProperty("--stk",stk+"px");
+  for(let i=0;i<ths.length;i++){const x=ths[i].getBoundingClientRect().width;hc[i].style.cssText="box-sizing:border-box;width:"+x+"px;min-width:"+x+"px;max-width:"+x+"px"}
+  h.style.width=tw+"px";
+  const ht=Math.round(t.tHead.getBoundingClientRect().height);bx.style.height=ht+"px";bx.style.marginBottom=-ht+"px";bx.scrollLeft=w.scrollLeft;
+}
 function render(){
   if(!days.length)return;
   $("day").value=sel;
@@ -822,9 +845,11 @@ function render(){
   $("tdesc").textContent=`Totaal t/m ${dl(sel)} · groen = erbij op ${dl(sel)} · stip = reed op ${dl(sel)} · lichtgroen = jaartotaal 1 jan t/m vandaag · klik op een kolomtitel om te sorteren`;
   const ar=k=>k===sortK?(sortD<0?" ↓":" ↑"):' <span class="so">⇅</span>';
   $("thead").innerHTML=`<tr><th>#</th><th data-k="name" class="${sortK==="name"?"on":""}">Naam${ar("name")}</th>`+`<th data-k="sur" class="sur ${sortK==="sur"?"on":""}">Surplus${ar("sur")}</th>`+`<th data-k="avg" class="av ${sortK==="avg"?"on":""}" title="Totaal km van de maand tot en met ${dl(sel)}, gedeeld door ${nd} dagen">Gem. km/dag${ar("avg")}</th>`+COLS.map(([k,l])=>`<th data-k="${k}" class="${sortK===k?"on":""}">${l}${ar(k)}</th>`).join("")+COLS.map(([k,l],i)=>`<th data-k="y:${k}" class="yc${i?"":" y0"}${sortK==="y:"+k?" on":""}" title="1 januari t/m vandaag"><span class="yl">Jaar ${yr}</span>${l}${ar("y:"+k)}</th>`).join("")+`</tr>`;
+  $("theadh").innerHTML=$("thead").innerHTML;
   $("tbody").innerHTML=data.length?`<tr class="tot"><td></td><td>${q?"Selectie":"Totaal"}</td>`+sc(data.reduce((s,o)=>s+o.s,0))+`<td class="av"></td>`+COLS.map(([k])=>cell({[k]:sum("d",k)},{[k]:sum("c",k)},k)).join("")+COLS.map(([k],i)=>ycell(sum("y",k),i)).join("")+`</tr>`+
     data.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${o.on?`<span class="ad" title="Reed op deze dag"></span>`:""}${esc(o.name)}${o.fd?`<span class="fin">FINISHER dag ${o.fd}</span>`:""}</td>`+sc(o.s)+`<td class="av"><span class="d">${nl1(o.a)}</span></td>`+COLS.map(([k])=>cell(o.d,o.c,k)).join("")+COLS.map(([k],i)=>ycell(o.y[k],i)).join("")+`</tr>`).join("")
     :`<tr><td colspan="16" class="empty">Geen resultaten.</td></tr>`;
+  requestAnimationFrame(syncH);
   document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;track("Tabel gesorteerd",{tabel:"BAD",kolom:k});if(k===sortK)sortD*=-1;else{sortK=k;sortD=k==="name"?1:-1}render()});
   chart();renderBed();renderHof();renderLangste(sel.slice(0,7));renderFeed();
   const i=days.indexOf(sel);$("prev").disabled=i<=0;$("next").disabled=i>=days.length-1;
