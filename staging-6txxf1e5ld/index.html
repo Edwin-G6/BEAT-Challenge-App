@@ -1149,6 +1149,7 @@ async function startSupabase(){
       b.disabled=true;m.textContent="Bezig…";
       const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:redirect,shouldCreateUser:true,captchaToken:capTok||undefined}});
       if(error){m.style.color="";m.textContent=/captcha/i.test(error.message||"")?"De controle is mislukt. Probeer het opnieuw.":mapErr(error);if(TS&&window.turnstile){try{turnstile.reset(capId)}catch(e){}capTok=null;b.disabled=true}else b.disabled=false;return}
+      track("Aanmelden: code aangevraagd");
       show(botHtml(su?"signup-code":"login-code",{email})+'<form id="gf2"><input id="gc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required placeholder="Code uit de mail" aria-label="Code uit de mail"><button id="gb2">Inloggen</button></form><div class="gx" id="gx3"></div><button class="gs" id="gr">Ander e-mailadres</button>',true);
       document.getElementById("gr").onclick=()=>loginForm(undefined,mode);
       document.getElementById("gf2").onsubmit=async ev=>{
@@ -1161,6 +1162,7 @@ async function startSupabase(){
     };
   };
   const signupForm=()=>new Promise(res=>{
+    track("Aanmelden: naamscherm getoond");
     show(botHtml("signup-naam")+'<form id="gs1"><input id="sf" required maxlength="40" autocomplete="given-name" placeholder="Voornaam" aria-label="Voornaam"><input id="sl" required maxlength="60" autocomplete="family-name" placeholder="Achternaam" aria-label="Achternaam"><p class="gh">Je krijgt automatisch een rugnummer toegewezen. Heb je al een eigen BEAT rugnummer? Vul die dan in. De jury doet een check, en wijst deze aan je toe als dat correct is.</p><input id="sn" inputmode="numeric" maxlength="4" placeholder="Rugnummer (optioneel)" aria-label="Rugnummer, optioneel"><button id="sbtn">Aanmelden</button></form><div class="gx" id="sx"></div><button class="gs" id="slo">Uitloggen</button>',true);
     document.getElementById("slo").onclick=logout;
     document.getElementById("gs1").onsubmit=async ev=>{
@@ -1171,6 +1173,7 @@ async function startSupabase(){
       b.disabled=true;m.textContent="Bezig…";
       const r=await sb.rpc("signup_rider",{p_first:f,p_last:l,p_claimed:n?parseInt(n,10):null});
       if(r.error||!r.data){m.textContent=/ongeldige naam/i.test((r.error&&r.error.message)||"")?"Controleer je naam en probeer het opnieuw.":"Aanmelden mislukt: "+((r.error&&r.error.message)||"onbekende fout");b.disabled=false;return}
+      track("Aanmelden: voltooid");
       res(r.data);
     };
   });
