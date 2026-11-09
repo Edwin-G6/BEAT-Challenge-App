@@ -389,6 +389,16 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .botv{--head:#e8f2f1;--head-shade:#c3d9d5;--visor:#0e1b2c;--led:#7ef0e6;--hair:#1b2b3d;--mint2:#e3f4f2}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .botv{--head:#d5e8e6;--head-shade:#a9c9c5;--hair:#3a5068;--mint2:#17383a}}
 :root[data-theme="dark"] .botv{--head:#d5e8e6;--head-shade:#a9c9c5;--hair:#3a5068;--mint2:#17383a}
+/* BAD-tabel mobiel: smalle vaste kolommen (rang + naam over 2 regels), rustiger scrollen */
+@media (max-width:700px){
+  .tws{max-height:calc(100dvh - 170px);overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  #ptable th:first-child,#ptable td:first-child{width:38px;min-width:38px;padding-left:6px;padding-right:0}
+  #ptable th:nth-child(2),#ptable td:nth-child(2){left:38px;width:108px;min-width:108px;max-width:108px;padding-left:4px;padding-right:4px;white-space:normal;overflow-wrap:anywhere;font-size:13.5px;line-height:1.2}
+  #ptable td.rk .rb{width:28px;height:28px;font-size:12.5px;border-radius:9px}
+  #ptable td:nth-child(2) .ad{width:7px;height:7px;margin-right:5px;box-shadow:0 0 0 2px var(--mint);vertical-align:1px}
+  #ptable td:nth-child(2) .fin{font-size:9px}
+  #ptable th.sur,#ptable td.sur{padding-left:10px}
+}
 </style>
 <!-- Omgeving: staging = het mapadres begint met /staging (testomgeving, niet indexeren) -->
 <script>
