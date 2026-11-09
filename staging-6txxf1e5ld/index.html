@@ -44,6 +44,7 @@ body.in #gate{display:none}
 .gc button.gs{background:transparent;color:var(--dt);border:1px solid var(--line)}
 .gc button:disabled{opacity:.6;cursor:default}
 .gh{margin:2px 2px 0;font-size:12px;line-height:1.4;color:var(--mute);text-align:left}
+.gh.gi{font-style:italic;text-align:center;margin:10px 2px 0}
 .gx{min-height:20px;margin-top:10px;font-size:13px;color:#b8402f}
 .adm #load{display:flex !important}
 .sg{font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--mute);padding:16px 10px 4px;text-transform:uppercase}
@@ -1163,7 +1164,7 @@ async function startSupabase(){
   };
   const signupForm=()=>new Promise(res=>{
     track("Aanmelden: naamscherm getoond");
-    show(botHtml("signup-naam")+'<form id="gs1"><input id="sf" required maxlength="40" autocomplete="given-name" placeholder="Voornaam" aria-label="Voornaam"><input id="sl" required maxlength="60" autocomplete="family-name" placeholder="Achternaam" aria-label="Achternaam"><p class="gh">Je krijgt automatisch een rugnummer toegewezen. Heb je al een eigen BEAT rugnummer? Vul die dan in. De jury doet een check, en wijst deze aan je toe als dat correct is.</p><input id="sn" inputmode="numeric" maxlength="4" placeholder="Rugnummer (optioneel)" aria-label="Rugnummer, optioneel"><button id="sbtn">Aanmelden</button></form><div class="gx" id="sx"></div><button class="gs" id="slo">Uitloggen</button>',true);
+    show(botHtml("signup-naam")+'<form id="gs1"><input id="sf" required maxlength="40" autocomplete="given-name" placeholder="Voornaam" aria-label="Voornaam"><input id="sl" required maxlength="60" autocomplete="family-name" placeholder="Achternaam" aria-label="Achternaam"><p class="gh">Je krijgt automatisch een rugnummer toegewezen. Heb je al een eigen BEAT rugnummer? Vul die dan in. De jury doet een check, en wijst deze aan je toe als dat correct is.</p><input id="sn" inputmode="numeric" maxlength="4" placeholder="Rugnummer (optioneel)" aria-label="Rugnummer, optioneel"><button id="sbtn">Aanmelden</button><p class="gh gi">Aanmelden is gratis. Ook voor niet-BEAT leden. Geen addertjes onder het gras.</p></form><div class="gx" id="sx"></div><button class="gs" id="slo">Uitloggen</button>',true);
     document.getElementById("slo").onclick=logout;
     document.getElementById("gs1").onsubmit=async ev=>{
       ev.preventDefault();
