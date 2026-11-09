@@ -413,7 +413,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <div id="gate"><div class="gc"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1><img class="lad" src="bot/ongeduld.webp" width="335" height="421" alt="De BED ploegleider kijkt op zijn horloge" id="ladimg"><script>if(window.AV==="v"){var li=document.getElementById("ladimg");li.src="bot/v/ongeduld.webp";li.width=386;li.height=401}</script><p>Even laden…</p></div></div>
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 2.01</div></div></div>
+  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 2.02</div></div></div>
   <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <div class="nv" id="menu" role="group" aria-label="Menu">
     <button class="ni" id="m-feed" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>BEATS</button>
@@ -743,7 +743,7 @@ function feedItems(){
 items.push({k:"ev",key:"man|20261105a",d:"2026-11-05",ts:new Date("2026-11-05T11:20:00").getTime(),tm:false,sex:"v",mood:"zelfspot",h:"Raceday! Ik zie dat renner nummer 6 ook meedoet, tssss....mijn tip, laten we rustig starten 😝"});
 items.push({k:"ev",key:"man|20261106a",d:"2026-11-06",ts:new Date("2026-11-06T06:45:00").getTime(),tm:false,sex:"v",mood:"strat",h:"Klasse race allen! En die sprint van renner nummer 6? Ach, dat is de koers, zondag weer een nieuwe kans!"});
   items.push({k:"ev",key:"man|20261106b",d:"2026-11-06",ts:new Date("2026-11-06T17:00:00").getTime(),tm:false,sex:"v",mood:"trots",h:"Het is weekend, op naar mooie avonturen (of een hele lange race op zondag). Maak er iets moois van 👊"});
-  items.push({k:"ev",key:"man|20261106t",d:"2026-11-06",ts:new Date("2026-11-06T12:00:00").getTime(),tm:false,sex:"m",mood:"zelfspot",h:"test, deze gaan we niet in live zetten"});
+  items.push({k:"ev",key:"man|20261108a",d:"2026-11-08",ts:new Date("2026-11-08T09:35:00").getTime(),tm:false,sex:"m",mood:"eigen",h:"De kampioenen hebben betere fietsen, duurdere schoentjes, veel meer koersbroeken dan wij, maar ze hebben dezelfde wegen. -Tim Krabbé"});
   items.sort((a,b)=>b.ts-a.ts);return {items:items.filter(o=>(o.k==="ev"?o.d:o.r[0])>=FEEDSTART),per};
 }
 function fDate(ds){const t=new Date(ds+"T12:00:00").toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});return t.charAt(0).toUpperCase()+t.slice(1)}
