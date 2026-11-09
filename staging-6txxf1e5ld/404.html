@@ -24,9 +24,9 @@ main{width:100%;max-width:420px;text-align:center;display:flex;flex-direction:co
 </style>
 <script>
 /* Plausible: alleen op live, zoals in de app (niet op /staging...) */
+window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)};
+plausible.init=plausible.init||function(i){plausible.o=i||{}};
 if(!/\/staging[-a-z0-9]*(\/|$)/i.test(location.pathname)){
-  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)};
-  plausible.init=plausible.init||function(i){plausible.o=i||{}};
   var ps=document.createElement("script");ps.async=true;ps.src="https://plausible.io/js/pa-7S4BVQN2dziziJLYpUKIp.js";document.head.appendChild(ps);
   plausible.init();
 }
