@@ -406,14 +406,21 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .mz button{width:42px;height:42px;padding:0;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--dt);font-family:inherit;font-weight:800;font-size:24px;line-height:1;display:grid;place-items:center;box-shadow:var(--sh);cursor:pointer}
 .mz button:disabled{opacity:.4;cursor:default}.mz button:focus-visible{outline:3px solid var(--dt);outline-offset:2px}
 .nobeat .mz{display:none}
-.feed .fcg{flex:1 1 150px;max-width:220px;min-width:150px;padding:7px 12px 6px;border-radius:12px;background:var(--mint);display:flex;flex-direction:column;justify-content:space-between;gap:4px}
-.feed .fcg small{display:block;font:700 9.5px/1.2 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);white-space:nowrap}
-.feed .fcg .ga::before{content:"";display:inline-block;width:12px;border-top:1px dashed currentColor;margin-right:5px;vertical-align:middle}
-.feed .fcg svg{display:block;width:100%;height:26px;overflow:visible;cursor:pointer}
+.feed .fcg{margin-top:10px;max-width:440px;padding:10px 14px 12px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.feed .fcg small{display:block;font:700 9.5px/1.2 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.feed .fcg .g7b{display:flex;gap:14px;align-items:flex-end;margin-top:6px}
+.feed .fcg .g7n{flex:none;min-width:70px;align-self:flex-start}
+.feed .fcg .g7n b{display:block;font:800 26px/1.1 "JetBrains Mono",monospace;color:var(--dt)}.feed .fcg .g7n b i{font-size:13px;font-style:normal}
+.feed .fcg .g7n small{margin-top:3px;text-transform:none;letter-spacing:0;font-size:11px;font-weight:600}
+.feed .fcg .g7p{position:relative;flex:1;min-width:0}
+.feed .fcg svg{display:block;width:100%;height:64px;overflow:visible;cursor:pointer}
 .feed .fcg rect{fill:var(--tq);fill-opacity:.4}.feed .fcg rect.td{fill:var(--dt);fill-opacity:1}
-.feed .fcg line{stroke:var(--mute);stroke-width:1;stroke-dasharray:3 2;vector-effect:non-scaling-stroke;pointer-events:none}
-.feed .t2 .fcg{background:#1f6f63}.feed .t2 .fcg small{color:#bfe6df}.feed .t2 .fcg rect{fill:#bfe6df;fill-opacity:.45}.feed .t2 .fcg rect.td{fill:#fff;fill-opacity:1}.feed .t2 .fcg line{stroke:#bfe6df}
-.feed .t3 .fcg{background:#fde4e0}.feed .t3 .fcg small{color:#a8362a}.feed .t3 .fcg rect{fill:#b8261a;fill-opacity:.35}.feed .t3 .fcg rect.td{fill:#b8261a;fill-opacity:1}.feed .t3 .fcg line{stroke:#a8362a}
+.feed .fcg line{stroke:var(--mute);stroke-width:1.2;stroke-dasharray:4 3;vector-effect:non-scaling-stroke;pointer-events:none}
+.feed .fcg .g7g{position:absolute;left:0;font:700 10px/1 "JetBrains Mono",monospace;color:var(--mute);pointer-events:none}
+.feed .fcg .g7l{display:grid;grid-template-columns:repeat(7,1fr);margin-top:4px}
+.feed .fcg .g7l span{text-align:center;font:600 11px/1 "JetBrains Mono",monospace;color:var(--mute)}.feed .fcg .g7l span.td{color:var(--dt);font-weight:800}
+.feed .fcg .g7s{display:flex;gap:26px;margin-top:10px;padding-top:8px;border-top:1px solid var(--line)}
+.feed .fcg .g7s b{display:block;font:800 16px/1.2 "JetBrains Mono",monospace}.feed .fcg .g7s small{margin-top:2px;text-transform:none;letter-spacing:0;font-size:11px;font-weight:600}
 </style>
 <!-- Omgeving: staging = het mapadres begint met /staging (testomgeving, niet indexeren) -->
 <script>
@@ -436,7 +443,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 </head>
 <body data-view="feed">
 <script>if(window.IS_STAGING){var b=document.createElement("div");b.className="stg";b.textContent="STAGING – testomgeving";document.body.appendChild(b);document.addEventListener("DOMContentLoaded",function(){var bl=document.querySelector(".beta");if(bl)bl.textContent+=" · STAGING · SUPABASE"})}</script>
-<div id="gate"><div class="gc"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1><img class="lad" src="bot/ongeduld.webp" width="335" height="421" alt="De BED ploegleider kijkt op zijn horloge" id="ladimg"><script>if(window.AV==="v"){var li=document.getElementById("ladimg");li.src="bot/v/ongeduld.webp";li.width=386;li.height=401}</script><p>Even laden…</p></div></div>
+<div id="gate"><div class="gc"><div class="g7l">B</div><h1>BEAT <span>Every Day</span></h1><img class="lad" src="bot/ongeduld.webp" width="335" height="421" alt="De BED ploegleider kijkt op zijn horloge" id="ladimg"><script>if(window.AV==="v"){var li=document.getElementById("ladimg");li.src="bot/v/ongeduld.webp";li.width=386;li.height=401}</script><p>Even laden…</p></div></div>
 <div class="app">
 <aside class="side">
   <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 2.02</div></div></div>
@@ -846,7 +853,7 @@ document.addEventListener("focusout",e=>{if(e.target.matches&&e.target.matches("
 document.addEventListener("click",e=>{const d=e.target.closest&&e.target.closest("#mapw .dot");if(d){const g=[...document.querySelectorAll("#mapw .tipg")].find(x=>x.dataset.n===d.dataset.n);mapTip(d.dataset.n,!(g&&g.classList.contains("on")));return}if(e.target.id==="mapgo"&&$("logout"))$("logout").click();else document.querySelectorAll("#mapw .tipg.on").forEach(g=>g.classList.remove("on"))});
 function weekDay(d,off){const t=new Date(d+"T12:00:00Z");t.setUTCDate(t.getUTCDate()-off);return t.toISOString().slice(0,10)}
 function weekLbl(d){return new Date(d+"T12:00:00Z").toLocaleDateString("nl-NL",{weekday:"short",day:"numeric",month:"short",timeZone:"UTC"})}
-document.addEventListener("click",e=>{const r=e.target.closest&&e.target.closest(".fcg rect");const g=e.target.closest&&e.target.closest(".fcg");document.querySelectorAll(".fcg .gt").forEach(x=>{if(!g||x.parentNode!==g)x.textContent=x.dataset.w});if(r)g.querySelector(".gt").textContent=r.dataset.t});
+document.addEventListener("click",e=>{const r=e.target.closest&&e.target.closest(".fcg rect");const g=e.target.closest&&e.target.closest(".fcg");document.querySelectorAll(".fcg .g7t").forEach(x=>{if(!g||x.parentNode!==g)x.textContent=x.dataset.w});if(r)g.querySelector(".g7t").textContent=r.dataset.t});
 function renderFeed(){
   const el=$("feedl");if(!el)return;BEATS.shown=1;beatsLoad();const F=feedItems(),fn=v=>nl(Math.round(v*10)/10),mk=(l,v)=>`<div class="fcp"><small>${l}</small><b>${v}</b></div>`;
   const cnt=new Map();ENT.forEach(r=>{const k=r[1]+"|"+r[0];cnt.set(k,(cnt.get(k)||0)+1)});
@@ -857,8 +864,9 @@ function renderFeed(){
     const ch=[["Road Warrior",r[2]],["Zwift Warrior",r[3]],["Stadsfietsbeuker",r[4]],["eBike",r[5]]].filter(x=>x[1]>0).map(x=>mk(x[0],fn(x[1])+" km")).join("")+(r[7]>0?mk("Bergbaas",nl(Math.round(r[7]))+" hm"):"");
     const tot=(F.per.get(r[1])||new Map()).get(r[0])||r[6],n=cnt.get(r[1]+"|"+r[0])||1;
     const pm=F.per.get(r[1])||new Map(),ds=[6,5,4,3,2,1,0].map(o=>weekDay(r[0],o)),vs=ds.map(d=>pm.get(d)||0),wk=vs.reduce((a,b)=>a+b,0),av=wk/7,mx=Math.max(...vs,av,1);
-    const cg=`<div class="fcg" role="img" aria-label="Kilometers van de laatste 7 dagen: ${fn(wk)} km in totaal, gemiddeld ${fn(av)} km per dag"><small class="gt" data-w="Laatste 7 dagen">Laatste 7 dagen</small><svg viewBox="0 0 70 26" preserveAspectRatio="none" aria-hidden="true">${vs.map((v,i)=>`<rect class="${i===6?"td":""}" x="${i*10}" y="${(25-Math.max(1.5,v/mx*23)).toFixed(1)}" width="8" height="${Math.max(1.5,v/mx*23).toFixed(1)}" rx="1.5" data-t="${esc(weekLbl(ds[i]))} · ${fn(v)} km"><title>${esc(weekLbl(ds[i]))} · ${fn(v)} km</title></rect>`).join("")}<line x1="0" x2="70" y1="${(25-av/mx*23).toFixed(1)}" y2="${(25-av/mx*23).toFixed(1)}"><title>Gemiddeld ${fn(av)} km per dag</title></line></svg><small class="ga">Gem. ${fn(av)} km per dag</small></div>`;
-    return `<article class="fc t${r[6]>=100?3:r[6]>=50?2:1}"><div class="fch"><div class="fbib" title="Rugnummer"><div class="tp">${BEATLOGO}</div><b style="font-size:${(rugnr(r[1])||"").length>4?15:(rugnr(r[1])||"").length>3?18:22}px">${esc(rugnr(r[1])||r[1].charAt(0))}</b></div><div><div><span class="fcn">${esc(r[1])}</span></div><div class="fct">${fDate(r[0])}</div></div></div>${r[11]?`<div class="fcr">${esc(r[11])}</div>`:''}<div class="fcc">${ch}${r[6]>=100?'<div class="fcx">Century Crack!</div>':""}${cg}</div><div class="fcd">Dagtotaal ${fn(tot)} km · ${n} ${n===1?"rit":"ritten"}</div>${r[6]>=100?beatRow("cc|"+r[1]+"|"+r[0]+"|"+r[10]):""}</article>`}).join(""):'<section class="card"><div class="fz">Nog geen BEATS. Voeg een rit toe en jij staat bovenaan!</div></section>';
+    const GL=25,mx2=Math.max(...vs,GL,1),H=56,bh=v=>Math.max(2,v/mx2*H),gy=64-GL/mx2*H,act=vs.filter(v=>v>0).length,wl=d=>["Z","M","D","W","D","V","Z"][new Date(d+"T12:00:00Z").getUTCDay()];
+    const cg=`<div class="fcg" role="img" aria-label="Kilometers van de laatste 7 dagen: ${fn(wk)} km in totaal, gemiddeld ${fn(av)} km per dag, op ${act} van de 7 dagen gereden"><small class="g7t" data-w="Laatste 7 dagen">Laatste 7 dagen</small><div class="g7b"><div class="g7n"><b>${nl(Math.round(av))}<i> km</i></b><small>Gemiddeld per dag</small></div><div class="g7p"><svg viewBox="0 0 70 64" preserveAspectRatio="none" aria-hidden="true">${vs.map((v,i)=>`<rect class="${i===6?"td":""}" x="${i*10+1.5}" y="${(64-bh(v)).toFixed(1)}" width="7" height="${bh(v).toFixed(1)}" rx="1.5" data-t="${esc(weekLbl(ds[i]))} · ${fn(v)} km"><title>${esc(weekLbl(ds[i]))} · ${fn(v)} km</title></rect>`).join("")}<line x1="0" x2="70" y1="${gy.toFixed(1)}" y2="${gy.toFixed(1)}"><title>Doel: ${GL} km per dag</title></line></svg><span class="g7g" style="top:${Math.max(0,gy-14).toFixed(0)}px">${GL} km</span><div class="g7l">${ds.map((d,i)=>`<span class="${i===6?"td":""}">${wl(d)}</span>`).join("")}</div></div></div><div class="g7s"><div><b>${act}/7</b><small>Actieve dagen</small></div><div><b>${nl(Math.round(wk))}</b><small>Kilometers totaal</small></div></div></div>`;
+    return `<article class="fc t${r[6]>=100?3:r[6]>=50?2:1}"><div class="fch"><div class="fbib" title="Rugnummer"><div class="tp">${BEATLOGO}</div><b style="font-size:${(rugnr(r[1])||"").length>4?15:(rugnr(r[1])||"").length>3?18:22}px">${esc(rugnr(r[1])||r[1].charAt(0))}</b></div><div><div><span class="fcn">${esc(r[1])}</span></div><div class="fct">${fDate(r[0])}</div></div></div>${r[11]?`<div class="fcr">${esc(r[11])}</div>`:''}<div class="fcc">${ch}${r[6]>=100?'<div class="fcx">Century Crack!</div>':""}</div>${cg}<div class="fcd">Dagtotaal ${fn(tot)} km · ${n} ${n===1?"rit":"ritten"}</div>${r[6]>=100?beatRow("cc|"+r[1]+"|"+r[0]+"|"+r[10]):""}</article>`}).join(""):'<section class="card"><div class="fz">Nog geen BEATS. Voeg een rit toe en jij staat bovenaan!</div></section>';
   $("feedmore").hidden=F.items.length<=feedN;
 }
 let syncOn=false;
@@ -1210,7 +1218,7 @@ async function startSupabase(){
     setNames();renderBot();
   }
   await loadBotTexts();
-  const show=(h,hb)=>{G.innerHTML='<div class="gc'+(hb?' hb':'')+'"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1>'+h+'</div>'};
+  const show=(h,hb)=>{G.innerHTML='<div class="gc'+(hb?' hb':'')+'"><div class="g7l">B</div><h1>BEAT <span>Every Day</span></h1>'+h+'</div>'};
   const redirect=location.origin+location.pathname;
   const realUser=async()=>{const s=await session();return s&&!s.user.is_anonymous?s.user:null};
   const mapErr=e=>/rate limit|too many|security purposes/i.test(e.message||"")?"Er zijn te veel codes aangevraagd. Wacht even en probeer het straks opnieuw.":/invalid.*email|valid email/i.test(e.message||"")?"Dit is geen geldig e-mailadres.":"Versturen mislukt: "+(e.message||e);
@@ -1237,7 +1245,7 @@ async function startSupabase(){
       const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:redirect,shouldCreateUser:true,captchaToken:capTok||undefined}});
       if(error){m.style.color="";m.textContent=/captcha/i.test(error.message||"")?"De controle is mislukt. Probeer het opnieuw.":mapErr(error);if(TS&&window.turnstile){try{turnstile.reset(capId)}catch(e){}capTok=null;b.disabled=true}else b.disabled=false;return}
       track("Aanmelden: code aangevraagd");
-      show(botHtml(su?"signup-code":"login-code",{email})+'<form id="gf2"><input id="gc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required placeholder="Code uit de mail" aria-label="Code uit de mail"><button id="gb2">Inloggen</button></form><div class="gx" id="gx3"></div><button class="gs" id="gr">Ander e-mailadres</button>',true);
+      show(botHtml(su?"signup-code":"login-code",{email})+'<form id="gf2"><input id="gc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required placeholder="Code uit de mail" aria-label="Code uit de mail"><button id="gb2">Inloggen</button></form><div class="gx" id="gx3"></div><button class="g7s" id="gr">Ander e-mailadres</button>',true);
       document.getElementById("gr").onclick=()=>loginForm(undefined,mode);
       document.getElementById("gf2").onsubmit=async ev=>{
         ev.preventDefault();
@@ -1250,7 +1258,7 @@ async function startSupabase(){
   };
   const signupForm=()=>new Promise(res=>{
     track("Aanmelden: naamscherm getoond");
-    show(botHtml("signup-naam")+'<form id="gs1"><input id="sf" required maxlength="40" autocomplete="given-name" placeholder="Voornaam" aria-label="Voornaam"><input id="sl" required maxlength="60" autocomplete="family-name" placeholder="Achternaam" aria-label="Achternaam"><p class="gh">Je krijgt automatisch een rugnummer toegewezen. Heb je al een eigen BEAT rugnummer? Vul die dan in. De jury doet een check, en wijst deze aan je toe als dat correct is.</p><input id="sn" inputmode="numeric" maxlength="4" placeholder="Rugnummer (optioneel)" aria-label="Rugnummer, optioneel"><button id="sbtn">Aanmelden</button><p class="gh gi">Aanmelden is gratis. Ook voor niet-BEAT leden. Geen addertjes onder het gras.</p></form><div class="gx" id="sx"></div><button class="gs" id="slo">Uitloggen</button>',true);
+    show(botHtml("signup-naam")+'<form id="gs1"><input id="sf" required maxlength="40" autocomplete="given-name" placeholder="Voornaam" aria-label="Voornaam"><input id="sl" required maxlength="60" autocomplete="family-name" placeholder="Achternaam" aria-label="Achternaam"><p class="gh">Je krijgt automatisch een rugnummer toegewezen. Heb je al een eigen BEAT rugnummer? Vul die dan in. De jury doet een check, en wijst deze aan je toe als dat correct is.</p><input id="sn" inputmode="numeric" maxlength="4" placeholder="Rugnummer (optioneel)" aria-label="Rugnummer, optioneel"><button id="sbtn">Aanmelden</button><p class="gh gi">Aanmelden is gratis. Ook voor niet-BEAT leden. Geen addertjes onder het gras.</p></form><div class="gx" id="sx"></div><button class="g7s" id="slo">Uitloggen</button>',true);
     document.getElementById("slo").onclick=logout;
     document.getElementById("gs1").onsubmit=async ev=>{
       ev.preventDefault();
@@ -1264,7 +1272,7 @@ async function startSupabase(){
       res(r.data);
     };
   });
-  const stop=(html,pl)=>{show((pl?botHtml(pl):"")+html+'<button id="g1">Opnieuw controleren</button><button class="gs" id="g2">Uitloggen</button>',!!pl);document.getElementById("g1").onclick=()=>location.reload();document.getElementById("g2").onclick=logout;return new Promise(()=>{})};
+  const stop=(html,pl)=>{show((pl?botHtml(pl):"")+html+'<button id="g1">Opnieuw controleren</button><button class="g7s" id="g2">Uitloggen</button>',!!pl);document.getElementById("g1").onclick=()=>location.reload();document.getElementById("g2").onclick=logout;return new Promise(()=>{})};
   let hashErr="";
   try{const hp=new URLSearchParams(HASH0.replace(/^#/,""));
     if(hp.get("error")||hp.get("error_code")){
@@ -1372,7 +1380,7 @@ async function startSupabase(){
   });
 }
 
-try{await startSupabase()}catch(e){console.error("Koppeling met de database mislukt",e);const g=document.getElementById("gate");if(g&&!document.body.classList.contains("in"))g.innerHTML='<div class="gc"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1><p>Geen verbinding met de database. Ververs de pagina om het opnieuw te proberen.</p></div>'}
+try{await startSupabase()}catch(e){console.error("Koppeling met de database mislukt",e);const g=document.getElementById("gate");if(g&&!document.body.classList.contains("in"))g.innerHTML='<div class="gc"><div class="g7l">B</div><h1>BEAT <span>Every Day</span></h1><p>Geen verbinding met de database. Ververs de pagina om het opnieuw te proberen.</p></div>'}
 </script>
 </body>
 </html>
