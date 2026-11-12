@@ -412,7 +412,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .feed .fcg small{display:block;font:700 9.5px/1.2 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
 .feed .fcg .g7p{position:relative;flex:1;min-height:64px;margin-top:8px}
 .feed .fcg svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;cursor:pointer}
-.feed .fcg rect{fill:#73CFC1;fill-opacity:.5}.feed .fcg rect.k2{fill:#246F65;fill-opacity:.4}.feed .fcg rect.k3{fill:#E5392D;fill-opacity:.45}
+.feed .fcg rect{fill:var(--k1);fill-opacity:var(--o1)}.feed .fcg rect.k2{fill:var(--k2);fill-opacity:var(--o2)}.feed .fcg rect.k3{fill:var(--k3);fill-opacity:var(--o3)}
 .feed .fcg line{stroke:var(--mute);stroke-width:1.2;stroke-dasharray:4 3;vector-effect:non-scaling-stroke;pointer-events:none}
 .feed .fcg .g7g.g7m{left:auto;right:0}.g7g{position:absolute;left:0;font:700 10px/1 "JetBrains Mono",monospace;color:var(--mute);pointer-events:none}
 .feed .fcg .g7l{display:grid;grid-template-columns:repeat(7,1fr);margin-top:4px}
@@ -430,10 +430,13 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .feed .plb:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
 .feed .plf{margin-top:8px;font-size:12px;font-weight:600;color:var(--mute)}
 /* Kleuren per afstand: 0-49 BEAT Mint, 50-99 Deep Petrol, 100+ BEAT Red (zachte tinten in de tegels, volle kleur in de staven) */
-.feed .fc.t1 .fcp{background:#e1f4f1}.feed .fc.t2 .fcp{background:#dcebe8}.feed .fc.t3 .fcp{background:#fce5e2}
-.feed .fc.t1 .fcp small{color:#2a7a74;opacity:.75}.feed .fc.t1 .fcp b{color:#2a7a74}
-.feed .fc.t2 .fcp small{color:#246F65;opacity:.8}.feed .fc.t2 .fcp b{color:#246F65}
-.feed .fc.t3 .fcp small{color:#E5392D;opacity:.8}.feed .fc.t3 .fcp b{color:#D32F24}
+.feed .fc.t1 .fcp{background:var(--tb1)}.feed .fc.t2 .fcp{background:var(--tb2)}.feed .fc.t3 .fcp{background:var(--tb3)}
+.feed .fc.t1 .fcp small,.feed .fc.t1 .fcp b{color:var(--tt1)}.feed .fc.t2 .fcp small,.feed .fc.t2 .fcp b{color:var(--tt2)}.feed .fc.t3 .fcp small,.feed .fc.t3 .fcp b{color:var(--tt3)}
+.feed .fc .fcp small{opacity:.8}
+.flg i.lg1{background:var(--k1);opacity:var(--o1)}.flg i.lg2{background:var(--k2);opacity:var(--o2)}.flg i.lg3{background:var(--k3);opacity:var(--o3)}
+:root{--k1:#73CFC1;--k2:#246F65;--k3:#E5392D;--o1:.5;--o2:.4;--o3:.45;--tb1:#e1f4f1;--tb2:#dcebe8;--tb3:#fce5e2;--tt1:#2a7a74;--tt2:#246F65;--tt3:#D32F24}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--k1:#A6EBE0;--k2:#2E9484;--k3:#F0574A;--o1:.9;--o2:.9;--o3:.9;--tb1:#17403d;--tb2:#1a3a3a;--tb3:#46201f;--tt1:#b5efe6;--tt2:#4fb3a3;--tt3:#ff8f84}}
+:root[data-theme="dark"]{--k1:#A6EBE0;--k2:#2E9484;--k3:#F0574A;--o1:.9;--o2:.9;--o3:.9;--tb1:#17403d;--tb2:#1a3a3a;--tb3:#46201f;--tt1:#b5efe6;--tt2:#4fb3a3;--tt3:#ff8f84}
 .feed .fleg{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}.feed .flg{display:inline-flex;align-items:center;gap:6px}.feed .flg i{width:12px;height:12px;border-radius:3px;display:inline-block}
 </style>
 <!-- Omgeving: staging = het mapadres begint met /staging (testomgeving, niet indexeren) -->
@@ -539,7 +542,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   <section class="card mapc"><div id="mapw"></div><div class="mapcap" id="mapcap"></div><div class="meting" id="meta"></div></section>
 </div>
 <div class="feed">
-  <section class="card tb"><h1>BED <em>BEATS Feed <svg class="hb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="hb0" d="M22 12h-4l-3 9L9 3l-3 9H2" pathLength="100"/><path class="hb1" d="M22 12h-4l-3 9L9 3l-3 9H2" pathLength="100"/></svg></em></h1><div class="fsub fleg">Legenda <span class="flg"><i style="background:#73CFC1;opacity:.5"></i>0-49 km</span><span class="flg"><i style="background:#246F65;opacity:.4"></i>50-99 km</span><span class="flg"><i style="background:#E5392D;opacity:.45"></i>100 km of meer</span></div></section>
+  <section class="card tb"><h1>BED <em>BEATS Feed <svg class="hb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="hb0" d="M22 12h-4l-3 9L9 3l-3 9H2" pathLength="100"/><path class="hb1" d="M22 12h-4l-3 9L9 3l-3 9H2" pathLength="100"/></svg></em></h1><div class="fsub fleg">Legenda <span class="flg"><i class="lg1"></i>0-49 km</span><span class="flg"><i class="lg2"></i>50-99 km</span><span class="flg"><i class="lg3"></i>100 km of meer</span></div></section>
   <div id="feedl"></div>
   <button class="fm" id="feedmore" hidden>Toon eerdere BEATS</button>
 </div>
