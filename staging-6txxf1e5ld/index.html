@@ -439,6 +439,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 :root[data-theme="dark"]{--k1:#A6EBE0;--k2:#2E9484;--k3:#F0574A;--o1:.9;--o2:.9;--o3:.9;--tb1:rgba(166,235,224,.9);--tb2:rgba(46,148,132,.9);--tb3:rgba(240,87,74,.9);--tt1:#0b2a27;--tt2:#fff;--tt3:#fff}
 .feed .fleg{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}.feed .flg{display:inline-flex;align-items:center;gap:6px}.feed .flg i{width:12px;height:12px;border-radius:3px;display:inline-block}
 @media (min-width:1100px){.feed .fcw{flex-wrap:nowrap}.feed .fcl{flex:0 0 440px}.feed .fcg{flex:1 1 0;min-width:260px}}
+.feed .fcf{display:flex;justify-content:flex-end;margin-top:8px}.feed .fcf .fin{margin:0}
 </style>
 <!-- Omgeving: staging = het mapadres begint met /staging (testomgeving, niet indexeren) -->
 <script>
@@ -771,6 +772,7 @@ function beatRow(key){if(!key)return"";if(!BEATS.ok)return BEATS.err?`<div class
 async function beatToggle(key){const me=window.__me;if(!me||!window.__beatSet)return;const a=(BEATS.m.get(key)||[]).slice(),on=!a.includes(me),old=a.slice();
   if(on)a.push(me);else a.splice(a.indexOf(me),1);BEATS.m.set(key,a);renderFeed();
   try{await window.__beatSet(key,on);track("BEAT gegeven",{op:on?"geef":"terug"})}catch(e){BEATS.m.set(key,old);renderFeed();const t=document.createElement("div");t.className="stg";t.textContent="Je BEAT kon niet worden opgeslagen.";document.body.appendChild(t);setTimeout(()=>t.remove(),3500)}}
+const FIN=new Map(),fm0=k=>FIN.get(k);
 function feedItems(){
   const E=eff(),per=new Map(),rideTs=new Map(),items=[];
   ENT.forEach(r=>{const k=r[1]+"|"+r[0];if((r[10]||0)>(rideTs.get(k)||0))rideTs.set(k,r[10])});
@@ -779,12 +781,12 @@ function feedItems(){
   const ds=[];for(let d=new Date(BSTART+"T12:00:00Z");;d.setUTCDate(d.getUTCDate()+1)){const s=d.toISOString().slice(0,10);if(s>last)break;ds.push(s)}
   const evT=(name,s)=>{const t=rideTs.get(name+"|"+s);return t?{ts:t+1,tm:true}:{ts:new Date(s+"T23:59:00").getTime(),tm:false}};
   const AVS=[["m","trots"],["v","motiv"],["v","trots"],["v","eigen"],["m","zorg"],["v","zorg"]],pk=k=>{let h=0;for(const c of k)h=(h*31+c.charCodeAt(0))>>>0;const a=AVS[h%AVS.length];return {sex:a[0],mood:a[1]}};
-  const dp=[];
+  const dp=[];FIN.clear();
   per.forEach((m,name)=>{let mon="",cum=0,run=CARRY[name]||0,mx0=0,ann=false;for(const s of ds){const v=m.get(s)||0;if(s.slice(0,7)!==mon){mon=s.slice(0,7);cum=0}
     if(Math.round(v*100)/100>=25){run++;if(!ann&&mx0>0&&run>mx0&&run>=7){ann=true;if(s>=START)items.push({k:"ev",key:"str|"+name+"|"+s,d:s,...evT(name,s),sex:"m",mood:"trots",h:`Wow <b>${esc(name)}</b> zet een nieuwe maximale streak neer van ${nl(run)} dagen. Nu kijken hoe lang dit doorgaat... 👊`})}}else if(s!==today()){if(run>mx0)mx0=run;run=0;ann=false}
     const before=cum;cum+=v;
     if(v>0&&s>=START)dp.push({s,name,v});
-    if(s>=START){const need=new Date(+s.slice(0,4),+s.slice(5,7),0).getDate()*25;if(before<need&&cum>=need)items.push({k:"ev",key:"fin|"+name+"|"+s.slice(0,7),...evT(name,s),d:s,...pk(name+s),h:`<b>${esc(name)}</b> is finisher van ${mNaam(s)}! ${nl(need)} km gehaald. 🏁`})}}});
+    if(s>=START){const need=new Date(+s.slice(0,4),+s.slice(5,7),0).getDate()*25;if(before<need&&cum>=need)FIN.set(name+"|"+s,mNaam(s))}}});
   const rec={};dp.map(o=>({...o,...evT(o.name,o.s)})).sort((a,b)=>a.ts-b.ts).forEach(o=>{const mo=o.s.slice(0,7),p=rec[mo];if(p&&o.v>p.v)items.push({k:"ev",key:"rec|"+o.name+"|"+o.s,d:o.s,ts:o.ts,tm:o.tm,...pk(o.name+o.s),h:`Nieuw maandrecord! <b>${esc(o.name)}</b> verbreekt het record langste dag van ${mNaam(o.s)} met ${nl(Math.round(o.v*10)/10)} km. Het oude maandrecord was ${nl(Math.round(p.v*10)/10)} km${p.name===o.name?", ook van "+esc(p.name):" van "+esc(p.name)} 🔥`});if(!p||o.v>p.v)rec[mo]={v:o.v,name:o.name}});
   ENT.forEach(r=>{if(r[12]!==false&&r[10]&&r[0]>=START)items.push({k:"ride",ts:r[10],tm:true,r})});
   items.push({k:"ev",key:"man|20261103a",d:"2026-11-03",ts:new Date("2026-11-03T09:00:00").getTime(),tm:false,sex:"m",mood:"strat",h:"November. Inmiddels 14 renners in koers. Ik reken het goed 😁"});
@@ -895,7 +897,7 @@ document.addEventListener("click",async e=>{
 });
 function renderFeed(){
   const el=$("feedl");if(!el)return;BEATS.shown=1;beatsLoad();const F=feedItems(),fn=v=>nl(Math.round(v*10)/10),mk=(l,v)=>`<div class="fcp"><small>${l}</small><b>${v}</b></div>`;
-  const cnt=new Map();ENT.forEach(r=>{const k=r[1]+"|"+r[0];cnt.set(k,(cnt.get(k)||0)+1)});
+  const cnt=new Map(),lastT=new Map();ENT.forEach(r=>{const k=r[1]+"|"+r[0];cnt.set(k,(cnt.get(k)||0)+1);if(r[12]!==false&&r[10]&&r[10]>(lastT.get(k)||0))lastT.set(k,r[10])});
   const sh=F.items.slice(0,feedN);
   el.innerHTML=sh.length?sh.map(o=>{
     if(o.k==="ev")return `<div class="fb">${window.__botCard?window.__botCard(o.sex,o.mood,o.h):""}<div class="fct">${fDate(o.d)}</div>${beatRow(o.key||"auto|"+o.d+"|"+[...String(o.h)].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7))}</div>`;
@@ -905,7 +907,7 @@ function renderFeed(){
     const pm=F.per.get(r[1])||new Map(),ds=[6,5,4,3,2,1,0].map(o=>weekDay(r[0],o)),vs=ds.map(d=>pm.get(d)||0),wk=vs.reduce((a,b)=>a+b,0),av=wk/7,mx=Math.max(...vs,av,1);
     const GL=25,mx2=Math.max(...vs,GL,1),H=56,bh=v=>Math.max(2,v/mx2*H),gy=64-GL/mx2*H,mxv=Math.max(...vs,0),my=64-bh(mxv),act=vs.filter(v=>v>0).length,wl=d=>["Z","M","D","W","D","V","Z"][new Date(d+"T12:00:00Z").getUTCDay()];
     const cg=`<div class="fcg" role="img" aria-label="Kilometers van de laatste 7 dagen: ${fn(wk)} km in totaal, gemiddeld ${fn(av)} km per dag, op ${act} van de 7 dagen gereden"><small class="g7t" data-w="Laatste 7 dagen">Laatste 7 dagen</small><div class="g7p"><svg viewBox="0 0 70 64" preserveAspectRatio="none" aria-hidden="true">${vs.map((v,i)=>`<rect class="${v>=100?"k3":v>=50?"k2":"k1"}" x="${i*10+1.5}" y="${(64-bh(v)).toFixed(1)}" width="7" height="${bh(v).toFixed(1)}" rx="1.5" data-t="${esc(weekLbl(ds[i]))} · ${fn(v)} km"><title>${esc(weekLbl(ds[i]))} · ${fn(v)} km</title></rect>`).join("")}<line x1="0" x2="70" y1="${gy.toFixed(1)}" y2="${gy.toFixed(1)}"><title>Doel: ${GL} km per dag</title></line>${mxv>0&&mxv!==GL?`<line x1="0" x2="70" y1="${my.toFixed(1)}" y2="${my.toFixed(1)}"><title>Hoogste dag: ${fn(mxv)} km</title></line>`:""}</svg><span class="g7g g7m" style="top:calc(${(gy/64*100).toFixed(1)}% ${(mxv>0&&mxv!==GL&&gy<my&&(my-gy)<14)||false?"- 13px":(mxv>0&&mxv!==GL&&gy>my&&(gy-my)<14)?"+ 3px":"- 13px"})">${GL} km</span>${mxv>0&&mxv!==GL?`<span class="g7g g7m" style="top:calc(${(my/64*100).toFixed(1)}% ${my>gy&&(my-gy)<14?"+ 3px":"- 13px"})">${fn(mxv)} km</span>`:""}</div><div class="g7l">${ds.map((d,i)=>`<span class="${i===6?"td":""}">${wl(d)}</span>`).join("")}</div><div class="g7s"><span><b>${nl(Math.round(av))}</b> km/dag</span><span><b>${act}/7</b> actief</span><span><b>${nl(Math.round(wk))}</b> totaal</span></div></div>`;
-    return `<article class="fc t${r[6]>=100?3:r[6]>=50?2:1}"><div class="fcw"><div class="fcl"><div class="fch"><div class="fbib" title="Rugnummer"><div class="tp">${BEATLOGO}</div><b style="font-size:${(rugnr(r[1])||"").length>4?15:(rugnr(r[1])||"").length>3?18:22}px">${esc(rugnr(r[1])||r[1].charAt(0))}</b></div><div><div><span class="fcn">${esc(r[1])}</span></div><div class="fct">${fDate(r[0])}</div></div></div>${r[11]?`<div class="fcr">${esc(r[11])}</div>`:''}<div class="fcc">${ch}${r[6]>=100?'<div class="fcx">Century Crack!</div>':""}</div><div class="fcd">Dagtotaal ${fn(tot)} km · ${n} ${n===1?"rit":"ritten"}</div></div>${cg}</div>${r[6]>=100?beatRow("cc|"+r[1]+"|"+r[0]+"|"+r[10]):""}</article>`}).join(""):'<section class="card"><div class="fz">Nog geen BEATS. Voeg een rit toe en jij staat bovenaan!</div></section>';
+    return `<article class="fc t${r[6]>=100?3:r[6]>=50?2:1}"><div class="fcw"><div class="fcl"><div class="fch"><div class="fbib" title="Rugnummer"><div class="tp">${BEATLOGO}</div><b style="font-size:${(rugnr(r[1])||"").length>4?15:(rugnr(r[1])||"").length>3?18:22}px">${esc(rugnr(r[1])||r[1].charAt(0))}</b></div><div><div><span class="fcn">${esc(r[1])}</span></div><div class="fct">${fDate(r[0])}</div></div></div>${r[11]?`<div class="fcr">${esc(r[11])}</div>`:''}<div class="fcc">${ch}${r[6]>=100?'<div class="fcx">Century Crack!</div>':""}</div><div class="fcd">Dagtotaal ${fn(tot)} km · ${n} ${n===1?"rit":"ritten"}</div></div>${cg}</div>${(()=>{const fk=r[1]+"|"+r[0],fm=FIN.get(fk)&&lastT.get(fk)===r[10]?fm0(fk):"";return (fm?`<div class="fcf"><span class="fin">FINISHER ${esc(fm.toUpperCase())} 🔥</span></div>`:"")+(r[6]>=100?beatRow("cc|"+r[1]+"|"+r[0]+"|"+r[10]):fm?beatRow("fin|"+r[1]+"|"+r[0].slice(0,7)):"")})()}</article>`}).join(""):'<section class="card"><div class="fz">Nog geen BEATS. Voeg een rit toe en jij staat bovenaan!</div></section>';
   $("feedmore").hidden=F.items.length<=feedN;
 }
 let syncOn=false;
