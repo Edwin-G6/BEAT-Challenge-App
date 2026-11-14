@@ -51,6 +51,11 @@ h2{margin:0 0 14px;font-size:20px;font-weight:900;font-style:italic;letter-spaci
 .foot{margin:18px 4px;text-align:center;font-size:12px;color:var(--mute)}
 .foot{margin:22px 0 8px}.btn{display:block;max-width:420px;margin:0 auto;padding:15px 22px;border-radius:16px;background:var(--dt);color:#fff;font-weight:800;font-size:15px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;box-shadow:0 6px 14px rgba(42,122,116,.25)}.btn:hover{filter:brightness(1.08)}.btn:focus-visible{outline:3px solid var(--tq);outline-offset:2px}@media (prefers-color-scheme:dark){.btn{color:#06201e}}
 @media (max-width:420px){.grid{gap:5px}.d{min-height:54px;border-radius:10px}.d i{font-size:12px}.card{padding:18px 14px}}
+.yc{display:flex;gap:4px;align-items:flex-end;height:190px}.yb{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;height:100%}.yb em{font:700 9px/1 "JetBrains Mono",monospace;color:var(--mute);font-style:normal;height:12px;white-space:nowrap}.ys{flex:1;width:100%;display:flex;align-items:flex-end}.yst{width:100%;display:flex;flex-direction:column-reverse;border-radius:5px 5px 2px 2px;overflow:hidden;min-height:0}.yst i{display:block;min-height:2px}.yb span{margin-top:6px;font:700 11px/1 "JetBrains Mono",monospace;color:var(--mute)}
+.c1{background:var(--c1)}.c2{background:var(--c2)}.c3{background:var(--c3)}.c4{background:var(--c4)}.yl{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:14px;font:700 11px/1 "JetBrains Mono",monospace;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}.yl span{display:inline-flex;align-items:center;gap:6px}.yl i{width:12px;height:12px;border-radius:3px;display:inline-block}
+:root{--yrbg:#2a7a74;--yrfg:#fff;--c1:#246F65;--c2:#73CFC1;--c3:#F2B84B;--c4:#8794a6}@media (prefers-color-scheme:dark){:root{--yrbg:#2a7a74;--yrfg:#fff;--c1:#3FA596;--c2:#A6EBE0;--c3:#F2B84B;--c4:#9fb1c4}}
+.k .v i,.k .yr i{display:block;font:700 9px/1 "JetBrains Mono",monospace;font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-bottom:3px}.k{overflow:hidden}.k:not(.wide){display:flex;flex-direction:column}.k:not(.wide)>.x,.k:not(.wide)>.v{margin-bottom:12px}.k .yr .x{margin-top:6px}.k .yr{min-height:76px;box-sizing:border-box;margin:auto -12px -14px;padding:10px 12px 12px;background:var(--yrbg);color:var(--yrfg);font:700 14px/1.1 "JetBrains Mono",monospace}.k .yr small{font-size:10px;color:var(--yrfg);opacity:.8;margin-left:3px}.k .yr i{color:var(--yrfg);opacity:.8}.k .yr .x{color:var(--yrfg)}.k.wide .yr{display:none}
+.k .l,.ch{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -113,20 +118,41 @@ function monthData(ym){
 }
 function go(n){if(!READY)return;const t=ymAdd(VIEW,n);if(t<minMonth()||t>D0.month)return;VIEW=t;render(monthData(VIEW));const b=$(n<0?"pm":"nm");if(b&&!b.disabled)b.focus();else{const o=$(n<0?"nm":"pm");if(o)o.focus()}}
 function msg(t){$("app").innerHTML='<div class="card msg">'+esc(t)+'</div>'}
-function cats(d,best,m){
+/* Jaartotalen uit RIT (pas volledig als alle ritten geladen zijn) */
+function yearData(y){
+  if(!READY)return null;
+  const today=todayNL(),M=Array.from({length:12},()=>({out:0,in:0,city:0,el:0})),T={out:0,in:0,city:0,el:0,hm:0},B={km:0,d:""};let g25=0;
+  RIT.forEach((x,d)=>{if(d.slice(0,4)!==y)return;const m=M[+d.slice(5,7)-1];m.out+=x.out;m.in+=x.in;m.city+=x.city;m.el+=x.el;T.out+=x.out;T.in+=x.in;T.city+=x.city;T.el+=x.el;T.hm+=x.hm;const k=Math.round(x.km*100)/100;if(k>=25)g25++;if(k>B.km){B.km=k;B.d=d}});
+  const end=today<y+"-12-31"?today:y+"-12-31",gone=Math.round((new Date(end+"T12:00:00Z")-new Date(y+"-01-01T12:00:00Z"))/864e5)+1;
+  return {M,T,B,g25,gone,tot:T.out+T.in+T.city+T.el,y};
+}
+/* Tegel met twee getallen: grote regel = gekozen maand, kleine regel = jaar */
+const tile2=(l,v1,u,v2,x1,x2,cls,u2)=>'<div class="k'+(cls?" "+cls:"")+'"><div class="l">'+l+'</div><div class="v"><i>'+(tile2.m||"")+'</i>'+v1+'<small>'+u+'</small></div>'+(x1?'<div class="x">'+x1+'</div>':'')+'<div class="yr"><i>'+(tile2.y||"")+'</i>'+v2+(v2!=="…"&&(u2||u)?'<small>'+(u2||u)+'</small>':"")+(x2?'<div class="x">'+x2+'</div>':'')+'</div></div>';
+function cats(d,best,m,Y){
   const t=d.tot;if(!t)return"";
-  const c=(l,v,u,x)=>'<div class="k"><div class="l">'+l+'</div><div class="v">'+v+'<small>'+u+'</small></div>'+(x?'<div class="x">'+x+'</div>':'')+'</div>';
+  const T=Y&&Y.T,dl=x=>x&&x.km>0?(+x.d.slice(8))+" "+MAANDEN[+x.d.slice(5,7)-1]:"";
+  const q=v=>Y?v:"…";
   return '<h2 class="ch">Totaal per categorie</h2><div class="cat">'+
-    c("Road Warrior",fmt(t.out),"km")+c("Zwift Warrior",fmt(t.in),"km")+c("Stadsfietsbeuker",fmt(t.city),"km")+c("eBike",fmt(t.el),"km")+
-    c("Bergbaas",Math.round(t.hm).toLocaleString("nl-NL"),"m")+
-    c("Langste dag",fmt(best.km),"km",best.km>0?(+best.d.slice(8))+" "+MAANDEN[m-1]:"")+'</div>';
+    tile2("Road Warrior",fmt(t.out),"km",q(T&&fmt(T.out)))+tile2("Zwift Warrior",fmt(t.in),"km",q(T&&fmt(T.in)))+tile2("Stadsfietsbeuker",fmt(t.city),"km",q(T&&fmt(T.city)))+tile2("eBike",fmt(t.el),"km",q(T&&fmt(T.el)))+
+    tile2("Bergbaas",Math.round(t.hm).toLocaleString("nl-NL"),"m",q(T&&Math.round(T.hm).toLocaleString("nl-NL")))+
+    tile2("Langste dag",fmt(best.km),"km",q(Y&&fmt(Y.B.km)),best.km>0?(+best.d.slice(8))+" "+MAANDEN[m-1]:"",Y?dl(Y.B):"")+'</div>';
+}
+/* Grafiek: km per maand van het jaar, gestapeld per categorie */
+function chartCard(Y){
+  if(!Y)return"";
+  const {M,y}=Y,fmtk=v=>v<=0?"":v>=1000?(Math.round(v/100)/10).toLocaleString("nl-NL")+"k":String(Math.round(v));
+  const mt=M.map(m=>m.out+m.in+m.city+m.el),mx=Math.max(...mt,1);
+  const bars=M.map((m,i)=>{const t=mt[i],seg=[["out","c1","Road Warrior"],["in","c2","Zwift Warrior"],["city","c3","Stadsfietsbeuker"],["el","c4","eBike"]].filter(s=>m[s[0]]>0).map(s=>'<i class="'+s[1]+'" style="flex:'+m[s[0]]+' 1 0" title="'+s[2]+': '+fmt(m[s[0]])+' km"></i>').join("");
+    return '<div class="yb" role="img" aria-label="'+MAANDEN[i]+': '+fmt(t)+' km"><em>'+fmtk(t)+'</em><div class="ys"><div class="yst" style="height:'+(t/mx*100)+'%">'+seg+'</div></div><span>'+MAANDEN[i][0].toUpperCase()+'</span></div>'}).join("");
+  return '<h2 class="ch">Kilometers per maand '+y+'</h2><div class="yc">'+bars+'</div><div class="yl"><span><i class="c1"></i>Road</span><span><i class="c2"></i>Zwift</span><span><i class="c3"></i>Stad</span><span><i class="c4"></i>eBike</span></div>';
 }
 function render(d){
   const [y,m]=d.month.split("-").map(Number),today=todayNL();
   const days=d.days,total=days.reduce((s,x)=>s+x.km,0);
   const gone=days.filter(x=>x.d<=today),ok=gone.filter(x=>x.km>=25).length;
   const best=gone.reduce((b,x)=>x.km>b.km?x:b,{km:0,d:""});
-  const first=(new Date(y,m-1,1).getDay()+6)%7,isCur=d.month===D0.month;
+  const first=(new Date(y,m-1,1).getDay()+6)%7,isCur=d.month===D0.month,Y=yearData(String(y));
+  tile2.y=String(y);tile2.m=MAANDEN[m-1].slice(0,3);
   document.title=d.name+" | BEAT Every Day";
   let cells=["ma","di","wo","do","vr","za","zo"].map(w=>'<div class="wd">'+w+'</div>').join("")+'<div class="d e"></div>'.repeat(first);
   days.forEach(x=>{
@@ -138,10 +164,10 @@ function render(d){
   $("app").innerHTML=
    (d.own_private?'<div class="own">🔒 <b>Je pagina staat op privé.</b> Anderen zien alleen een melding. Jij ziet hem nog wel, omdat je bent ingelogd.</div>':'')+
    '<div class="card"><h1>'+esc(d.name)+'</h1><div class="sub">Rugnummer '+d.bib+' · '+MAANDEN[m-1]+' '+y+'</div>'+(d.is_member===true?'<div class="mem yes">BEAT-lid</div>':'')+
-   '<div class="kpi"><div class="k"><div class="l">Totaal '+(isCur?"deze maand":MAANDEN[m-1])+'</div><div class="v">'+fmt(total)+'<small>km</small></div></div>'+
-   '<div class="k"><div class="l">Dagen met 25 km of meer</div><div class="v">'+ok+'<small>/ '+gone.length+'</small></div></div>'+
-   '<div class="k wide" id="mx">'+STREAK+'</div></div>'+
-   cats(d,best,m)+'</div>'+
+   '<div class="kpi">'+tile2("Totaal",fmt(total),"km",Y?fmt(Y.tot):"…")+
+   tile2("Dagen met 25 km of meer",ok,"/ "+gone.length,Y?Y.g25:"…","","","",Y?"/ "+Y.gone:"")+
+   '<div class="k wide" id="mx">'+STREAK+'</div></div>'+chartCard(Y)+
+   cats(d,best,m,Y)+'</div>'+
    '<div class="card"><div class="mh"><h2>'+MAANDEN[m-1]+(y!==+D0.month.slice(0,4)?" "+y:"")+' dag voor dag</h2><div class="nav"><button id="pm" aria-label="Vorige maand"'+(!READY||ymAdd(d.month,-1)<minMonth()?" disabled":"")+'>‹</button><button id="nm" aria-label="Volgende maand"'+(!READY||isCur?" disabled":"")+'>›</button></div></div><div class="leg"><span class="lg">25 km of meer</span><span class="lo">minder dan 25 km</span><span class="lz">0 km</span><span class="ll">langste dag</span></div><div class="grid">'+cells+'</div></div>';
   $("pm").onclick=()=>go(-1);$("nm").onclick=()=>go(1);
 }
