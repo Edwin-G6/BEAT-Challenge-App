@@ -51,6 +51,9 @@ h2{margin:0 0 14px;font-size:20px;font-weight:900;font-style:italic;letter-spaci
 .foot{margin:18px 4px;text-align:center;font-size:12px;color:var(--mute)}
 .foot{margin:22px 0 8px}.btn{display:block;max-width:420px;margin:0 auto;padding:15px 22px;border-radius:16px;background:var(--dt);color:#fff;font-weight:800;font-size:15px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;box-shadow:0 6px 14px rgba(42,122,116,.25)}.btn:hover{filter:brightness(1.08)}.btn:focus-visible{outline:3px solid var(--tq);outline-offset:2px}@media (prefers-color-scheme:dark){.btn{color:#06201e}}
 @media (max-width:420px){.grid{gap:5px}.d{min-height:54px;border-radius:10px}.d i{font-size:12px}.card{padding:18px 14px}}
+.yc{display:flex;gap:4px;align-items:flex-end;height:190px}.yb{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;height:100%}.yb em{font:700 9px/1 "JetBrains Mono",monospace;color:var(--mute);font-style:normal;height:12px;white-space:nowrap}.ys{flex:1;width:100%;display:flex;align-items:flex-end}.yst{width:100%;display:flex;flex-direction:column-reverse;border-radius:5px 5px 2px 2px;overflow:hidden;min-height:0}.yst i{display:block;min-height:2px}.yb span{margin-top:6px;font:700 11px/1 "JetBrains Mono",monospace;color:var(--mute)}
+.c1{background:var(--c1)}.c2{background:var(--c2)}.c3{background:var(--c3)}.c4{background:var(--c4)}.yl{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:14px;font:700 11px/1 "JetBrains Mono",monospace;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}.yl span{display:inline-flex;align-items:center;gap:6px}.yl i{width:12px;height:12px;border-radius:3px;display:inline-block}
+:root{--c1:#246F65;--c2:#73CFC1;--c3:#F2B84B;--c4:#8794a6}@media (prefers-color-scheme:dark){:root{--c1:#3FA596;--c2:#A6EBE0;--c3:#F2B84B;--c4:#9fb1c4}}
 </style>
 </head>
 <body>
@@ -121,6 +124,21 @@ function cats(d,best,m){
     c("Bergbaas",Math.round(t.hm).toLocaleString("nl-NL"),"m")+
     c("Langste dag",fmt(best.km),"km",best.km>0?(+best.d.slice(8))+" "+MAANDEN[m-1]:"")+'</div>';
 }
+/* Jaartotalen + grafiek met km per maand (gestapeld per categorie), uit RIT; pas zichtbaar als alle ritten geladen zijn */
+function yearCard(){
+  if(!READY)return"";
+  const y=D0.month.slice(0,4),today=todayNL(),M=Array.from({length:12},()=>({out:0,in:0,city:0,el:0})),T={out:0,in:0,city:0,el:0,hm:0},B={km:0,d:""};let g25=0;
+  RIT.forEach((x,d)=>{if(d.slice(0,4)!==y)return;const m=M[+d.slice(5,7)-1];m.out+=x.out;m.in+=x.in;m.city+=x.city;m.el+=x.el;T.out+=x.out;T.in+=x.in;T.city+=x.city;T.el+=x.el;T.hm+=x.hm;const k=Math.round(x.km*100)/100;if(k>=25)g25++;if(k>B.km){B.km=k;B.d=d}});
+  const tot=T.out+T.in+T.city+T.el,gone=Math.round((new Date(today+"T12:00:00Z")-new Date(y+"-01-01T12:00:00Z"))/864e5)+1;
+  const c=(l,v,u,x)=>'<div class="k"><div class="l">'+l+'</div><div class="v">'+v+'<small>'+u+'</small></div>'+(x?'<div class="x">'+x+'</div>':'')+'</div>';
+  const mt=M.map(m=>m.out+m.in+m.city+m.el),mx=Math.max(...mt,1),cur=+D0.month.slice(5,7);
+  const lab=v=>v<=0?"":v>=1000?(Math.round(v/100)/10).toLocaleString("nl-NL")+"k":String(Math.round(v));
+  const bars=M.map((m,i)=>{const t=mt[i],seg=[["out","c1","Road Warrior"],["in","c2","Zwift Warrior"],["city","c3","Stadsfietsbeuker"],["el","c4","eBike"]].filter(s=>m[s[0]]>0).map(s=>'<i class="'+s[1]+'" style="flex:'+m[s[0]]+' 1 0" title="'+s[2]+': '+fmt(m[s[0]])+' km"></i>').join("");
+    return '<div class="yb" role="img" aria-label="'+MAANDEN[i]+': '+fmt(t)+' km"><em>'+lab(t)+'</em><div class="ys"><div class="yst" style="height:'+(t/mx*100)+'%">'+seg+'</div></div><span>'+MAANDEN[i][0].toUpperCase()+'</span></div>'}).join("");
+  return '<div class="card"><h2 class="ch" style="margin-top:0">Jaartotaal '+y+'</h2><div class="kpi"><div class="k"><div class="l">Totaal dit jaar</div><div class="v">'+fmt(tot)+'<small>km</small></div></div><div class="k"><div class="l">Dagen met 25 km of meer</div><div class="v">'+g25+'<small>/ '+gone+'</small></div></div></div>'+
+   '<div class="cat" style="margin-top:12px">'+c("Road Warrior",fmt(T.out),"km")+c("Zwift Warrior",fmt(T.in),"km")+c("Stadsfietsbeuker",fmt(T.city),"km")+c("eBike",fmt(T.el),"km")+c("Bergbaas",Math.round(T.hm).toLocaleString("nl-NL"),"m")+c("Langste dag",fmt(B.km),"km",B.km>0?(+B.d.slice(8))+" "+MAANDEN[+B.d.slice(5,7)-1]:"")+'</div>'+
+   '<h2 class="ch">Kilometers per maand</h2><div class="yc">'+bars+'</div><div class="yl"><span><i class="c1"></i>Road</span><span><i class="c2"></i>Zwift</span><span><i class="c3"></i>Stad</span><span><i class="c4"></i>eBike</span></div></div>';
+}
 function render(d){
   const [y,m]=d.month.split("-").map(Number),today=todayNL();
   const days=d.days,total=days.reduce((s,x)=>s+x.km,0);
@@ -142,7 +160,7 @@ function render(d){
    '<div class="k"><div class="l">Dagen met 25 km of meer</div><div class="v">'+ok+'<small>/ '+gone.length+'</small></div></div>'+
    '<div class="k wide" id="mx">'+STREAK+'</div></div>'+
    cats(d,best,m)+'</div>'+
-   '<div class="card"><div class="mh"><h2>'+MAANDEN[m-1]+(y!==+D0.month.slice(0,4)?" "+y:"")+' dag voor dag</h2><div class="nav"><button id="pm" aria-label="Vorige maand"'+(!READY||ymAdd(d.month,-1)<minMonth()?" disabled":"")+'>‹</button><button id="nm" aria-label="Volgende maand"'+(!READY||isCur?" disabled":"")+'>›</button></div></div><div class="leg"><span class="lg">25 km of meer</span><span class="lo">minder dan 25 km</span><span class="lz">0 km</span><span class="ll">langste dag</span></div><div class="grid">'+cells+'</div></div>';
+   '<div class="card"><div class="mh"><h2>'+MAANDEN[m-1]+(y!==+D0.month.slice(0,4)?" "+y:"")+' dag voor dag</h2><div class="nav"><button id="pm" aria-label="Vorige maand"'+(!READY||ymAdd(d.month,-1)<minMonth()?" disabled":"")+'>‹</button><button id="nm" aria-label="Volgende maand"'+(!READY||isCur?" disabled":"")+'>›</button></div></div><div class="leg"><span class="lg">25 km of meer</span><span class="lo">minder dan 25 km</span><span class="lz">0 km</span><span class="ll">langste dag</span></div><div class="grid">'+cells+'</div></div>'+yearCard();
   $("pm").onclick=()=>go(-1);$("nm").onclick=()=>go(1);
 }
 (async()=>{
