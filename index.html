@@ -442,6 +442,9 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .feed .fcf{display:flex;justify-content:flex-start;margin:0 0 8px}.feed .fcf .fin{margin:0;color:var(--k3);font-size:21px;font-weight:800;letter-spacing:.06em}
 .feed .fcg small.g7t{font-weight:800}
 @media (max-width:700px){.feed .fc{display:flex;flex-direction:column}.feed .fc>.fcw{display:contents}.feed .fc>.fcf{order:0}.feed .fc .fcl{order:1}.feed .fc>.bt{order:2}.feed .fc .fcg{order:3;margin-top:10px;flex:0 0 auto;min-width:0}.feed .fc::after{order:9}.feed .fcf .fin{font-size:17px}}
+.bmc{padding:4px 2px 14px;display:flex;flex-direction:column;gap:6px}.bmcl{font-family:ui-monospace,"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+.bmcn{display:flex;gap:14px;flex-wrap:wrap}.bmcn span{display:flex;flex-direction:column;align-items:flex-start;min-width:44px}.bmcn b{font-family:ui-monospace,"JetBrains Mono",monospace;font-size:24px;line-height:1.05;font-weight:800;color:var(--dt);font-variant-numeric:tabular-nums}.bmcn small{font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.65}
+.bmcs{font-size:12px;opacity:.7}.bmct{font-size:15px}.bmct b{font-weight:800}.bmcn.bmcgo{font-size:18px;font-weight:800;color:var(--dt)}.kaart .dot.tas,#mapw .dot.tas{fill:var(--k3)}
 </style>
 <!-- Omgeving: staging = het mapadres begint met /staging (testomgeving, niet indexeren) -->
 <script>
@@ -543,7 +546,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <div class="kaart">
   <section class="card tb"><div class="mbadge">★ Members only · BEAT-leden</div><h1>BED <em>Bike Messenger</em></h1><p class="sub" style="margin:6px 0 0">Lukt het ons om één BEAT-tas door het hele BEAT peloton te laten reizen? Van renner naar renner?</p></section>
   <section class="kaartlock" id="klock"></section>
-  <section class="card mapc"><div id="mapw"></div><div class="mapcap" id="mapcap"></div><div class="meting" id="meta"></div></section>
+  <section class="card mapc"><div class="bmc" id="bmc"><div class="bmcl">De bike messenger begint over</div><div class="bmcn" id="bmcn" aria-live="off"><span><b id="bmd">--</b><small>dagen</small></span><span><b id="bmh">--</b><small>uur</small></span><span><b id="bmm">--</b><small>min</small></span><span><b id="bms">--</b><small>sec</small></span></div><div class="bmcs">Start: 1 januari 2027, 0.00 uur</div><div class="bmct">De tas is nu bij: <b>Edwin-6</b></div><div class="bmct">De tas gaat naar renner: <b>1 jan bekend</b></div></div><div id="mapw"></div><div class="mapcap" id="mapcap"></div><div class="meting" id="meta"></div></section>
 </div>
 <div class="feed">
   <section class="card tb"><h1>BED <em>BEATS Feed <svg class="hb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="hb0" d="M22 12h-4l-3 9L9 3l-3 9H2" pathLength="100"/><path class="hb1" d="M22 12h-4l-3 9L9 3l-3 9H2" pathLength="100"/></svg></em></h1><div class="fsub fleg">Legenda <span class="flg"><i class="lg1"></i>0-49 km</span><span class="flg"><i class="lg2"></i>50-99 km</span><span class="flg"><i class="lg3"></i>100 km of meer</span></div></section>
@@ -861,9 +864,9 @@ async function renderMap(load){
   if(!demo&&load&&window.__mapLoad&&Date.now()-MAPS.t>15000){try{MAPS.rows=await window.__mapLoad();MAPS.ok=true}catch(e){MAPS.ok=false}MAPS.t=Date.now()}
   const pts=a=>a.map(([la,lo])=>mx(la,lo).join(",")).join(" "),me=window.__me;
   const DEMO=[[53.22,6.57],[53.2,5.8],[52.51,6.09],[52.38,4.9],[52.1,5.12],[52.07,4.3],[51.92,4.48],[51.84,5.86],[51.44,5.47],[50.85,5.69],[51.5,3.61],[52.22,6.89],[51.22,4.4],[50.85,4.35],[51.05,3.72],[50.63,5.57],[49.61,6.13],[52.78,5.1],[51.69,5.3],[50.45,4.45]];
-  const dots=(demo?DEMO.map(([la,lo])=>{const [x,y]=mx(la,lo);return {r:{name:""},x,y,me:false}}):mapPts().map(o=>{const [x,y]=mx(o.lat,o.lon);return {r:o.r,x,y,me:o.me}})).sort((a,b)=>a.me-b.me);
+  const dots=(demo?DEMO.map(([la,lo])=>{const [x,y]=mx(la,lo);return {r:{name:""},x,y,me:false}}):mapPts().map(o=>{const [x,y]=mx(o.lat,o.lon);return {r:o.r,x,y,me:o.me}})).sort((a,b)=>(a.me-b.me)||((a.r.name==="Edwin-6")-(b.r.name==="Edwin-6")));
   const tips=demo?"":dots.map(d=>{const t=d.r.name,wd=t.length*7.4+16;return `<g class="tipg" data-n="${esc(d.r.name)}" data-x="${d.x}" data-y="${d.y}" data-w="${wd}" pointer-events="none"><rect class="tipbg" width="${wd}" height="24" rx="12"/><text class="tip">${esc(t)}</text></g>`}).join("");
-  w.innerHTML=`<svg viewBox="0 0 460 650" role="img" aria-label="Kaart van Nederland, België en Luxemburg met de renners van de club"><polygon class="lu" points="${pts(LUP)}"/>${BEP.map(q=>`<polygon class="be" points="${pts(q)}"/>`).join("")}${BEP.map(q=>`<polygon class="be2" points="${pts(q)}"/>`).join("")}${NLP.map(q=>`<polygon class="nl" points="${pts(q)}"/>`).join("")}${WATP.map(q=>`<polygon class="wt" points="${pts(q)}"/>`).join("")}`+dots.map(d=>demo?`<circle class="dot" cx="${d.x}" cy="${d.y}" r="7" aria-hidden="true"/>`:`<circle class="dot${d.me?" me":""}" cx="${d.x}" cy="${d.y}" r="7" tabindex="0" role="button" aria-label="${esc(d.r.name)}" data-n="${esc(d.r.name)}"/>`).join("")+tips+`</svg>`+(demo?"":`<div class="mz" role="group" aria-label="Zoomen op de kaart"><button type="button" class="mzin" aria-label="Inzoomen" title="Inzoomen">+</button><button type="button" class="mzout" aria-label="Uitzoomen" title="Uitzoomen">&minus;</button><button type="button" class="mzreset" aria-label="Terug naar de hele kaart" title="Terug naar de hele kaart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg></button></div>`);
+  w.innerHTML=`<svg viewBox="0 0 460 650" role="img" aria-label="Kaart van Nederland, België en Luxemburg met de renners van de club"><polygon class="lu" points="${pts(LUP)}"/>${BEP.map(q=>`<polygon class="be" points="${pts(q)}"/>`).join("")}${BEP.map(q=>`<polygon class="be2" points="${pts(q)}"/>`).join("")}${NLP.map(q=>`<polygon class="nl" points="${pts(q)}"/>`).join("")}${WATP.map(q=>`<polygon class="wt" points="${pts(q)}"/>`).join("")}`+dots.map(d=>demo?`<circle class="dot" cx="${d.x}" cy="${d.y}" r="7" aria-hidden="true"/>`:`<circle class="dot${d.me?" me":""}${d.r.name==="Edwin-6"?" tas":""}" cx="${d.x}" cy="${d.y}" r="7" tabindex="0" role="button" aria-label="${esc(d.r.name)}" data-n="${esc(d.r.name)}"/>`).join("")+tips+`</svg>`+(demo?"":`<div class="mz" role="group" aria-label="Zoomen op de kaart"><button type="button" class="mzin" aria-label="Inzoomen" title="Inzoomen">+</button><button type="button" class="mzout" aria-label="Uitzoomen" title="Uitzoomen">&minus;</button><button type="button" class="mzreset" aria-label="Terug naar de hele kaart" title="Terug naar de hele kaart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg></button></div>`);
   if(demo){MZ.z=1;MZ.x=0;MZ.y=0}else mapWire(w);mapApply();
   MAPS.ms=Math.round((performance.now()-tA)*10)/10;MAPS.kb=Math.round(JSON.stringify([NLP,BEP,LUP,WATP]).length/102.4)/10;const mA=$("meta");if(mA)mA.textContent="Bike Messenger · tekenen "+MAPS.ms+" ms · 0 externe aanvragen · kaartdata "+MAPS.kb+" KB (zit in de pagina)";
   const n=MAPS.rows.length,has=me&&MAPS.rows.some(r=>r.name===me);
@@ -1425,6 +1428,13 @@ async function startSupabase(){
 }
 
 try{await startSupabase()}catch(e){console.error("Koppeling met de database mislukt",e);const g=document.getElementById("gate");if(g&&!document.body.classList.contains("in"))g.innerHTML='<div class="gc"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1><p>Geen verbinding met de database. Ververs de pagina om het opnieuw te proberen.</p></div>'}
+
+(function(){const T=Date.parse("2026-12-31T23:00:00Z"),p=n=>String(n).padStart(2,"0");
+function tick(){const o=document.getElementById("bmcn");if(!o||document.hidden)return;let d=T-Date.now();
+ if(d<=0){if(!o.classList.contains("bmcgo")){o.classList.add("bmcgo");o.textContent="De bike messenger is begonnen!"}return}
+ d=Math.floor(d/1000);const dd=Math.floor(d/86400),h=Math.floor(d%86400/3600),m=Math.floor(d%3600/60),sec=d%60;
+ const set=(i,v)=>{const e=document.getElementById(i);if(e&&e.textContent!==v)e.textContent=v};set("bmd",String(dd));set("bmh",p(h));set("bmm",p(m));set("bms",p(sec))}
+tick();setInterval(tick,1000)})();
 </script>
 </body>
 </html>
