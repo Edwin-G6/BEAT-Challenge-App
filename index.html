@@ -433,7 +433,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .feed .fc.t1 .fcp{background:var(--tb1)}.feed .fc.t2 .fcp{background:var(--tb2)}.feed .fc.t3 .fcp{background:var(--tb3)}
 .feed .fc.t1 .fcp small,.feed .fc.t1 .fcp b{color:var(--tt1)}.feed .fc.t2 .fcp small,.feed .fc.t2 .fcp b{color:var(--tt2)}.feed .fc.t3 .fcp small,.feed .fc.t3 .fcp b{color:var(--tt3)}
 .feed .fc .fcp small{opacity:.85}
-.flg i.lg1{background:var(--k1);opacity:var(--o1)}.flg i.lg2{background:var(--k2);opacity:var(--o2)}.flg i.lg3{background:var(--k3);opacity:var(--o3)}
+.flg i.lg1{background:var(--k1);opacity:var(--o1)}.flg i.lg2{background:var(--k2);opacity:var(--o2)}.flg i.lg3{background:var(--k3);opacity:var(--o3)}.feed .fsep{width:18px;height:18px;flex:0 0 auto;color:var(--dt)}.flg i.lg4{background:#CEA510}
 :root{--k1:#73CFC1;--k2:#246F65;--k3:#E5392D;--o1:.5;--o2:.4;--o3:.45;--tb1:#e1f4f1;--tb2:#dcebe8;--tb3:#fce5e2;--tt1:#2a7a74;--tt2:#246F65;--tt3:#D32F24}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--k1:#A6EBE0;--k2:#2E9484;--k3:#F0574A;--o1:.9;--o2:.9;--o3:.9;--tb1:rgba(166,235,224,.9);--tb2:rgba(46,148,132,.9);--tb3:rgba(240,87,74,.9);--tt1:#0b2a27;--tt2:#fff;--tt3:#fff}}
 :root[data-theme="dark"]{--k1:#A6EBE0;--k2:#2E9484;--k3:#F0574A;--o1:.9;--o2:.9;--o3:.9;--tb1:rgba(166,235,224,.9);--tb2:rgba(46,148,132,.9);--tb3:rgba(240,87,74,.9);--tt1:#0b2a27;--tt2:#fff;--tt3:#fff}
@@ -562,7 +562,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   <section class="card mapc"><div class="bmc" id="bmc"><div class="bmcl">De bike messenger begint over</div><div class="bmcn" id="bmcn" aria-live="off"><span><b id="bmd">--</b><small>dagen</small></span><span><b id="bmh">--</b><small>uur</small></span><span><b id="bmm">--</b><small>min</small></span><span><b id="bms">--</b><small>sec</small></span></div><div class="bmcs">Start: 1 januari 2027, 0.00 uur</div><div class="bmct">De tas is nu bij: <b>Edwin-6</b></div><div class="bmct">De tas gaat naar renner: <b>1 jan bekend</b></div></div><div id="mapw"></div><div class="mapcap" id="mapcap"></div><div class="meting" id="meta"></div></section>
 </div>
 <div class="feed">
-  <section class="card tb"><h1>BED <em>BEATS Feed <svg class="hb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="hb0" d="M22 12h-4l-3 9L9 3l-3 9H2" pathLength="100"/><path class="hb1" d="M22 12h-4l-3 9L9 3l-3 9H2" pathLength="100"/></svg></em></h1><div class="fsub fleg">Legenda <span class="flg"><i class="lg1"></i>0-49 km</span><span class="flg"><i class="lg2"></i>50-99 km</span><span class="flg"><i class="lg3"></i>100 km of meer</span></div></section>
+  <section class="card tb"><h1>BED <em>BEATS Feed <svg class="hb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="hb0" d="M22 12h-4l-3 9L9 3l-3 9H2" pathLength="100"/><path class="hb1" d="M22 12h-4l-3 9L9 3l-3 9H2" pathLength="100"/></svg></em></h1><div class="fsub fleg">Legenda <span class="flg"><i class="lg1"></i>0-49 km</span><span class="flg"><i class="lg2"></i>50-99 km</span><span class="flg"><i class="lg3"></i>Century Crack</span><svg class="fsep" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="flg"><i class="lg1"></i>0-499 hm</span><span class="flg"><i class="lg2"></i>500-999 hm</span><span class="flg"><i class="lg4"></i>Vertical Viking</span></div></section>
   <div id="feedl"></div>
   <button class="fm" id="feedmore" hidden>Toon eerdere BEATS</button>
 </div>
@@ -818,7 +818,6 @@ items.push({k:"ev",key:"man|20261106a",d:"2026-11-06",ts:new Date("2026-11-06T06
   items.push({k:"ev",key:"man|20261110a",d:"2026-11-10",ts:new Date("2026-11-10T08:35:00").getTime(),tm:false,sex:"m",mood:"zorg",h:"Dinsdag. Nieuwe podcast. Bakkie koffie. En luisteren naar de hoogtepunten van het jaar 👍"});
   items.push({k:"ev",key:"man|20261112a",d:"2026-11-12",ts:new Date("2026-11-12T19:10:00").getTime(),tm:false,sex:"m",mood:"straks",h:"Nieuwe kleurtjes in de grafieken? En een stippellijn? Ja joh, wat jullie willen."});
   items.push({k:"ev",key:"man|20261114a",d:"2026-11-14",ts:new Date("2026-11-14T11:15:00").getTime(),tm:false,sex:"m",mood:"straks",h:"Het is weekend en de zon schijnt buiten, geen excuses! ps check ook even de update in de Bike Messenger tab, we tellen af ⏰"});
-  items.push({k:"ev",key:"man|20261115a",d:"2026-11-15",ts:new Date("2026-11-15T09:55:00").getTime(),tm:false,sex:"m",mood:"zelfspot",h:"Trainen is voor talentlozen - Bobbie Traksel"});
   items.sort((a,b)=>b.ts-a.ts);return {items:items.filter(o=>(o.k==="ev"?o.d:o.r[0])>=FEEDSTART),per};
 }
 function fDate(ds){const t=new Date(ds+"T12:00:00").toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});return t.charAt(0).toUpperCase()+t.slice(1)}
