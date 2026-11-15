@@ -739,9 +739,9 @@ function renderBed(){
   const tb={max:["max","mk"],mk:["mk","max"],cur:["cur","ck"],ck:["ck","cur"]}[bsK];
   L.sort((a,b)=>tb?bsD*((a[tb[0]]-b[tb[0]])||(a[tb[1]]-b[tb[1]]))||a.name.localeCompare(b.name):bsD*a.name.localeCompare(b.name));
   const ar=k=>k===bsK?(bsD<0?" ↓":" ↑"):"",on=k=>k===bsK?"on":"";
-  $("bhead").innerHTML=`<tr><th>#</th><th data-b="name" class="${on("name")}">Naam${ar("name")}</th><th data-b="max" class="${on("max")}">Max streak${ar("max")}</th><th data-b="mk" class="${on("mk")}">KM max streak${ar("mk")}</th><th data-b="cur" class="${on("cur")}">Huidige streak${ar("cur")}</th><th data-b="ck" class="${on("ck")}">KM huidige streak${ar("ck")}</th></tr>`;
+  $("bhead").innerHTML=`<tr><th>#</th><th data-b="name" class="${on("name")}">Naam${ar("name")}</th><th data-b="cur" class="${on("cur")}">Huidige streak${ar("cur")}</th><th data-b="ck" class="${on("ck")}">KM huidige streak${ar("ck")}</th><th data-b="max" class="${on("max")}">Max streak${ar("max")}</th><th data-b="mk" class="${on("mk")}">KM max streak${ar("mk")}</th></tr>`;
   const z=v=>v?nl(v):"–",zk=v=>Math.round(v)?nl(Math.round(v)):"–";
-  $("bbody").innerHTML=L.length?L.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${esc(o.name)}</td><td><span class="c">${z(o.max)}</span></td><td>${zk(o.mk)}</td><td><span class="c">${z(o.cur)}</span></td><td>${zk(o.ck)}</td></tr>`).join(""):`<tr><td colspan="6" class="empty">Geen resultaten.</td></tr>`;
+  $("bbody").innerHTML=L.length?L.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${esc(o.name)}</td><td><span class="c">${z(o.cur)}</span></td><td>${zk(o.ck)}</td><td><span class="c">${z(o.max)}</span></td><td>${zk(o.mk)}</td></tr>`).join(""):`<tr><td colspan="6" class="empty">Geen resultaten.</td></tr>`;
   document.querySelectorAll("th[data-b]").forEach(th=>th.onclick=()=>{const k=th.dataset.b;track("Tabel gesorteerd",{tabel:"STREAK",kolom:k});if(k===bsK)bsD*=-1;else{bsK=k;bsD=k==="name"?1:-1}renderBed()});
 }
 const VIEWS={map:["m-map","Bike Messenger"],bad:["m-bad","BAD"],bed:["m-bed","STREAK"],hof:["m-hof","Hall of Fame"],zo:["m-zo","Rennersbriefing"],feed:["m-feed","BEATS Feed"]};
