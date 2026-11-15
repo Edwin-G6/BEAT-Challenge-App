@@ -472,7 +472,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <div id="gate"><div class="gc"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1><img class="lad" src="bot/ongeduld.webp" width="335" height="421" alt="De BED ploegleider kijkt op zijn horloge" id="ladimg"><script>if(window.AV==="v"){var li=document.getElementById("ladimg");li.src="bot/v/ongeduld.webp";li.width=386;li.height=401}</script><p>Even laden…</p></div></div>
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 2.03</div></div></div>
+  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 2.04</div></div></div>
   <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <div class="nv" id="menu" role="group" aria-label="Menu">
     <button class="ni" id="m-feed" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>BEATS</button>
@@ -739,9 +739,9 @@ function renderBed(){
   const tb={max:["max","mk"],mk:["mk","max"],cur:["cur","ck"],ck:["ck","cur"]}[bsK];
   L.sort((a,b)=>tb?bsD*((a[tb[0]]-b[tb[0]])||(a[tb[1]]-b[tb[1]]))||a.name.localeCompare(b.name):bsD*a.name.localeCompare(b.name));
   const ar=k=>k===bsK?(bsD<0?" ↓":" ↑"):"",on=k=>k===bsK?"on":"";
-  $("bhead").innerHTML=`<tr><th>#</th><th data-b="name" class="${on("name")}">Naam${ar("name")}</th><th data-b="max" class="${on("max")}">Max streak${ar("max")}</th><th data-b="mk" class="${on("mk")}">KM max streak${ar("mk")}</th><th data-b="cur" class="${on("cur")}">Huidige streak${ar("cur")}</th><th data-b="ck" class="${on("ck")}">KM huidige streak${ar("ck")}</th></tr>`;
+  $("bhead").innerHTML=`<tr><th>#</th><th data-b="name" class="${on("name")}">Naam${ar("name")}</th><th data-b="cur" class="${on("cur")}">Huidige streak${ar("cur")}</th><th data-b="ck" class="${on("ck")}">KM huidige streak${ar("ck")}</th><th data-b="max" class="${on("max")}">Max streak${ar("max")}</th><th data-b="mk" class="${on("mk")}">KM max streak${ar("mk")}</th></tr>`;
   const z=v=>v?nl(v):"–",zk=v=>Math.round(v)?nl(Math.round(v)):"–";
-  $("bbody").innerHTML=L.length?L.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${esc(o.name)}</td><td><span class="c">${z(o.max)}</span></td><td>${zk(o.mk)}</td><td><span class="c">${z(o.cur)}</span></td><td>${zk(o.ck)}</td></tr>`).join(""):`<tr><td colspan="6" class="empty">Geen resultaten.</td></tr>`;
+  $("bbody").innerHTML=L.length?L.map((o,i)=>`<tr><td class="rk">${rb(i)}</td><td>${esc(o.name)}</td><td><span class="c">${z(o.cur)}</span></td><td>${zk(o.ck)}</td><td><span class="c">${z(o.max)}</span></td><td>${zk(o.mk)}</td></tr>`).join(""):`<tr><td colspan="6" class="empty">Geen resultaten.</td></tr>`;
   document.querySelectorAll("th[data-b]").forEach(th=>th.onclick=()=>{const k=th.dataset.b;track("Tabel gesorteerd",{tabel:"STREAK",kolom:k});if(k===bsK)bsD*=-1;else{bsK=k;bsD=k==="name"?1:-1}renderBed()});
 }
 const VIEWS={map:["m-map","Bike Messenger"],bad:["m-bad","BAD"],bed:["m-bed","STREAK"],hof:["m-hof","Hall of Fame"],zo:["m-zo","Rennersbriefing"],feed:["m-feed","BEATS Feed"]};
