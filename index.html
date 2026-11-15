@@ -454,6 +454,9 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 .feed .fcx.fdw{display:flex;padding:0;overflow:hidden;background:none}.feed .fcx.fdw span{padding:8px 11px 7px}.feed .fcx.fdw span:first-child{background:#d93a2b;color:#fff}.feed .fcx.fdw span:last-child{background:#CEA510;color:#2b2200}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .feed .fc .fcp.fhm.fvv{background:#CEA510}:root:not([data-theme="light"]) .feed .fc .fcp.fhm.fvv small,:root:not([data-theme="light"]) .feed .fc .fcp.fhm.fvv b{color:#2b2200}}
 :root[data-theme="dark"] .feed .fc .fcp.fhm.fvv{background:#CEA510}:root[data-theme="dark"] .feed .fc .fcp.fhm.fvv small,:root[data-theme="dark"] .feed .fc .fcp.fhm.fvv b{color:#2b2200}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .feed .fc.t3 .fcp.fhm:not(.fvv):not(.fh2){background:var(--tb1)}:root:not([data-theme="light"]) .feed .fc.t3 .fcp.fhm:not(.fvv):not(.fh2) small,:root:not([data-theme="light"]) .feed .fc.t3 .fcp.fhm:not(.fvv):not(.fh2) b{color:var(--tt1)}}
+:root[data-theme="dark"] .feed .fc.t3 .fcp.fhm:not(.fvv):not(.fh2){background:var(--tb1)}:root[data-theme="dark"] .feed .fc.t3 .fcp.fhm:not(.fvv):not(.fh2) small,:root[data-theme="dark"] .feed .fc.t3 .fcp.fhm:not(.fvv):not(.fh2) b{color:var(--tt1)}
+:root .feed .fc .fcp.fhm.fh2{background:var(--tb2)}:root .feed .fc .fcp.fhm.fh2 small,:root .feed .fc .fcp.fhm.fh2 b{color:var(--tt2)}
 .feed .fca{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 </style>
 <!-- Omgeving: staging = het mapadres begint met /staging (testomgeving, niet indexeren) -->
@@ -919,7 +922,7 @@ function renderFeed(){
     if(o.k==="ev")return `<div class="fb">${window.__botCard?window.__botCard(o.sex,o.mood,o.h):""}<div class="fct">${fDate(o.d)}</div>${beatRow(o.key||"auto|"+o.d+"|"+[...String(o.h)].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7))}</div>`;
     const r=o.r,rd=new Date(o.ts).toLocaleDateString("sv");
     const k0=r[1]+"|"+r[0],vv=(+r[7]||0)>=1000,cc=r[6]>=100;
-    const ch=[["Road Warrior",r[2]],["Zwift Warrior",r[3]],["Stadsfietsbeuker",r[4]],["eBike",r[5]]].filter(x=>x[1]>0).map(x=>mk(x[0],fn(x[1])+" km")).join("")+(r[7]>0?mk("Bergbaas",nl(Math.round(r[7]))+" hm").replace('class="fcp"','class="fcp fhm'+(vv?" fvv":"")+'"'):"");
+    const ch=[["Road Warrior",r[2]],["Zwift Warrior",r[3]],["Stadsfietsbeuker",r[4]],["eBike",r[5]]].filter(x=>x[1]>0).map(x=>mk(x[0],fn(x[1])+" km")).join("")+(r[7]>0?mk("Bergbaas",nl(Math.round(r[7]))+" hm").replace('class="fcp"','class="fcp fhm'+(vv?" fvv":(+r[7]||0)>=500?" fh2":"")+'"'):"");
     const tot=(F.per.get(r[1])||new Map()).get(r[0])||r[6],n=cnt.get(r[1]+"|"+r[0])||1;
     const pm=F.per.get(r[1])||new Map(),mtot=[...pm].reduce((t,[d,v])=>d.slice(0,7)===r[0].slice(0,7)&&d<=r[0]?t+v:t,0),ds=[6,5,4,3,2,1,0].map(o=>weekDay(r[0],o)),vs=ds.map(d=>pm.get(d)||0),wk=vs.reduce((a,b)=>a+b,0),av=wk/7,mx=Math.max(...vs,av,1);
     const GL=25,mx2=Math.max(...vs,GL,1),H=56,bh=v=>Math.max(2,v/mx2*H),gy=64-GL/mx2*H,mxv=Math.max(...vs,0),my=64-bh(mxv),act=vs.filter(v=>v>0).length,wl=d=>["Z","M","D","W","D","V","Z"][new Date(d+"T12:00:00Z").getUTCDay()];
