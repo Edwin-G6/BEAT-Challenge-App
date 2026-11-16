@@ -1350,6 +1350,10 @@ async function startSupabase(){
   if(!rd&&!isAdmin)rd=await signupForm();
   if(rd&&(rd.status!=="actief"||!rd.bib)&&!isAdmin)await stop('','wacht');
   window.__me=rd&&rd.display_name||null;
+  {let lastAct=0;const trackActivity=async()=>{const n=Date.now();if(n-lastAct<60000)return;lastAct=n;try{await sb.rpc("track_activity")}catch(e){}};
+  trackActivity();
+  sb.auth.onAuthStateChange((_e,ses)=>{if(ses&&!ses.user.is_anonymous)trackActivity()});
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")trackActivity()})}
   try{const fl=await sb.rpc("rider_flags");if(!fl.error&&fl.data)window.__members=new Set(fl.data.filter(x=>x.is_member).map(x=>x.name))}catch(e){}
   let asNon=false;
   const isBeat=()=>!asNon&&!!(isAdmin||(window.__me&&window.__members&&window.__members.has(window.__me)));
