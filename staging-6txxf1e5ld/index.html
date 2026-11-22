@@ -170,7 +170,7 @@ td.yc.z .cv{color:var(--line);font-weight:400}
 .chip .dg{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dt)}
 .sec{margin:6px 2px 14px}
 dialog{border:0;border-radius:28px;padding:0;width:calc(100% - 24px);max-width:480px;background:var(--card);color:var(--ink);box-shadow:0 30px 80px rgba(10,30,40,.35)}
-#cdlg .cheerbox{padding:22px 18px 18px}#cdlg .botrow{margin:0 0 14px}#cdlg .cheerbtn{display:block;width:100%;padding:15px;border:0;border-radius:99px;background:var(--dt);color:#fff;font:800 17px/1 inherit;font-family:inherit;cursor:pointer}#cdlg .cheerbtn:focus-visible{outline:3px solid var(--tq);outline-offset:2px}
+#cdlg .cheerbox,#rdlg .cheerbox{padding:22px 18px 18px}#cdlg .botrow,#rdlg .botrow{margin:0 0 14px}#rdlg .cheerbtn{display:block;width:100%;padding:15px;border:0;border-radius:99px;background:var(--dt);color:#fff;font:800 17px/1 inherit;font-family:inherit;cursor:pointer}#rdlg .cheerbtn:focus-visible{outline:3px solid var(--tq);outline-offset:2px}#cdlg .cheerbtn{display:block;width:100%;padding:15px;border:0;border-radius:99px;background:var(--dt);color:#fff;font:800 17px/1 inherit;font-family:inherit;cursor:pointer}#cdlg .cheerbtn:focus-visible{outline:3px solid var(--tq);outline-offset:2px}
 dialog::backdrop{background:rgba(10,30,34,.55)}
 .dh{font-size:26px;font-weight:800;font-style:italic;text-transform:uppercase;letter-spacing:-.04em;padding:22px 24px 0}
 .db{padding:14px 24px 24px;display:grid;gap:12px}
@@ -489,7 +489,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 <div id="gate"><div class="gc"><div class="gl">B</div><h1>BEAT <span>Every Day</span></h1><img class="lad" src="bot/ongeduld.webp" width="335" height="421" alt="De BED ploegleider kijkt op zijn horloge" id="ladimg"><script>if(window.AV==="v"){var li=document.getElementById("ladimg");li.src="bot/v/ongeduld.webp";li.width=386;li.height=401}</script><p>Even laden…</p></div></div>
 <div class="app">
 <aside class="side">
-  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 2.05</div></div></div>
+  <div class="brand"><div class="bl">B</div><div><div class="bt">BEAT<br>Every Day</div><div class="beta">BETA versie 2.06</div></div></div>
   <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <div class="nv" id="menu" role="group" aria-label="Menu">
     <button class="ni" id="m-feed" aria-pressed="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>BEATS</button>
@@ -689,6 +689,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
   </div>
 </dialog>
 <dialog id="cdlg" aria-label="Rit opgeslagen"><div class="cheerbox"><div id="cbot"></div><button type="button" class="cheerbtn" id="chi">High five ✋</button></div></dialog>
+<dialog id="rdlg" aria-label="Nieuw rugnummer"><div class="cheerbox"><div id="rbot"></div><button type="button" class="cheerbtn" id="rok">Oké</button></div></dialog>
 <dialog id="dlg">
   <div class="dh">Rit invoeren</div>
   <div class="db">
@@ -1364,8 +1365,24 @@ async function startSupabase(){
   if(rr.error&&!isAdmin)await stop('<p>Je gegevens konden niet worden opgehaald ('+gx(rr.error.message)+').</p>');
   let rd=rr.data;
   if(!rd&&!isAdmin)rd=await signupForm();
+  /* Rugnummerregister: wie nog wacht, vraagt opnieuw om een nummer */
+  if(rd&&(rd.status!=="actief"||!rd.bib)&&!isAdmin){try{const q=await sb.rpc("vraag_mijn_nummer");if(!q.error&&q.data&&q.data.bib)rd=q.data}catch(e){}}
   if(rd&&(rd.status!=="actief"||!rd.bib)&&!isAdmin)await stop('','wacht');
   window.__me=rd&&rd.display_name||null;
+  /* Rugnummerregister: privé-melding na een nieuw rugnummer (één keer) */
+  if(rd&&rd.bib)(async()=>{try{
+    const q=await sb.rpc("mijn_rugnummer_melding");const m=q&&!q.error&&q.data;if(!m||!m.nieuw)return;
+    let t=0;while(!window.__botCard&&t++<50)await new Promise(r=>setTimeout(r,200));
+    const d=document.getElementById("rdlg");if(!window.__botCard||!d||!d.showModal)return;
+    const n=String(m.nieuw),mee=" Al je ritten en BEATS zijn meegegaan.";
+    const tx=m.soort==="lid"?["v","trots","Welkom bij BEAT! Je rijdt vanaf nu met rugnummer "+n+"."+mee,"Top 👊"]
+      :m.soort==="gestopt"?["v","motiv","Je BEAT-lidmaatschap is gestopt, maar je rijdt gewoon door met rugnummer "+n+"."+mee,"Oké"]
+      :[window.AV||"m","trots","Je rijdt vanaf nu met rugnummer "+n+"."+mee,"Oké"];
+    document.getElementById("rbot").innerHTML=window.__botCard(tx[0],tx[1],tx[2]);
+    const ok=document.getElementById("rok");ok.textContent=tx[3];ok.onclick=()=>d.close();
+    d.addEventListener("close",()=>{sb.rpc("rugnummer_melding_gezien").then(()=>{},()=>{})},{once:true});
+    d.showModal();ok.focus();
+  }catch(e){}})();
   {let lastAct=0;const trackActivity=async()=>{const n=Date.now();if(n-lastAct<60000)return;lastAct=n;try{await sb.rpc("track_activity")}catch(e){}};
   trackActivity();
   sb.auth.onAuthStateChange((_e,ses)=>{if(ses&&!ses.user.is_anonymous)trackActivity()});
