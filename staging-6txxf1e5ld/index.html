@@ -464,7 +464,7 @@ th[data-k]:hover,th[data-b]:hover{color:var(--dt)}
 :root[data-theme="dark"] .feed .fc.t3 .fcp.fhm:not(.fvv):not(.fh2){background:var(--tb1)}:root[data-theme="dark"] .feed .fc.t3 .fcp.fhm:not(.fvv):not(.fh2) small,:root[data-theme="dark"] .feed .fc.t3 .fcp.fhm:not(.fvv):not(.fh2) b{color:var(--tt1)}
 :root .feed .fc .fcp.fhm.fh2{background:var(--tb2)}:root .feed .fc .fcp.fhm.fh2 small,:root .feed .fc .fcp.fhm.fh2 b{color:var(--tt2)}
 .feed .fca{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.feed .fcaw{display:block;width:max-content;margin:1px 0 5px;padding:4px 7px 3px;border-radius:7px;background:#d93a2b;color:#fff;font:800 10.5px/1 "JetBrains Mono",monospace;letter-spacing:.05em;text-transform:uppercase}.feed .fcaw.fvk{background:#CEA510;color:#2b2200}
+.feed .fcaw{display:block;width:max-content;margin:5px 0 2px;padding:4px 7px 3px;border-radius:7px;background:#d93a2b;color:#fff;font:800 10.5px/1 "JetBrains Mono",monospace;letter-spacing:.05em;text-transform:uppercase}.feed .fcaw.fvk{background:#CEA510;color:#2b2200}
 :root:not([data-theme="light"]) .feed .fcaw.fvk{background:#2b2200;color:#f3d55a}
 </style>
 <!-- Omgeving: staging = het mapadres begint met /staging (testomgeving, niet indexeren) -->
@@ -938,9 +938,9 @@ function renderFeed(){
     if(o.k==="ev")return `<div class="fb">${window.__botCard?window.__botCard(o.sex,o.mood,o.h):""}<div class="fct">${fDate(o.d)}</div>${beatRow(o.key||"auto|"+o.d+"|"+[...String(o.h)].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7))}</div>`;
     const r=o.r,rd=new Date(o.ts).toLocaleDateString("sv");
     const k0=r[1]+"|"+r[0],vv=(+r[7]||0)>=1000,cc=r[6]>=100;
-    /* Awards staan als kopje in de tegel zelf: Century Crack in de kilometertegel met de meeste km, Vertical Viking in de Bergbaas-tegel */
+    /* Awards staan in de tegel zelf, onder de waarde: Century Crack in de kilometertegel met de meeste km, Vertical Viking in de Bergbaas-tegel */
     const kmT=[["Road Warrior",r[2]],["Zwift Warrior",r[3]],["Stadsfietsbeuker",r[4]],["eBike",r[5]]].filter(x=>x[1]>0),ccI=cc&&kmT.length?kmT.reduce((b,x,i)=>x[1]>kmT[b][1]?i:b,0):-1,aw=(t,c)=>`<span class="fcaw${c?" "+c:""}">${t}</span>`;
-    const ch=kmT.map((x,i)=>mk(x[0],fn(x[1])+" km").replace("<small>",(i===ccI?aw("Century Crack!"):"")+"<small>")).join("")+(r[7]>0?mk("Bergbaas",nl(Math.round(r[7]))+" hm").replace('class="fcp"','class="fcp fhm'+(vv?" fvv":(+r[7]||0)>=500?" fh2":"")+'"').replace("<small>",(vv?aw("Vertical Viking!","fvk"):"")+"<small>"):"");
+    const ch=kmT.map((x,i)=>mk(x[0],fn(x[1])+" km").replace("</b></div>","</b>"+(i===ccI?aw("Century Crack!"):"")+"</div>")).join("")+(r[7]>0?mk("Bergbaas",nl(Math.round(r[7]))+" hm").replace('class="fcp"','class="fcp fhm'+(vv?" fvv":(+r[7]||0)>=500?" fh2":"")+'"').replace("</b></div>","</b>"+(vv?aw("Vertical Viking!","fvk"):"")+"</div>"):"");
     const tot=(F.per.get(r[1])||new Map()).get(r[0])||r[6],n=cnt.get(r[1]+"|"+r[0])||1;
     const pm=F.per.get(r[1])||new Map(),mtot=[...pm].reduce((t,[d,v])=>d.slice(0,7)===r[0].slice(0,7)&&d<=r[0]?t+v:t,0),ds=[6,5,4,3,2,1,0].map(o=>weekDay(r[0],o)),vs=ds.map(d=>pm.get(d)||0),wk=vs.reduce((a,b)=>a+b,0),av=wk/7,mx=Math.max(...vs,av,1);
     const H=56,wl=d=>["Z","M","D","W","D","V","Z"][new Date(d+"T12:00:00Z").getUTCDay()],act=vs.filter(v=>v>0).length,ph=(F.perh&&F.perh.get(r[1]))||new Map(),vh=ds.map(d=>ph.get(d)||0),wkh=vh.reduce((a,b)=>a+b,0),avh=wkh/7,acth=vh.filter(v=>v>0).length;
